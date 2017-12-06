@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xy.alcs.dao.ContestMapper" >
+  <resultMap id="BaseResultMap" type="xy.alcs.domain.Contest" >
+    <id column="cid" property="cid" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="enroll_start_date" property="enrollStartDate" jdbcType="DATE" />
+    <result column="enroll_end_date" property="enrollEndDate" jdbcType="DATE" />
+    <result column="works_end_date" property="worksEndDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    cid, title, summary, end_date, start_date, enroll_start_date, enroll_end_date, works_end_date
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="xy.alcs.domain.ContestExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from contest
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from contest
+    where cid = #{cid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from contest
+    where cid = #{cid,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="xy.alcs.domain.ContestExample" >
+    delete from contest
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="xy.alcs.domain.Contest" >
+    insert into contest (cid, title, summary, 
+      end_date, start_date, enroll_start_date, 
+      enroll_end_date, works_end_date)
+    values (#{cid,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{endDate,jdbcType=DATE}, #{startDate,jdbcType=DATE}, #{enrollStartDate,jdbcType=DATE}, 
+      #{enrollEndDate,jdbcType=DATE}, #{worksEndDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="xy.alcs.domain.Contest" >
+    insert into contest
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="enrollStartDate != null" >
+        enroll_start_date,
+      </if>
+      <if test="enrollEndDate != null" >
+        enroll_end_date,
+      </if>
+      <if test="worksEndDate != null" >
+        works_end_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cid != null" >
+        #{cid,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=DATE},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=DATE},
+      </if>
+      <if test="enrollStartDate != null" >
+        #{enrollStartDate,jdbcType=DATE},
+      </if>
+      <if test="enrollEndDate != null" >
+        #{enrollEndDate,jdbcType=DATE},
+      </if>
+      <if test="worksEndDate != null" >
+        #{worksEndDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="xy.alcs.domain.ContestExample" resultType="java.lang.Integer" >
+    select count(*) from contest
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update contest
+    <set >
+      <if test="record.cid != null" >
+        cid = #{record.cid,jdbcType=BIGINT},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.summary != null" >
+        summary = #{record.summary,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endDate != null" >
+        end_date = #{record.endDate,jdbcType=DATE},
+      </if>
+      <if test="record.startDate != null" >
+        start_date = #{record.startDate,jdbcType=DATE},
+      </if>
+      <if test="record.enrollStartDate != null" >
+        enroll_start_date = #{record.enrollStartDate,jdbcType=DATE},
+      </if>
+      <if test="record.enrollEndDate != null" >
+        enroll_end_date = #{record.enrollEndDate,jdbcType=DATE},
+      </if>
+      <if test="record.worksEndDate != null" >
+        works_end_date = #{record.worksEndDate,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update contest
+    set cid = #{record.cid,jdbcType=BIGINT},
+      title = #{record.title,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR},
+      end_date = #{record.endDate,jdbcType=DATE},
+      start_date = #{record.startDate,jdbcType=DATE},
+      enroll_start_date = #{record.enrollStartDate,jdbcType=DATE},
+      enroll_end_date = #{record.enrollEndDate,jdbcType=DATE},
+      works_end_date = #{record.worksEndDate,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="xy.alcs.domain.Contest" >
+    update contest
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=DATE},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=DATE},
+      </if>
+      <if test="enrollStartDate != null" >
+        enroll_start_date = #{enrollStartDate,jdbcType=DATE},
+      </if>
+      <if test="enrollEndDate != null" >
+        enroll_end_date = #{enrollEndDate,jdbcType=DATE},
+      </if>
+      <if test="worksEndDate != null" >
+        works_end_date = #{worksEndDate,jdbcType=DATE},
+      </if>
+    </set>
+    where cid = #{cid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xy.alcs.domain.Contest" >
+    update contest
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      end_date = #{endDate,jdbcType=DATE},
+      start_date = #{startDate,jdbcType=DATE},
+      enroll_start_date = #{enrollStartDate,jdbcType=DATE},
+      enroll_end_date = #{enrollEndDate,jdbcType=DATE},
+      works_end_date = #{worksEndDate,jdbcType=DATE}
+    where cid = #{cid,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectList" resultMap="BaseResultMap">
+     select * from contest
+  </select>
+</mapper>

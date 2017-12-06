@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xy.alcs.dao.RaterMapper" >
+  <resultMap id="BaseResultMap" type="xy.alcs.domain.Rater" >
+    <id column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="rat_name" property="ratName" jdbcType="VARCHAR" />
+    <result column="rat_account" property="ratAccount" jdbcType="VARCHAR" />
+    <result column="rat_password" property="ratPassword" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    rid, rat_name, rat_account, rat_password
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="xy.alcs.domain.RaterExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from rater
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from rater
+    where rid = #{rid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rater
+    where rid = #{rid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="xy.alcs.domain.RaterExample" >
+    delete from rater
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="xy.alcs.domain.Rater" >
+    insert into rater (rid, rat_name, rat_account, 
+      rat_password)
+    values (#{rid,jdbcType=INTEGER}, #{ratName,jdbcType=VARCHAR}, #{ratAccount,jdbcType=VARCHAR}, 
+      #{ratPassword,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="xy.alcs.domain.Rater" >
+    insert into rater
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rid != null" >
+        rid,
+      </if>
+      <if test="ratName != null" >
+        rat_name,
+      </if>
+      <if test="ratAccount != null" >
+        rat_account,
+      </if>
+      <if test="ratPassword != null" >
+        rat_password,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rid != null" >
+        #{rid,jdbcType=INTEGER},
+      </if>
+      <if test="ratName != null" >
+        #{ratName,jdbcType=VARCHAR},
+      </if>
+      <if test="ratAccount != null" >
+        #{ratAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="ratPassword != null" >
+        #{ratPassword,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="xy.alcs.domain.RaterExample" resultType="java.lang.Integer" >
+    select count(*) from rater
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update rater
+    <set >
+      <if test="record.rid != null" >
+        rid = #{record.rid,jdbcType=INTEGER},
+      </if>
+      <if test="record.ratName != null" >
+        rat_name = #{record.ratName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ratAccount != null" >
+        rat_account = #{record.ratAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ratPassword != null" >
+        rat_password = #{record.ratPassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update rater
+    set rid = #{record.rid,jdbcType=INTEGER},
+      rat_name = #{record.ratName,jdbcType=VARCHAR},
+      rat_account = #{record.ratAccount,jdbcType=VARCHAR},
+      rat_password = #{record.ratPassword,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="xy.alcs.domain.Rater" >
+    update rater
+    <set >
+      <if test="ratName != null" >
+        rat_name = #{ratName,jdbcType=VARCHAR},
+      </if>
+      <if test="ratAccount != null" >
+        rat_account = #{ratAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="ratPassword != null" >
+        rat_password = #{ratPassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where rid = #{rid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xy.alcs.domain.Rater" >
+    update rater
+    set rat_name = #{ratName,jdbcType=VARCHAR},
+      rat_account = #{ratAccount,jdbcType=VARCHAR},
+      rat_password = #{ratPassword,jdbcType=VARCHAR}
+    where rid = #{rid,jdbcType=INTEGER}
+  </update>
+</mapper>

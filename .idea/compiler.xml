@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="alcs-client" />
+        <module name="alcs-common" />
+        <module name="alcs-dao" />
+        <module name="alcs-domain" />
+        <module name="alcs-man" />
+        <module name="alcs-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.8">
+      <module name="alcs" target="1.8" />
+      <module name="alcs-client" target="1.8" />
+      <module name="alcs-common" target="1.8" />
+      <module name="alcs-dao" target="1.8" />
+      <module name="alcs-domain" target="1.8" />
+      <module name="alcs-man" target="1.8" />
+      <module name="alcs-service" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

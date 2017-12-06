@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/alcs.iml" filepath="$PROJECT_DIR$/alcs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-client/alcs-client.iml" filepath="$PROJECT_DIR$/alcs-client/alcs-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-common/alcs-common.iml" filepath="$PROJECT_DIR$/alcs-common/alcs-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-dao/alcs-dao.iml" filepath="$PROJECT_DIR$/alcs-dao/alcs-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-domain/alcs-domain.iml" filepath="$PROJECT_DIR$/alcs-domain/alcs-domain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-man/alcs-man.iml" filepath="$PROJECT_DIR$/alcs-man/alcs-man.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-service/alcs-service.iml" filepath="$PROJECT_DIR$/alcs-service/alcs-service.iml" />
+    </modules>
+  </component>
+</project>
