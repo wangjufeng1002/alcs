@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/common/css/default.css">
+    <!-- 引入EasyUI的样式文件-->
+    <link rel="stylesheet" href="/common/jquery-easyui-1.5.3/themes/default/easyui.css" type="text/css"/>
+    <!-- 引入EasyUI的图标样式文件-->
+    <link rel="stylesheet" href="/common/jquery-easyui-1.5.3/themes/icon.css" type="text/css"/>
+</head>
+<body>
+    <!--使用纯html的方式创建创建EasyUI的Dialog的步骤：
+        1、定义一个div
+        2、将div的class样式属性设置成easyui-dialog，这样就可以将普通的div变成EasyUI的Dialog了
+
+    <div class="easyui-dialog" id="dd1" title="EasyUI Dialog" style="width: 500px;height: 300px;">
+        Hello World!
+    </div>
+    <div id="dd2">Dialog Content</div>
+    <div id="dd3">Dialog Content</div>
+-->
+    <body class="easyui-layout">
+    <div data-options="region:'north',border:false" style="height:60px;background:#B3DFDA;padding:10px">
+        汇编语言竞赛管理系统
+    </div>
+    <!--左边 -->
+    <div data-options="region:'west',split:true,title:'West'" style="width:180px;padding:10px;">
+        <div id="nav">
+
+        </div>
+    </div>
+    <div data-options="region:'east',split:true,collapsed:true,title:'East'" style="width:100px;padding:10px;">east region</div>
+    <div data-options="region:'south',border:false" style="height:50px;background:#A9FACD;padding:10px;">south region</div>
+    <div data-options="region:'center',title:'Center'"></div>
+    </body>
+</body>
+<!-- 引入JQuery -->
+<script type="text/javascript" src="/common/jquery-easyui-1.5.3/jquery.min.js"></script>
+<!-- 引入EasyUI -->
+<script type="text/javascript" src="/common/jquery-easyui-1.5.3/jquery.easyui.min.js"></script>
+<!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+<script type="text/javascript" src="/common/jquery-easyui-1.5.3/locale/easyui-lang-zh_CN.js"></script>
+<!-- 引入EasyUI的样式文件-->
+<link rel="stylesheet" href="/common/jquery-easyui-1.5.3/themes/default/easyui.css" type="text/css"/>
+<!-- 引入EasyUI的图标样式文件-->
+<link rel="stylesheet" href="/common/jquery-easyui-1.5.3/themes/icon.css" type="text/css"/>
+<script type="text/javascript">
+   /* $(function(){
+        //console.info($('#dd2'));
+        /!*使用JavaScript动态创建EasyUI的Dialog的步骤：
+        1、定义一个div，并给div指定一个id
+        2、使用Jquery选择器选中该div，然后调用dialog()方法就可以创建EasyUI的Dialog
+        *!/
+        $('#dd2').dialog();//使用默认的参数创建EasyUI的Dialog
+        //使用自定义参数创建EasyUI的Dialog
+        $('#dd3').dialog({
+            title: '使用JavaScript创建的Dialog',
+            width: 400,
+            height: 200,
+            closed: false,
+            cache: false,
+            modal: true
+        });
+    });*/
+   var _menus = {
+       "menus": [{
+           "menuid": "1",
+           "icon": "icon-add",
+           "menuname": "标注管理",
+           "menus": [{
+               "menuid": "12",
+               "menuname": "添加标注",
+               "icon": "icon-add",
+               "url": "http://hxling.cnblogs.com",
+               "child": [{
+                   "menuid": "140",
+                   "menuname": "角色管理 3",
+                   "icon": "icon-role",
+                   "url": "demo2.html"
+               },
+                   {
+                       "menuid": "150",
+                       "menuname": "权限设置 3",
+                       "icon": "icon-set",
+                       "url": "demo.html"
+                   }]
+           },
+               {
+                   "menuid": "13",
+                   "menuname": "标注类别管理",
+                   "icon": "icon-add",
+                   "url": "demo2.html",
+                   "child": [{
+                       "menuid": "141",
+                       "menuname": "角色管理 3",
+                       "icon": "icon-role",
+                       "url": "demo.html"
+                   },
+                       {
+                           "menuid": "151",
+                           "menuname": "权限设置 3",
+                           "icon": "icon-set",
+                           "url": "demo1.html"
+                       }]
+               },
+               {
+                   "menuid": "14",
+                   "menuname": "标注统计",
+                   "icon": "icon-add",
+                   "url": "demo2.html",
+                   "child": [{
+                       "menuid": "142",
+                       "menuname": "角色管理 3",
+                       "icon": "icon-role",
+                       "url": "demo2.html"
+                   },
+                       {
+                           "menuid": "152",
+                           "menuname": "权限设置 3",
+                           "icon": "icon-set",
+                           "url": "demo.html"
+                       }]
+               },
+               {
+                   "menuid": "15",
+                   "menuname": "权限设置",
+                   "icon": "icon-add",
+                   "url": "demo.html",
+                   "child": [{
+                       "menuid": "143",
+                       "menuname": "角色管理 3",
+                       "icon": "icon-role",
+                       "url": "demo2.html"
+                   },
+                       {
+                           "menuid": "153",
+                           "menuname": "权限设置 3",
+                           "icon": "icon-set",
+                           "url": "demo.html"
+                       }]
+               },
+               {
+                   "menuid": "16",
+                   "menuname": "系统日志",
+                   "icon": "icon-add",
+                   "url": "demo1.html",
+                   "child": [{
+                       "menuid": "144",
+                       "menuname": "角色管理 3",
+                       "icon": "icon-role",
+                       "url": "demo2.html"
+                   },
+                       {
+                           "menuid": "154",
+                           "menuname": "权限设置 3",
+                           "icon": "icon-set",
+                           "url": "demo.html"
+                       }]
+               }]
+       },
+           {
+               "menuid": "8",
+               "icon": "icon-add",
+               "menuname": "地理要素管理",
+               "menus": [{
+                   "menuid": "21",
+                   "menuname": "员工列表",
+                   "icon": "icon-nav",
+                   "url": "demo.html"
+               },
+                   {
+                       "menuid": "22",
+                       "menuname": "视频监控",
+                       "icon": "icon-nav",
+                       "url": "demo1.html",
+                       "child": [{
+                           "menuid": "221",
+                           "menuname": "员工列表 3",
+                           "icon": "icon-nav",
+                           "url": "demo.html"
+                       },
+                           {
+                               "menuid": "222",
+                               "menuname": "视频监控 3",
+                               "icon": "icon-nav",
+                               "url": "demo1.html"
+                           }]
+                   }]
+           },
+           {
+               "menuid": "56",
+               "icon": "icon-add",
+               "menuname": "数据管理",
+               "menus": [{
+                   "menuid": "31",
+                   "menuname": "添加部门",
+                   "icon": "icon-nav",
+                   "url": "demo1.html"
+               },
+                   {
+                       "menuid": "321",
+                       "menuname": "部门列表",
+                       "icon": "icon-nav",
+                       "url": "demo2.html",
+                       "child": [{
+                           "menuid": "311",
+                           "menuname": "添加部门 4",
+                           "icon": "icon-nav",
+                           "url": "demo1.html"
+                       },
+                           {
+                               "menuid": "312",
+                               "menuname": "部门列表 4",
+                               "icon": "icon-nav",
+                               "url": "demo2.html"
+                           }]
+                   }]
+           }]
+   };
+   function InitLeftMenu() {
+       $("#nav").accordion({animate:false,fit:true,border:false});
+       var selectedPanelname = '';
+       $.each(_menus.menus, function(i, n) {
+           var menulist ='';
+           menulist +='<ul class="navlist">';
+           $.each(n.menus, function(j, o) {
+               menulist += '<li><div ><a ref="'+o.menuid+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.menuname + '</span>' +
+                   '</a></div> ';
+
+               if(o.child && o.child.length>0)
+               {
+                   //li.find('div').addClass('icon-arrow');
+
+                   menulist += '<ul class="third_ul">';
+                   $.each(o.child,function(k,p){
+                       menulist += '<li><div><a ref="'+p.menuid+'" href="#" rel="' + p.url + '" ><span class="icon '+p.icon+'" >&nbsp;</span><span class="nav">' + p.menuname + '</span></a></div> </li>'
+                   });
+                   menulist += '</ul>';
+               }
+
+               menulist+='</li>';
+           })
+           menulist += '</ul>';
+
+           $('#nav').accordion('add', {
+               title: n.menuname,
+               content: menulist,
+               border:false,
+               iconCls: 'icon ' + n.icon
+           });
+
+           if(i==0)
+               selectedPanelname =n.menuname;
+
+       });
+       $('#nav').accordion('select',selectedPanelname);
+
+
+
+       $('.navlist li a').click(function(){
+           var tabTitle = $(this).children('.nav').text();
+
+           var url = $(this).attr("rel");
+           var menuid = $(this).attr("ref");
+           var icon = $(this).find('.icon').attr('class');
+
+           var third = find(menuid);
+           if(third && third.child && third.child.length>0)
+           {
+               $('.third_ul').slideUp();
+
+               var ul =$(this).parent().next();
+               if(ul.is(":hidden"))
+                   ul.slideDown();
+               else
+                   ul.slideUp();
+
+
+
+           }
+           else{
+               addTab(tabTitle,url,icon);
+               $('.navlist li div').removeClass("selected");
+               $(this).parent().addClass("selected");
+           }
+       }).hover(function(){
+           $(this).parent().addClass("hover");
+       },function(){
+           $(this).parent().removeClass("hover");
+       });
+   }
+   $(function () {
+       InitLeftMenu();
+   });
+</script>
+</html>

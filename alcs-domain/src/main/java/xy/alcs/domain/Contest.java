@@ -19,6 +19,14 @@ public class Contest {
 
     private Date worksEndDate;
 
+    private Date timestamp;
+
+    private Date scoreStartDate;
+
+    private Date scoreEndDate;
+
+    private Integer status;
+
     public Long getCid() {
         return cid;
     }
@@ -81,5 +89,37 @@ public class Contest {
 
     public void setWorksEndDate(Date worksEndDate) {
         this.worksEndDate = worksEndDate;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Date getScoreStartDate() {
+        return scoreStartDate;
+    }
+
+    public void setScoreStartDate(Date scoreStartDate) {
+        this.scoreStartDate = scoreStartDate;
+    }
+
+    public Date getScoreEndDate() {
+        return scoreEndDate;
+    }
+
+    public void setScoreEndDate(Date scoreEndDate) {
+        this.scoreEndDate = scoreEndDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

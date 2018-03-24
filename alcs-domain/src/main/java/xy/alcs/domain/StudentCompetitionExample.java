@@ -1,6 +1,7 @@
 package xy.alcs.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StudentCompetitionExample {
@@ -364,53 +365,183 @@ public class StudentCompetitionExample {
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdEqualTo(Long value) {
+        public Criteria andTeamIdEqualTo(String value) {
             addCriterion("team_id =", value, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdNotEqualTo(Long value) {
+        public Criteria andTeamIdNotEqualTo(String value) {
             addCriterion("team_id <>", value, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdGreaterThan(Long value) {
+        public Criteria andTeamIdGreaterThan(String value) {
             addCriterion("team_id >", value, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andTeamIdGreaterThanOrEqualTo(String value) {
             addCriterion("team_id >=", value, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdLessThan(Long value) {
+        public Criteria andTeamIdLessThan(String value) {
             addCriterion("team_id <", value, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdLessThanOrEqualTo(Long value) {
+        public Criteria andTeamIdLessThanOrEqualTo(String value) {
             addCriterion("team_id <=", value, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdIn(List<Long> values) {
+        public Criteria andTeamIdLike(String value) {
+            addCriterion("team_id like", value, "teamId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTeamIdNotLike(String value) {
+            addCriterion("team_id not like", value, "teamId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTeamIdIn(List<String> values) {
             addCriterion("team_id in", values, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdNotIn(List<Long> values) {
+        public Criteria andTeamIdNotIn(List<String> values) {
             addCriterion("team_id not in", values, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdBetween(Long value1, Long value2) {
+        public Criteria andTeamIdBetween(String value1, String value2) {
             addCriterion("team_id between", value1, value2, "teamId");
             return (Criteria) this;
         }
 
-        public Criteria andTeamIdNotBetween(Long value1, Long value2) {
+        public Criteria andTeamIdNotBetween(String value1, String value2) {
             addCriterion("team_id not between", value1, value2, "teamId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampIsNull() {
+            addCriterion("TIMESTAMP is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampIsNotNull() {
+            addCriterion("TIMESTAMP is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampEqualTo(Date value) {
+            addCriterion("TIMESTAMP =", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampNotEqualTo(Date value) {
+            addCriterion("TIMESTAMP <>", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampGreaterThan(Date value) {
+            addCriterion("TIMESTAMP >", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampGreaterThanOrEqualTo(Date value) {
+            addCriterion("TIMESTAMP >=", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampLessThan(Date value) {
+            addCriterion("TIMESTAMP <", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampLessThanOrEqualTo(Date value) {
+            addCriterion("TIMESTAMP <=", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampIn(List<Date> values) {
+            addCriterion("TIMESTAMP in", values, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampNotIn(List<Date> values) {
+            addCriterion("TIMESTAMP not in", values, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampBetween(Date value1, Date value2) {
+            addCriterion("TIMESTAMP between", value1, value2, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampNotBetween(Date value1, Date value2) {
+            addCriterion("TIMESTAMP not between", value1, value2, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitIsNull() {
+            addCriterion("workcommit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitIsNotNull() {
+            addCriterion("workcommit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitEqualTo(Integer value) {
+            addCriterion("workcommit =", value, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitNotEqualTo(Integer value) {
+            addCriterion("workcommit <>", value, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitGreaterThan(Integer value) {
+            addCriterion("workcommit >", value, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitGreaterThanOrEqualTo(Integer value) {
+            addCriterion("workcommit >=", value, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitLessThan(Integer value) {
+            addCriterion("workcommit <", value, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitLessThanOrEqualTo(Integer value) {
+            addCriterion("workcommit <=", value, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitIn(List<Integer> values) {
+            addCriterion("workcommit in", values, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitNotIn(List<Integer> values) {
+            addCriterion("workcommit not in", values, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitBetween(Integer value1, Integer value2) {
+            addCriterion("workcommit between", value1, value2, "workcommit");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkcommitNotBetween(Integer value1, Integer value2) {
+            addCriterion("workcommit not between", value1, value2, "workcommit");
             return (Criteria) this;
         }
     }

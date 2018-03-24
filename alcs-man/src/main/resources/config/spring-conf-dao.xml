@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd "
+       >
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close" >
+        <property name="driverClassName" value="${driverClass}"/>
+        <property name="url" value="${jdbcUrl}"/>
+        <property name="username" value="${user}"/>
+        <property name="password" value="${password}"/>
+        <!--   初始化连接数量   -->
+        <property name="initialSize" value="15"/>
+        <!--   最大活动连接数量   -->
+        <property name="maxTotal" value="30"/>
+        <!--   最大空闲连接数量   -->
+        <property name="maxIdle" value="15"/>
+        <!--   最小空闲连接数量   -->
+        <property name="minIdle" value="5"/>
+        <!--   获取连接时等待时间，超出将抛异常，单位毫秒   -->
+        <property name="maxWaitMillis" value="10000"/>
+        <!--   空闲连接被回收时间，回收空闲连接至minIdle指定数量，单位毫秒   -->
+        <property name="minEvictableIdleTimeMillis" value="600000"/>
+        <!--   检查空闲连接是否可被回收，如果小于等于0，不会启动检查线程，默认-1，单位毫秒   -->
+        <property name="timeBetweenEvictionRunsMillis" value="600000"/>
+        <!--   泄露的连接可以被删除的超时值,   单位秒   -->
+        <property name="removeAbandonedTimeout" value="180"/>
+    </bean>
+
+    <!-- mybatis 设置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="configLocation" value="classpath:config/mybatis-config.xml" />
+    </bean>
+
+    <!-- 事务 -->
+    <!--程序中统一使用编码式事务 -->
+    <bean name="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--事务结束 -->
+
+
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage"  value="xy.alcs.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+
+</beans>

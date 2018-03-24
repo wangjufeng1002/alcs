@@ -11,6 +11,19 @@
     <result column="stu_cla_id" property="stuClaId" jdbcType="INTEGER" />
     <result column="stu_password" property="stuPassword" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="MyContestDetailDto" type="xy.alcs.dto.MyContestDetailDto">
+    <result column="cid" property="cid" jdbcType="BIGINT"></result>
+    <result column="title" property="title" jdbcType="VARCHAR"/>
+    <result column="summary" property="summary" jdbcType="VARCHAR"/>
+    <result column="end_date" property="endDate" jdbcType="DATE"/>
+    <result column="start_date" property="startDate" jdbcType="DATE"/>
+    <result column="enroll_start_date" property="enrollStartDate" jdbcType="DATE"/>
+    <result column="enroll_end_date" property="enrollEndDate" jdbcType="DATE"/>
+    <result column="works_end_date" property="worksEndDate" jdbcType="DATE"/>
+    <result column="score_start_date" property="scoreStartDate" jdbcType="DATE"/>
+    <result column="score_end_date" property="scoreEndDate" jdbcType="DATE"/>
+    <result column="status" property="status" jdbcType="INTEGER"/>
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >

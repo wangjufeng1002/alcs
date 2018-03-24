@@ -631,6 +631,66 @@ public class ContestExample {
             addCriterionForJDBCDate("works_end_date not between", value1, value2, "worksEndDate");
             return (Criteria) this;
         }
+
+        public Criteria andTimestampIsNull() {
+            addCriterion("timestamp is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampIsNotNull() {
+            addCriterion("timestamp is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampEqualTo(Date value) {
+            addCriterion("timestamp =", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampNotEqualTo(Date value) {
+            addCriterion("timestamp <>", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampGreaterThan(Date value) {
+            addCriterion("timestamp >", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampGreaterThanOrEqualTo(Date value) {
+            addCriterion("timestamp >=", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampLessThan(Date value) {
+            addCriterion("timestamp <", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampLessThanOrEqualTo(Date value) {
+            addCriterion("timestamp <=", value, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampIn(List<Date> values) {
+            addCriterion("timestamp in", values, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampNotIn(List<Date> values) {
+            addCriterion("timestamp not in", values, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampBetween(Date value1, Date value2) {
+            addCriterion("timestamp between", value1, value2, "timestamp");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimestampNotBetween(Date value1, Date value2) {
+            addCriterion("timestamp not between", value1, value2, "timestamp");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

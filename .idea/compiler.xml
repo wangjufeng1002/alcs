@@ -11,6 +11,7 @@
         <module name="alcs-dao" />
         <module name="alcs-domain" />
         <module name="alcs-man" />
+        <module name="alcs-manager" />
         <module name="alcs-service" />
       </profile>
     </annotationProcessing>
@@ -21,6 +22,7 @@
       <module name="alcs-dao" target="1.8" />
       <module name="alcs-domain" target="1.8" />
       <module name="alcs-man" target="1.8" />
+      <module name="alcs-manager" target="1.8" />
       <module name="alcs-service" target="1.8" />
     </bytecodeTargetLevel>
   </component>

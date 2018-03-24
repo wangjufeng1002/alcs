@@ -1,5 +1,7 @@
 package xy.alcs.domain;
 
+import java.util.Date;
+
 public class StudentCompetition {
     private Long scId;
 
@@ -9,7 +11,11 @@ public class StudentCompetition {
 
     private Long contestId;
 
-    private Long teamId;
+    private String teamId;
+
+    private Date timestamp;
+
+    private Integer workcommit;
 
     public Long getScId() {
         return scId;
@@ -43,11 +49,27 @@ public class StudentCompetition {
         this.contestId = contestId;
     }
 
-    public Long getTeamId() {
+    public String getTeamId() {
         return teamId;
     }
 
-    public void setTeamId(Long teamId) {
-        this.teamId = teamId;
+    public void setTeamId(String teamId) {
+        this.teamId = teamId == null ? null : teamId.trim();
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Integer getWorkcommit() {
+        return workcommit;
+    }
+
+    public void setWorkcommit(Integer workcommit) {
+        this.workcommit = workcommit;
     }
 }

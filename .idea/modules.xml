@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/alcs-dao/alcs-dao.iml" filepath="$PROJECT_DIR$/alcs-dao/alcs-dao.iml" />
       <module fileurl="file://$PROJECT_DIR$/alcs-domain/alcs-domain.iml" filepath="$PROJECT_DIR$/alcs-domain/alcs-domain.iml" />
       <module fileurl="file://$PROJECT_DIR$/alcs-man/alcs-man.iml" filepath="$PROJECT_DIR$/alcs-man/alcs-man.iml" />
+      <module fileurl="file://$PROJECT_DIR$/alcs-manager/alcs-manager.iml" filepath="$PROJECT_DIR$/alcs-manager/alcs-manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/alcs-service/alcs-service.iml" filepath="$PROJECT_DIR$/alcs-service/alcs-service.iml" />
     </modules>
   </component>

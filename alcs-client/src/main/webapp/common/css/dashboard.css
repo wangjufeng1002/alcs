@@ -1,0 +1,268 @@
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  font-size:16px;
+}
+
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+  display: none;
+}
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 53px; /*update by liuqiang  51 to 53*/
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+  }
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-top: -21px; /*add by liuqiang 20141124*/
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -19px;/*add by liuqiang 20141124*/
+  border-left-width: 3px;/*add by liuqiang 20141124*/
+  border-left-style: solid;/*add by liuqiang 20141124*/
+  border-left-color: #23b7e5;/*add by liuqiang 20141124*/
+}
+
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 45px;
+  color:#555;
+}
+.nav-sidebar > .active > a {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+/*
+ * Main content
+ */
+
+.main {
+  padding: 20px;
+}
+@media (min-width: 768px) {
+  .main {
+    padding-right: 0px; /** change by liuqiang ,origin:40*/
+    padding-left: 0px; /** change by liuqiang ,origin:40*/
+    padding-top: 0px; /** add by liuqiang*/
+  }
+}
+.main .page-header {
+  margin-top: 0;
+}
+
+
+/*
+ * Placeholder dashboard ideas
+ */
+
+.placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
+
+/** add by liuqiang*/
+.main_home table tr {
+	height:160px; text-align: center;
+}
+
+.mainnav > .breadcrumb{
+	margin-top:0px;
+	height:39px;
+}
+
+.nav-sidebar > .title {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: #23b7e5;
+  padding-right: 20px;
+  padding-left: 20px;
+  font-size:20px;
+}
+.main_table > table{
+  margin-top:20px;
+  margin-bottom:-20px;
+}
+.main_table > tr{
+ height:20px;
+}
+
+.form-horizontal > .row {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.form-horizontal > .row > .col-md-1{
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.left_menu_active {
+  color: #fff;
+  background-color: #428bca;
+}
+
+.nav-sidebar > a:hover {
+	color:#fff;background-color:#428bca;
+}
+
+.show-grid {
+	margin-top: 2px;
+    margin-bottom: 2px;
+	background-color: #eee;
+    background-color: rgba(86,61,124,.15);
+    border: 1px solid #ddd;
+    border: 1px solid rgba(86,61,124,.2);
+}
+
+.bg_blue {
+	background-color: #3071a9;
+}
+
+.bg_green {
+	background-color: #449d44;
+}
+
+.bg_blue2 {
+	background-color: #5bc0de;
+}
+
+.bg_yellow {
+	background-color: #ec971f;
+}
+
+.bg_red {
+	background-color: #c9302c;
+}
+
+.named_td {
+	font-weight:bold;
+	text-align:right;
+	width:10%;
+	background-color: rgba(86,61,124,.15);
+}
+
+.valued_td {
+	text-align:left;
+	width:13%;
+}
+/** for 修改bar背景*/
+.navbar-inverse{
+	background-color:#fff;
+	border-color:#edeeef;
+	border-bottom-width:2px;
+}
+/** add by liuqiang*/
+form label.error {
+	color:red;
+}
+
+.top_level_menu_icon {
+	float:left; 
+	display:inline; 
+	margin-top:3px;
+}
+
+.top_level_menu_text {
+	margin-left:5px;
+}
+
+.top_level_menu_direct {
+	font-size:8px; 
+	float:right; 
+	display:inline;
+	margin-top:6px;
+}
+
+.navbar-logo{
+	height: 48px;
+    padding: 1px 1px;
+    float:left;
+}
+
+/** 修改topbar a标签鼠标反馈字体颜色 */
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+    color: #777;
+    background-color: transparent;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus {
+    color: #777;
+    background-color: transparent;
+}
+
+.date_picker {
+	margin-left:5px;
+	margin-right:5px;
+}
+
+.input_form > .row {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
+.expsense_split {
+	padding-top: 9px;
+    margin: 40px 0 20px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    text-align:right;
+}
+
+.expsense_approved_split {
+	padding-top: 5px;
+    border-top: 1px solid #eee;
+    text-align:left;
+}
+
+.top_tip_bar{
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+.top_tip{
+	margin-right:10px;
+	color:#23b7e5;
+}

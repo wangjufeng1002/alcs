@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>工作台</title>
+
+    <!-- Bootstrap -->
+    <link href="/common/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/common/css/dashboard.css" rel="stylesheet">
+    <script src="/common/js/jquery-3.3.1.min.js"></script>
+    <script src="/common/js/jquery.dataTables.min.js"></script>
+    <script src="/common/js/bootstrap.min.js"></script>
+    <script src="/common/js/bootstrap.js"></script>
+    <script src="/common/js/bootstrap-table.js"></script>
+    <script src="/common/js/bootstrap-table-zh-CN.js"></script>
+    <script src="/common/js/dataTables.bootstrap.min.js"></script>
+    <style>
+        .container-fluid {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: 110px;
+            margin-left: 310px;
+        }
+        .panel-body {
+            padding: 15px;
+            margin-top: 100px;
+            border: 1px solid #cccccc;
+            padding-top: 10px !important;
+        }
+        .navbar-header {
+            position: absolute;
+            left: 10px;
+        }
+    </style>
+
+</head>
+<body style="font-family: 微软雅黑;">
+<div class="m_title"></div>
+
+<div class="container-fluid">
+    <div class="row content-container">
+        <div class="m_left"></div>
+        <div class="container-fluid">
+            <div class="side-body padding-top panel panel-body" style="padding-top: 4px">
+                <div class="right">
+                    <table id="listTable">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--模态框 -->
+<div class="modal fade" id="modal_detail">
+    <div class="modal-dialog" style="width:1000px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">比赛详情</h4>
+            </div>
+            <div class="modal-body" style="font-size: 20px">
+                题目:<p id="title" style="text-indent: 2em"></p>
+                介绍:<p id="summary" style="text-indent: 2em"></p>
+                竞赛时间:<p id="startEndTime" style="text-indent: 2em"></p>
+                报名时间:<p id="enrollTime" style="text-indent: 2em"></p>
+                评分时间：<p id="scoreTime" style="text-indent: 2em"></p>
+                作品提交截止时间：<p id="workEndTime" style="text-indent: 2em"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="m_foot"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".m_title").load("/common/title.html");
+        $(".m_left").load("/common/left.html");
+        $(".m_foot").load("/common/foot.html");
+        //1.初始化Table
+        debugger
+        var oTable = new TableInit();
+        oTable.Init();
+
+    });
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#listTable').bootstrapTable({
+                url: '/client/json/contest/list',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 5,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [
+                    {
+                        field: 'cid',
+                        title: '编号',
+                        width: "10%"
+
+                    }, {
+                        field: 'title',
+                        title: '题目',
+                        width: "15%"
+                    }, {
+                        field: 'summary',
+                        title: '简介',
+                        width: "25%"
+                    },
+                    {
+                        field: 'startEndTime',
+                        title: '竞赛时间',
+                        width: "20%"
+
+                    },
+                    {
+                        field: 'enrollTime',
+                        title: '报名时间',
+                        width: "20%"
+                    },
+                    {
+                        field: 'nEnroll',
+                        title: '操作',
+                        width: "10%",
+                        formatter: operateFormatter
+                    }
+                    ,
+                    {
+                        field: 'scoreTime',
+                        title: '评分时间',
+                        visible: false
+                    },
+                    {
+                        field: 'workEndTime',
+                        title: '作品提交截止时间',
+                        visible: false
+                    }
+
+                ],//  visible: false,
+                //双击触发的事件，当双击就会获取row，row就是该整行的内容，其中"row.playerName"中"playerName"是data-field定义的字段，（如果在js中定义，就是field定义的字段,）可以通过该方法获取该行所有列的值
+                // onDblClickRow: function (row) {
+                //     console.log("click:" + row.playerName)
+                // }
+                // 如果想单击获取row，把onDblClickRow改为onClickRow，如下
+                onClickRow: function (row) {
+                    disPlay(row);
+                }
+
+            });
+        };
+
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                id: 10,
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+
+    function operateFormatter(value, row, index) {
+        if (value == "0") {
+            return '<button type="button" class="RoleOfdelete btn btn-primary  btn-sm" disabled="disabled">报名</button>';
+
+        }
+        if (value == "1") {
+            return '<button type="button" class="RoleOfdelete btn btn-primary  btn-sm" >报名</button>';
+
+        }
+        if (value == "2") {
+            return "比赛已结束";
+
+        }
+        if (value == "3") {
+            return "比赛未开始";
+        }
+
+
+    }
+
+    function disPlay(row) {
+        $("#title").text(row.title);
+        $("#summary").text(row.summary);
+        $("#startEndTime").text(row.startEndTime);
+        $("#enrollTime").text(row.enrollTime);
+        $("#scoreTime").text(row.scoreTime);
+        $("#workEndTime").text(row.workEndTime);
+        $("#modal_detail").modal("show");
+    }
+
+    /* var ButtonInit = function () {
+         var oInit = new Object();
+         var postdata = {};
+
+         oInit.Init = function () {
+             //初始化页面上面的按钮事件
+         };
+
+         return oInit;
+     };*/
+
+</script>
+</body>
+</html>
