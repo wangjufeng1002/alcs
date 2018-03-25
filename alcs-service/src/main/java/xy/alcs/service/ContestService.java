@@ -17,17 +17,16 @@ import java.util.Map;
 public interface ContestService {
     /**
      *
-     * @param page   当前页
-     * @param rows   每页的数据
+     * @param queryMap
      * @return
      */
-    public List<ContestDto> listContest(Integer page, Integer rows);
+    public List<ContestDto> listContest(Map<String,Object> queryMap);
 
     /**
      * 统计总数
      * @return
      */
-    public Integer  countTotal();
+    public Integer  countTotal(Map<String,Object> queryMap);
 
     /**
      * 根据参数查询我的赛事

@@ -70,12 +70,21 @@
 <div id="center" data-options="region:'center',title:''"   >
     <div class="easyui-tabs" data-options="fit:true,border:false">
         <div title="竞赛管理">
-            <table id="contestList" toolbar="#toolbar"  style="width:600px;height:200px"></table>
+            <table id="contestList" toolbar="#toolbar" url="/man/json/contest/list" pagination="true" style="width:600px;height:200px"></table>
         </div>
     </div>
     <div id="toolbar">
+
         <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">New</a>
         <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">Destroy</a>
+
+
+        <span>竞赛 ID:</span>
+        <input id="conId" style="line-height:26px;border:1px solid #ccc">
+
+        <span>竞赛 题目:</span>
+        <input id="conTitle" style="line-height:26px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
     </div>
 </div>
 
@@ -234,7 +243,16 @@
         });
 
     }
+    //查询
+    function doSearch() {
+        var cId  = $("#conId").val();
+        var cTitle = $("#conTitle").val();
+        var searchParam = {"cid":cId,"title":cTitle};
 
+        $('#contestList').datagrid('load',{
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
 </script>
 <script type="text/javascript">
     $(function(){
@@ -280,7 +298,7 @@
                 if("竞赛信息管理" == node.text){
                     window.location.href="/man/html/admin/contestList";
                 }
-                if("分配评委"){
+                if("分配评委" == node.text){
                     window.location.href="/man/html/admin/allotRater";
                 }
                 alert(node.text);

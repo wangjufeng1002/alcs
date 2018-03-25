@@ -29,11 +29,11 @@ public class MyContestDetailDto {
 
     private Integer status;        //状态 0,1 (0：已结束  ；  1：正在进行)
 
-    private String teamId ;           //小组id,唯一；
+    private String teamId ;        //小组id,唯一；
 
     private Integer workcommit;       //作品是否提交
 
-    private Float score;           //分数
+    private Float score;             //分数
 
     private List<String>  teammate;  //队友列表   ； 若是个人赛，则只显示本人学号
 

@@ -1,9 +1,12 @@
 package xy.alcs.dto;
 
+import xy.alcs.domain.Rater;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author:ju
@@ -11,9 +14,9 @@ import java.util.Date;
  * @Date:Create in 0:29 2017-12-07
  */
 public class ContestDto {
-    private String cid;
+    private Long cid;
     private String title;
-    private String summary;      //简介
+    private String summary;        //简介
 
     private Date endDate;          //比赛结束时间（数据库字段）
 
@@ -26,8 +29,18 @@ public class ContestDto {
     private Date worksEndDate;     //作品提交结束时间
 
     private Date scoreStartDate;   //评分开始时间
+
     private Date scoreEndDate;     //评分结束时间
-    private Integer status;        //状态
+
+    private Integer status;           //状态
+
+    private String extendJson;         //扩展字段
+
+    private Integer raterSize = 0;     //分配了几个评委
+
+    private List<RaterDto> raters;     //评委集合
+
+
 
     //显示属性
 
@@ -56,12 +69,11 @@ public class ContestDto {
         this.scoreTime = scoreTime;
     }
 
-
-    public String getCid() {
+    public Long getCid() {
         return cid;
     }
 
-    public void setCid(String cid) {
+    public void setCid(Long cid) {
         this.cid = cid;
     }
 
@@ -213,4 +225,28 @@ public class ContestDto {
         this.workEndTime = workEndTime;
     }
 
+
+    public String getExtendJson() {
+        return extendJson;
+    }
+
+    public void setExtendJson(String extendJson) {
+        this.extendJson = extendJson;
+    }
+
+    public Integer getRaterSize() {
+        return raterSize;
+    }
+
+    public void setRaterSize(Integer raterSize) {
+        this.raterSize = raterSize;
+    }
+
+    public List<RaterDto> getRaters() {
+        return raters;
+    }
+
+    public void setRaters(List<RaterDto> raters) {
+        this.raters = raters;
+    }
 }

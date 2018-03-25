@@ -17,7 +17,9 @@ import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.MyContestDetailDto;
 import xy.alcs.service.ContestService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:ju
@@ -56,14 +58,22 @@ public class ContestJson {
      */
     @RequestMapping(value = "/contest/list")
     @ResponseBody
-    public PageData<ContestDto> listContest(Integer page, Integer rows) {
+    public PageData<ContestDto> listContest(Integer page, Integer rows,String queryParam) {
+        Map<String,Object> map = new HashMap<>();
         if (page == null || page.intValue() <= 0) {
             page = Integer.parseInt(PAGENOW);
         }
         if (rows == null || rows.intValue() < 0) {
             rows = Integer.parseInt(PAGELIMIT);
         }
-        List<ContestDto> contests = contestService.listContest(page, rows);
+        if(!StringUtils.isEmpty(queryParam)){
+             map = JSONObject.parseObject(queryParam, Map.class);
+        }
+
+        map.put("page",page);
+        map.put("rows",rows);
+
+        List<ContestDto> contests = contestService.listContest(map);
         Integer total = contestService.countTotal();
         PageData<ContestDto> pageData = new PageData();
         pageData.setRows(contests);
@@ -126,15 +136,14 @@ public class ContestJson {
 
         try {
             contestId = Integer.parseInt(cId);
-        } catch (NumberFormatException e) {
+            MyContestDetailDto myContestDetail = contestService.getMyContestDetail(sId, contestId);
+            return Result.buildSuccessResult(myContestDetail);
+        } catch (Exception e) {
             logger.error("ContestJson.getMyConetestDetail 参数异常，cId格式错误，error{}",e);
             return  Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
         }
 
-        MyContestDetailDto myContestDetail = contestService.getMyContestDetail(sId, contestId);
-
-        return Result.buildSuccessResult(myContestDetail);
-    }
+}
 
 
 }

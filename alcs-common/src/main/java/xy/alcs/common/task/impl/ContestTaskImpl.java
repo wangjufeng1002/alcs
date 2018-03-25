@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import xy.alcs.common.task.ContestTask;
 import xy.alcs.dao.ContestMapper;
 
+import javax.annotation.Resource;
+
 /**
  * @Author:ju
  * @Description:  定时任务，每天跟新
@@ -18,7 +20,7 @@ public class ContestTaskImpl implements ContestTask {
 
     Logger logger = LoggerFactory.getLogger(ContestTaskImpl.class);
 
-    @Autowired
+    @Resource
     private ContestMapper contestMapper;
 
     /**

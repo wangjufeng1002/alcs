@@ -35,10 +35,10 @@ public interface ContestMapper {
 
     ///////////////////////////
     //分页查询
-    List<ContestDto> selectContest(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<ContestDto> selectContest(Map<String,Object> queryMap);
 
     //查询总记录数
-    Integer countTotal();
+    Integer countTotal(Map<String,Object> queryMap);
 
 
     //根据参数进行查询我的竞赛

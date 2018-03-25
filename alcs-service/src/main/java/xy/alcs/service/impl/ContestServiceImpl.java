@@ -1,6 +1,8 @@
 package xy.alcs.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import xy.alcs.domain.StudentCompetitionExample;
 import xy.alcs.dto.ContestDateDto;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.MyContestDetailDto;
+import xy.alcs.dto.RaterDto;
 import xy.alcs.manager.ContestManager;
 import xy.alcs.service.ContestService;
 
@@ -36,7 +39,7 @@ import java.util.Map;
  */
 @Service("contestService")
 public class ContestServiceImpl implements ContestService {
-    private static  Logger logger = LoggerFactory.getLogger(ContestServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ContestServiceImpl.class);
 
 
     @Resource
@@ -63,6 +66,7 @@ public class ContestServiceImpl implements ContestService {
         queryParamMap.put("status", status);
         return contestMapper.selectMyContestByParam(queryParamMap);
     }
+
     @Override
     public Integer countMyContestByParam(String sId, Integer offset, Integer limit, Integer status) {
         Map queryParamMap = new HashMap();
@@ -74,25 +78,37 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public List<ContestDto> listContest(Integer page, Integer rows) {
-        if(page == null || page <=0){
-            page = Integer.parseInt(this.pageNow);
+    public List<ContestDto> listContest(Map<String, Object> queryMap) {
+
+        if (MapUtils.isEmpty(queryMap)) {
+            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
         }
-        if(rows == null || rows <=0){
-            rows = Integer.parseInt(this.rows);
+        Map map = this.buildQueryMap(queryMap);
+        List<ContestDto> contests = contestMapper.selectContest(map);
+
+        for (ContestDto dto : contests) {
+            if (! StringUtils.isEmpty(dto.getExtendJson())) {
+                dto.setRaters(JSONObject.parseArray(dto.getExtendJson(), RaterDto.class));
+                dto.setRaterSize(dto.getRaters().size());
+            }else{
+                dto.setRaterSize(0);
+                dto.setRaters(null);
+            }
         }
-        Integer offset = (page - 1) * rows;
-        List<ContestDto> contests = contestMapper.selectContest(offset, rows);
         return contests;
     }
 
     @Override
-    public Integer countTotal() {
-        return contestMapper.countTotal();
+    public Integer countTotal(Map<String, Object> queryMap) {
+        if (MapUtils.isEmpty(queryMap)) {
+            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
+        }
+        Map map = this.buildQueryMap(queryMap);
+        return contestMapper.countTotal(map);
     }
 
     @Override
-    public  MyContestDetailDto getMyContestDetail(String sId, Integer contestId){
+    public MyContestDetailDto getMyContestDetail(String sId, Integer contestId) {
         MyContestDetailDto myContestDetailDto = studentCompetitionMapper.selectContestBySidAndCid(sId, contestId);
         String teamId = myContestDetailDto.getTeamId();
 
@@ -108,16 +124,16 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public  Result addOrUpdateContest(Contest contest){
+    public Result addOrUpdateContest(Contest contest) {
         try {
-            if(contest.getCid() == null){
+            if (contest.getCid() == null) {
                 contestMapper.insert(contest);
-            }else{
+            } else {
                 contestMapper.updateByPrimaryKey(contest);
             }
 
         } catch (Exception e) {
-            logger.error("#ContestServiceImpl addContest hadppend exception,error:{}" ,e);
+            logger.error("#ContestServiceImpl addContest hadppend exception,error:{}", e);
             e.printStackTrace();
             throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
         }
@@ -126,7 +142,7 @@ public class ContestServiceImpl implements ContestService {
 
     @Override
     public Contest changeContestDateFormat(Contest contest, ContestDateDto contestDateDto) {
-        SimpleDateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             contest.setStartDate(dateFormat.parse(contestDateDto.getStartDateStr()));
             contest.setEndDate(dateFormat.parse(contestDateDto.getEndDateStr()));
@@ -136,18 +152,51 @@ public class ContestServiceImpl implements ContestService {
             contest.setScoreEndDate(dateFormat.parse(contestDateDto.getScoreEndDateStr()));
             contest.setWorksEndDate(dateFormat.parse(contestDateDto.getWorksEndDateStr()));
         } catch (Exception e) {
-           logger.error("#ContestServiceImpl changeContestDateFormat hadppend exception,error:{}" ,e);
-           throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
+            logger.error("#ContestServiceImpl changeContestDateFormat hadppend exception,error:{}", e);
+            throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
         }
         return contest;
     }
 
     @Override
     public Boolean delContestByIds(List<Long> cIds) {
-        if(CollectionUtils.isEmpty(cIds)){
+        if (CollectionUtils.isEmpty(cIds)) {
             logger.error("#ContestServiceImpl delContestByIds param  cIds is empty");
             throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
         }
         return contestManager.batchDelete(cIds);
+    }
+
+
+    private Map buildQueryMap(Map<String, Object> queryMap) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        for (Map.Entry item : queryMap.entrySet()) {
+            if (item.getKey().toString().equals("page")) {
+                if (item.getValue() == null) {
+                    resultMap.put("page", Integer.parseInt(this.pageNow));
+                }
+                resultMap.put("page", queryMap.get("page"));
+            } else if (item.getKey().toString().equals("rows")) {
+                if (item.getValue() == null) {
+                    resultMap.put("limit", Integer.parseInt(this.rows));
+                }
+                resultMap.put("limit", queryMap.get("rows"));
+            } else if (item.getKey().toString().equals("title")) {
+                if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
+                    resultMap.put("title", null);
+                }
+            } else if (item.getKey().toString().equals("cid")) {
+                if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
+                    resultMap.put("cid", null);
+                } else {
+                    resultMap.put("cid", Integer.parseInt((String) item.getValue()));
+                }
+            }
+        }
+        Integer offset = ((Integer) resultMap.get("page") - 1) * (Integer) queryMap.get("rows");
+        resultMap.put("offset", offset);
+        return resultMap;
+
     }
 }

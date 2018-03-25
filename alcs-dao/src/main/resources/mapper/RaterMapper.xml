@@ -7,6 +7,11 @@
     <result column="rat_account" property="ratAccount" jdbcType="VARCHAR" />
     <result column="rat_password" property="ratPassword" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="DtoResultMap" type="xy.alcs.dto.RaterDto">
+    <id column="rid" property="rid" jdbcType="INTEGER" />
+    <result column="rat_name" property="ratName" jdbcType="VARCHAR" />
+    <result column="rat_account" property="ratAccount" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -193,4 +198,51 @@
       rat_password = #{ratPassword,jdbcType=VARCHAR}
     where rid = #{rid,jdbcType=INTEGER}
   </update>
+
+  <sql id="dto_columns">
+     rid,rat_name,rat_account
+  </sql>
+  <sql id="limit_select">
+    LIMIT #{offset},#{limit};
+  </sql>
+
+  <select id="selectRaterByParam" parameterType="java.util.Map" resultMap="DtoResultMap">
+    SELECT
+    <include refid="dto_columns"/>
+    FROM rater
+    WHERE 1 = 1
+    <if test="ratName != null">
+      AND rat_name LIKE %#{ratName}%
+    </if>
+    <if test="rid !=null">
+      AND rid = #{rid}
+    </if>
+    <if test="rids != null">
+      AND rid not in
+      <foreach collection="rids" index="index" item="rid" separator=","  open="(" close=")">
+          #{rid}
+      </foreach>
+    </if>
+
+
+    <include refid="limit_select"/>
+  </select>
+  <select id="countTotalByParam" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT
+      count(*)
+    FROM rater
+    WHERE 1 = 1
+    <if test="ratName != null">
+      AND rat_name LIKE %#{ratName}%
+    </if>
+    <if test="rid !=null">
+      AND rid = #{rid}
+    </if>
+    <if test="rids != null">
+    AND rid not in
+      <foreach collection="rids" index="index" item="rid" separator=","  open="(" close=")">
+        #{rid}
+      </foreach>
+    </if>
+  </select>
 </mapper>

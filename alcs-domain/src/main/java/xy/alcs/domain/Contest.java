@@ -27,6 +27,9 @@ public class Contest {
 
     private Integer status;
 
+    private String extendJson;
+
+
     public Long getCid() {
         return cid;
     }
@@ -121,5 +124,13 @@ public class Contest {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getExtendJson() {
+        return extendJson;
+    }
+
+    public void setExtendJson(String extendJson) {
+        this.extendJson = extendJson;
     }
 }

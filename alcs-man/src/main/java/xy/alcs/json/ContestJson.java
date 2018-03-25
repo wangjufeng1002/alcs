@@ -18,9 +18,7 @@ import xy.alcs.dto.ContestDateDto;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.service.ContestService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author:ju
@@ -42,6 +40,9 @@ public class ContestJson {
     @Value("${page.offset}")
     private String PAGEOFFSET;
 
+    @Value("${page.now}")
+    private String PAGENOW;
+
 
     @Autowired
     private ContestService contestService;
@@ -53,18 +54,25 @@ public class ContestJson {
      */
     @RequestMapping(value = "/contest/list")
     @ResponseBody
-    public PageData<ContestDto> listContest(Integer page, Integer rows) {
+    public PageData<ContestDto> listContest(Integer page, Integer rows,String queryParam) {
+        Map<String,Object> map = new HashMap<>();
         if (rows == null || rows.intValue() <= 0) {
             rows = Integer.parseInt(PAGELIMIT);
         }
         if (page == null || page.intValue() < 0) {
-            page = Integer.parseInt(PAGEOFFSET);
+            page = Integer.parseInt(PAGENOW);
         }
-        List<ContestDto> contests = contestService.listContest(page, rows);
-        Integer total = contestService.countTotal();
+        if(!StringUtils.isEmpty(queryParam)){
+            map = JSONObject.parseObject(queryParam,Map.class);
+        }
+        map.put("rows",rows);
+        map.put("page",page);
+        List<ContestDto> contests = contestService.listContest(map);
+        Integer total = contestService.countTotal(map);
         PageData<ContestDto> pageData = new PageData();
         pageData.setRows(contests);
         pageData.setTotal(total);
+        pageData.setPage(page);
         return pageData;
 
     }
