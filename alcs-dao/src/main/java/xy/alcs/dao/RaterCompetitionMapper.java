@@ -1,6 +1,8 @@
 package xy.alcs.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import xy.alcs.domain.RaterCompetition;
 import xy.alcs.domain.RaterCompetitionExample;
@@ -27,4 +29,8 @@ public interface RaterCompetitionMapper {
     int updateByPrimaryKeySelective(RaterCompetition record);
 
     int updateByPrimaryKey(RaterCompetition record);
+
+    List<Integer> selectAllotedRaterId(@Param("contestId") Long contestId);
+
+    int insertRaterForContest(Map insertMap);
 }

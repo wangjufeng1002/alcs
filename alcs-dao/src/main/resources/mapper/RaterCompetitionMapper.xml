@@ -178,4 +178,15 @@
       contest_id = #{contestId,jdbcType=BIGINT}
     where rc_id = #{rcId,jdbcType=BIGINT}
   </update>
+
+  <select id="selectAllotedRaterId" parameterType="java.lang.Long" resultType="java.lang.Integer">
+      SELECT rater_id from rater_competition  where  contest_id = #{contestId,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insertRaterForContest" parameterType="java.util.Map">
+     <foreach collection="rids" item="rid" open="" close="" separator=";">
+        INSERT INTO rater_competition(rater_id,contest_id) VALUES (#{rid},#{cid})
+     </foreach>
+
+  </insert>
 </mapper>

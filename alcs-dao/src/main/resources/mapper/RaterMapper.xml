@@ -203,7 +203,9 @@
      rid,rat_name,rat_account
   </sql>
   <sql id="limit_select">
-    LIMIT #{offset},#{limit};
+    <if test="offset !=null and limit != null">
+      LIMIT #{offset},#{limit};
+    </if>
   </sql>
 
   <select id="selectRaterByParam" parameterType="java.util.Map" resultMap="DtoResultMap">
@@ -223,8 +225,6 @@
           #{rid}
       </foreach>
     </if>
-
-
     <include refid="limit_select"/>
   </select>
   <select id="countTotalByParam" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -239,7 +239,7 @@
       AND rid = #{rid}
     </if>
     <if test="rids != null">
-    AND rid not in
+      AND rid not in
       <foreach collection="rids" index="index" item="rid" separator=","  open="(" close=")">
         #{rid}
       </foreach>

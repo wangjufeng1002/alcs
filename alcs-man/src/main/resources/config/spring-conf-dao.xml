@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="GBK"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
@@ -16,38 +16,38 @@
         <property name="url" value="${jdbcUrl}"/>
         <property name="username" value="${user}"/>
         <property name="password" value="${password}"/>
-        <!--   ³õÊ¼»¯Á¬½ÓÊýÁ¿   -->
+        <!--   åˆå§‹åŒ–è¿žæŽ¥æ•°é‡   -->
         <property name="initialSize" value="15"/>
-        <!--   ×î´ó»î¶¯Á¬½ÓÊýÁ¿   -->
+        <!--   æœ€å¤§æ´»åŠ¨è¿žæŽ¥æ•°é‡   -->
         <property name="maxTotal" value="30"/>
-        <!--   ×î´ó¿ÕÏÐÁ¬½ÓÊýÁ¿   -->
+        <!--   æœ€å¤§ç©ºé—²è¿žæŽ¥æ•°é‡   -->
         <property name="maxIdle" value="15"/>
-        <!--   ×îÐ¡¿ÕÏÐÁ¬½ÓÊýÁ¿   -->
+        <!--   æœ€å°ç©ºé—²è¿žæŽ¥æ•°é‡   -->
         <property name="minIdle" value="5"/>
-        <!--   »ñÈ¡Á¬½ÓÊ±µÈ´ýÊ±¼ä£¬³¬³ö½«Å×Òì³££¬µ¥Î»ºÁÃë   -->
+        <!--   èŽ·å–è¿žæŽ¥æ—¶ç­‰å¾…æ—¶é—´ï¼Œè¶…å‡ºå°†æŠ›å¼‚å¸¸ï¼Œå•ä½æ¯«ç§’   -->
         <property name="maxWaitMillis" value="10000"/>
-        <!--   ¿ÕÏÐÁ¬½Ó±»»ØÊÕÊ±¼ä£¬»ØÊÕ¿ÕÏÐÁ¬½ÓÖÁminIdleÖ¸¶¨ÊýÁ¿£¬µ¥Î»ºÁÃë   -->
+        <!--   ç©ºé—²è¿žæŽ¥è¢«å›žæ”¶æ—¶é—´ï¼Œå›žæ”¶ç©ºé—²è¿žæŽ¥è‡³minIdleæŒ‡å®šæ•°é‡ï¼Œå•ä½æ¯«ç§’   -->
         <property name="minEvictableIdleTimeMillis" value="600000"/>
-        <!--   ¼ì²é¿ÕÏÐÁ¬½ÓÊÇ·ñ¿É±»»ØÊÕ£¬Èç¹ûÐ¡ÓÚµÈÓÚ0£¬²»»áÆô¶¯¼ì²éÏß³Ì£¬Ä¬ÈÏ-1£¬µ¥Î»ºÁÃë   -->
+        <!--   æ£€æŸ¥ç©ºé—²è¿žæŽ¥æ˜¯å¦å¯è¢«å›žæ”¶ï¼Œå¦‚æžœå°äºŽç­‰äºŽ0ï¼Œä¸ä¼šå¯åŠ¨æ£€æŸ¥çº¿ç¨‹ï¼Œé»˜è®¤-1ï¼Œå•ä½æ¯«ç§’   -->
         <property name="timeBetweenEvictionRunsMillis" value="600000"/>
-        <!--   Ð¹Â¶µÄÁ¬½Ó¿ÉÒÔ±»É¾³ýµÄ³¬Ê±Öµ,   µ¥Î»Ãë   -->
+        <!--   æ³„éœ²çš„è¿žæŽ¥å¯ä»¥è¢«åˆ é™¤çš„è¶…æ—¶å€¼,   å•ä½ç§’   -->
         <property name="removeAbandonedTimeout" value="180"/>
     </bean>
 
-    <!-- mybatis ÉèÖÃ -->
+    <!-- mybatis è®¾ç½® -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
         <property name="configLocation" value="classpath:config/mybatis-config.xml" />
     </bean>
 
-    <!-- ÊÂÎñ -->
-    <!--³ÌÐòÖÐÍ³Ò»Ê¹ÓÃ±àÂëÊ½ÊÂÎñ -->
+    <!-- äº‹åŠ¡ -->
+    <!--ç¨‹åºä¸­ç»Ÿä¸€ä½¿ç”¨ç¼–ç å¼äº‹åŠ¡ -->
     <bean name="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
-    <!--ÊÂÎñ½áÊø -->
+    <!--äº‹åŠ¡ç»“æŸ -->
 
 
 

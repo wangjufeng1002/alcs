@@ -141,7 +141,9 @@
         <div title="评委列表">
             <table id="raterList"  style="width:600px;height:200px"></table>
         </div>
+
     </div>
+    <p>sdsd</p>
 </div>
 <div id="rater-buttons" style="display: none;overflow: hidden;">
     <a href="javascript:void(0)" id="okButton" class="easyui-linkbutton" iconCls="icon-ok"
@@ -153,14 +155,46 @@
 
 </body>
 <script>
+    //查询
+    function doSearch() {
+        var cId  = $("#conId").val();
+        var cTitle = $("#conTitle").val();
+        var searchParam = {"cid":cId,"title":cTitle};
+
+        $('#contestList').datagrid('load',{
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
     //关闭对话框
     function closeModel() {
         $("#editContestModel").dialog("close");
         $("#raterListModel").dialog("close");
     }
-
-    function allotRater() {
+    function saveRater() {
+        var selected = $("#raterList").datagrid('getChecked');
+        var rids = [];
+        for (var row in  selected) {
+            rids.push(selected[row].rid);
+        }
         debugger
+        $.ajax({
+            url:"/man/json/rater/addRaterForContest",
+            data:{"rids":JSON.stringify(rids),"cid":$("#rater_cid").val()},
+            success:function (result) {
+                if(result.code == "0000"){
+                    allotRater();
+                }else{
+
+                }
+            },
+            error:function () {
+                $.messager.alert('Info', "系统出小差啦，请稍后重试", 'info');
+            }
+        });
+
+    }
+    function allotRater() {
+
         var selected = $("#contestList").datagrid('getChecked');
         var cids = [];
         for (var row in  selected) {
@@ -175,7 +209,6 @@
             return;
         }
         $("#rater_cid").val(cids[0]);
-
         $('#raterList').datagrid({
             url: '/man/json/rater/listByCid?'+"cid="+cids[0],
             iconCls: 'icon-save',
@@ -189,7 +222,8 @@
             columns: [[
                 {   field:"",
                     title: '编号',
-                    checkbox:true
+                    checkbox:true,
+                    disabled:true
                 },
                 {
                     field: 'rid',
@@ -257,6 +291,12 @@
                     window.location.href = "/man/html/admin/contestList";
                 }
                 if ("分配评委" == node.text) {
+                    window.location.href = "/man/html/admin/allotRater";
+                }
+                if ("分数统计" == node.text) {
+                    window.location.href = "/man/html/admin/allotRater";
+                }
+                if ("作品管理" == node.text) {
                     window.location.href = "/man/html/admin/allotRater";
                 }
                 alert(node.text);
@@ -341,7 +381,6 @@
     }
 
     function raterList(val, row) {
-        debugger
         var html = ['<select>','<option selected="selected">评委列表</option>'];
         for (var index in val) {
             var name = val[index].ratName;

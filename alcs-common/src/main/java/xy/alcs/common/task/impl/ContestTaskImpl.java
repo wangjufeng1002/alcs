@@ -32,7 +32,8 @@ public class ContestTaskImpl implements ContestTask {
     public void updateContestStatus() {
         logger.info("===================定时任务开启==================");
         try {
-            contestMapper.updateContestStatus();
+            /*contestMapper.updateContestStatus();*/
+            logger.info("定时任务进行中");
         } catch (Exception e) {
            logger.error("定时任务出错：" + e);
         }

@@ -25,7 +25,7 @@ public class ChangeBeanImpl implements ChangeBean {
         Calendar tempCalendar = Calendar.getInstance();
         for(Contest contest : contests){
             dto = new ContestDto();
-            dto.setCid(String.valueOf(contest.getCid()));
+            dto.setCid(contest.getCid());
             dto.setSummary(contest.getSummary());
             dto.setTitle(contest.getTitle());
 

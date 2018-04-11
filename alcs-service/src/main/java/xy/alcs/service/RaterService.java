@@ -16,18 +16,31 @@ public interface RaterService {
     Boolean addRater(Rater rater);
 
     /**
-     *
+     * 分页查询评委列表
      * @param queryMap
      * @return
      */
-    public List<RaterDto> listRater(Map<String,Object> queryMap);
+     List<RaterDto> listRater(Map<String,Object> queryMap,Long cid);
 
     /**
      * 统计总数
      * @return
      */
-    public Integer  countRater(Map<String,Object> queryMap);
+     Integer  countRater(Map<String,Object> queryMap,Long cid);
 
 
+    /**
+     * 查询比赛可分配的评委
+     * @return
+     */
+     List<RaterDto> queryRaterList(Long cid);
+
+    /**
+     * 分配评委
+     * @param cid  比赛id
+     * @param rids 评委id
+     * @return
+     */
+     Boolean addRaterForContest(Long  cid,List<Integer> rids);
 
 }
