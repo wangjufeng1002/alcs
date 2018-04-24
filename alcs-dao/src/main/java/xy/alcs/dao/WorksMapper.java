@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import xy.alcs.domain.Works;
 import xy.alcs.domain.WorksExample;
+import xy.alcs.dto.CommentAvgDto;
 
 public interface WorksMapper {
     int countByExample(WorksExample example);
@@ -34,5 +35,6 @@ public interface WorksMapper {
 
     int updateByPrimaryKey(Works record);
 
-    List<Works> selectWorksBySIdAndCommitStatus(@Param("sId") String sId,@Param("commit") Integer commit);
+
+    int updateScoreAvg(@Param("scoreList") List<CommentAvgDto> scoreList);
 }

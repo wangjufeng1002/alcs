@@ -16,7 +16,7 @@
   </listener>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:applicationContext.xml</param-value>
+    <param-value>classpath:spring-config.xml</param-value>
   </context-param>
 
   <context-param>
@@ -57,7 +57,7 @@
   <!-- 配置 springMVC -->
   <!-- 视图专用mvc-->
   <servlet>
-    <servlet-name>client-html</servlet-name>
+    <servlet-name>client</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
@@ -65,11 +65,11 @@
     </init-param>
   </servlet>
   <servlet-mapping>
-    <servlet-name>client-html</servlet-name>
-    <url-pattern>/client/html/*</url-pattern>
+    <servlet-name>client</servlet-name>
+    <url-pattern>/client/*</url-pattern>
   </servlet-mapping>
   <!-- json专用mvc-->
-  <servlet>
+  <!--<servlet>
     <servlet-name>client-json</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
@@ -81,7 +81,7 @@
     <servlet-name>client-json</servlet-name>
     <url-pattern>/client/json/*</url-pattern>
   </servlet-mapping>
-
+-->
 
 
 </web-app>

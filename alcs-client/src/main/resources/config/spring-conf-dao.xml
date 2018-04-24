@@ -8,8 +8,8 @@
             http://www.springframework.org/schema/tx
            http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
            http://www.springframework.org/schema/aop
-           http://www.springframework.org/schema/aop/spring-aop.xsd "
-       default-autowire="byName">
+           http://www.springframework.org/schema/aop/spring-aop.xsd"
+    >
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close" >
         <property name="driverClassName" value="${driverClass}"/>
@@ -34,15 +34,12 @@
         <property name="removeAbandonedTimeout" value="180"/>
     </bean>
 
-    <bean id="servicenoSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <!-- mybatis 设置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
         <property name="configLocation" value="classpath:config/mybatis-config.xml" />
     </bean>
-    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.jd.mechanic.dao"/>
-        <property name="sqlSessionFactoryBeanName" value="servicenoSqlSessionFactory"/>
-    </bean>-->
 
     <!-- 事务 -->
     <!--程序中统一使用编码式事务 -->
@@ -50,9 +47,11 @@
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
+    <!--事务结束 -->
+
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage"  value="xy.alcs.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
-
 
 </beans>

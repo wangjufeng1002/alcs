@@ -53,4 +53,11 @@ public interface ContestMapper {
     //批量删除
     int deleteContest(@Param("cIds") List<Long> cIds);
 
+    /**
+     * 根据id进行查询
+     * @param cid 竞赛主键
+     * @return
+     */
+   ContestDto selectContestDtoById(@Param("cid")Integer cid);
+
 }

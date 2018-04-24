@@ -43,29 +43,66 @@
     </bean>
     <!-- 拦截器 -->
      <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+         <property name="interceptors">
+             <list>
+                 <bean class="xy.alcs.interceptors.LoginInterceptor">
 
+                 </bean>
+             </list>
+         </property>
      </bean>
 
     <!-- 适配器 -->
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
-
-
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <property name="messageConverters">
             <list>
-                <ref bean="jsonHttpMessageConverter"/>
+                <ref bean="mappingJacksonHttpMessageConverter" />
             </list>
         </property>
     </bean>
 
-    <bean id="jsonHttpMessageConverter"
+    <bean id="mappingJacksonHttpMessageConverter"
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-        <property name="supportedMediaTypes">
+        <property name = "supportedMediaTypes">
+            <!--<list>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="text"/>
+                    <constructor-arg index="1" value="plain"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="*"/>
+                    <constructor-arg index="1" value="*"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="text"/>
+                    <constructor-arg index="1" value="*"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+                <bean class="org.springframework.http.MediaType">
+                    <constructor-arg index="0" value="application"/>
+                    <constructor-arg index="1" value="json"/>
+                    <constructor-arg index="2" value="UTF-8"/>
+                </bean>
+            </list>-->
             <list>
                 <value>application/json;charset=UTF-8</value>
                 <value>text/html;charset=UTF-8</value>
             </list>
         </property>
+    </bean>
+
+
+    <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:properties/application.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
     </bean>
 
 
@@ -101,16 +138,6 @@
         </property>
     </bean>
  -->
-    <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations">
-            <list>
-                <value>classpath:properties/application.properties</value>
-            </list>
-        </property>
-    </bean>
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
-        <property name="properties" ref="configProperties" />
-    </bean>
 </beans>      
 
 

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import xy.alcs.domain.Student;
 import xy.alcs.domain.StudentExample;
 import xy.alcs.domain.StudentKey;
+import xy.alcs.dto.StudentDto;
 
 public interface StudentMapper {
     int countByExample(StudentExample example);
@@ -28,4 +29,6 @@ public interface StudentMapper {
     int updateByPrimaryKeySelective(Student record);
 
     int updateByPrimaryKey(Student record);
+
+    StudentDto selectStuInfo(@Param("stuId") String stuId);
 }

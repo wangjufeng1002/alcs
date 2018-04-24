@@ -4,14 +4,15 @@
   <resultMap id="BaseResultMap" type="xy.alcs.domain.Works" >
     <id column="w_id" property="wId" jdbcType="BIGINT" />
     <result column="team_id" property="teamId" jdbcType="VARCHAR" />
+    <result column="contest_id" property="contestId" jdbcType="BIGINT" />
     <result column="image" property="image" jdbcType="VARCHAR" />
     <result column="thesis" property="thesis" jdbcType="VARCHAR" />
     <result column="score" property="score" jdbcType="REAL" />
-    <result column="TIMESTAMP" property="timestamp" jdbcType="TIMESTAMP" />
-    <result column="COMMIT" property="commit" jdbcType="INTEGER" />
+    <result column="timestamp" property="timestamp" jdbcType="TIMESTAMP" />
+    <result column="commit" property="commit" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="xy.alcs.domain.Works" extends="BaseResultMap" >
-    <result column="CODE" property="code" jdbcType="LONGVARCHAR" />
+    <result column="code" property="code" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,10 +73,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    w_id, team_id, image, thesis, score, TIMESTAMP, COMMIT
+    w_id, team_id, contest_id, image, thesis, score, timestamp, commit
   </sql>
   <sql id="Blob_Column_List" >
-    CODE
+    code
   </sql>
   <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="xy.alcs.domain.WorksExample" >
     select
@@ -126,12 +127,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="xy.alcs.domain.Works" >
-    insert into works (w_id, team_id, image, 
-      thesis, score, TIMESTAMP, 
-      COMMIT, CODE)
-    values (#{wId,jdbcType=BIGINT}, #{teamId,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, 
-      #{thesis,jdbcType=VARCHAR}, #{score,jdbcType=REAL}, #{timestamp,jdbcType=TIMESTAMP}, 
-      #{commit,jdbcType=INTEGER}, #{code,jdbcType=LONGVARCHAR})
+    insert into works (w_id, team_id, contest_id, 
+      image, thesis, score, 
+      timestamp, commit, code
+      )
+    values (#{wId,jdbcType=BIGINT}, #{teamId,jdbcType=VARCHAR}, #{contestId,jdbcType=BIGINT}, 
+      #{image,jdbcType=VARCHAR}, #{thesis,jdbcType=VARCHAR}, #{score,jdbcType=REAL}, 
+      #{timestamp,jdbcType=TIMESTAMP}, #{commit,jdbcType=INTEGER}, #{code,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="xy.alcs.domain.Works" >
     insert into works
@@ -141,6 +144,9 @@
       </if>
       <if test="teamId != null" >
         team_id,
+      </if>
+      <if test="contestId != null" >
+        contest_id,
       </if>
       <if test="image != null" >
         image,
@@ -152,13 +158,13 @@
         score,
       </if>
       <if test="timestamp != null" >
-        TIMESTAMP,
+        timestamp,
       </if>
       <if test="commit != null" >
-        COMMIT,
+        commit,
       </if>
       <if test="code != null" >
-        CODE,
+        code,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -167,6 +173,9 @@
       </if>
       <if test="teamId != null" >
         #{teamId,jdbcType=VARCHAR},
+      </if>
+      <if test="contestId != null" >
+        #{contestId,jdbcType=BIGINT},
       </if>
       <if test="image != null" >
         #{image,jdbcType=VARCHAR},
@@ -203,6 +212,9 @@
       <if test="record.teamId != null" >
         team_id = #{record.teamId,jdbcType=VARCHAR},
       </if>
+      <if test="record.contestId != null" >
+        contest_id = #{record.contestId,jdbcType=BIGINT},
+      </if>
       <if test="record.image != null" >
         image = #{record.image,jdbcType=VARCHAR},
       </if>
@@ -213,13 +225,13 @@
         score = #{record.score,jdbcType=REAL},
       </if>
       <if test="record.timestamp != null" >
-        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
+        timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
       </if>
       <if test="record.commit != null" >
-        COMMIT = #{record.commit,jdbcType=INTEGER},
+        commit = #{record.commit,jdbcType=INTEGER},
       </if>
       <if test="record.code != null" >
-        CODE = #{record.code,jdbcType=LONGVARCHAR},
+        code = #{record.code,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -230,12 +242,13 @@
     update works
     set w_id = #{record.wId,jdbcType=BIGINT},
       team_id = #{record.teamId,jdbcType=VARCHAR},
+      contest_id = #{record.contestId,jdbcType=BIGINT},
       image = #{record.image,jdbcType=VARCHAR},
       thesis = #{record.thesis,jdbcType=VARCHAR},
       score = #{record.score,jdbcType=REAL},
-      TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
-      COMMIT = #{record.commit,jdbcType=INTEGER},
-      CODE = #{record.code,jdbcType=LONGVARCHAR}
+      timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
+      commit = #{record.commit,jdbcType=INTEGER},
+      code = #{record.code,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -244,11 +257,12 @@
     update works
     set w_id = #{record.wId,jdbcType=BIGINT},
       team_id = #{record.teamId,jdbcType=VARCHAR},
+      contest_id = #{record.contestId,jdbcType=BIGINT},
       image = #{record.image,jdbcType=VARCHAR},
       thesis = #{record.thesis,jdbcType=VARCHAR},
       score = #{record.score,jdbcType=REAL},
-      TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
-      COMMIT = #{record.commit,jdbcType=INTEGER}
+      timestamp = #{record.timestamp,jdbcType=TIMESTAMP},
+      commit = #{record.commit,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -258,6 +272,9 @@
     <set >
       <if test="teamId != null" >
         team_id = #{teamId,jdbcType=VARCHAR},
+      </if>
+      <if test="contestId != null" >
+        contest_id = #{contestId,jdbcType=BIGINT},
       </if>
       <if test="image != null" >
         image = #{image,jdbcType=VARCHAR},
@@ -269,13 +286,13 @@
         score = #{score,jdbcType=REAL},
       </if>
       <if test="timestamp != null" >
-        TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
+        timestamp = #{timestamp,jdbcType=TIMESTAMP},
       </if>
       <if test="commit != null" >
-        COMMIT = #{commit,jdbcType=INTEGER},
+        commit = #{commit,jdbcType=INTEGER},
       </if>
       <if test="code != null" >
-        CODE = #{code,jdbcType=LONGVARCHAR},
+        code = #{code,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where w_id = #{wId,jdbcType=BIGINT}
@@ -283,29 +300,34 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="xy.alcs.domain.Works" >
     update works
     set team_id = #{teamId,jdbcType=VARCHAR},
+      contest_id = #{contestId,jdbcType=BIGINT},
       image = #{image,jdbcType=VARCHAR},
       thesis = #{thesis,jdbcType=VARCHAR},
       score = #{score,jdbcType=REAL},
-      TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
-      COMMIT = #{commit,jdbcType=INTEGER},
-      CODE = #{code,jdbcType=LONGVARCHAR}
+      timestamp = #{timestamp,jdbcType=TIMESTAMP},
+      commit = #{commit,jdbcType=INTEGER},
+      code = #{code,jdbcType=LONGVARCHAR}
     where w_id = #{wId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="xy.alcs.domain.Works" >
     update works
     set team_id = #{teamId,jdbcType=VARCHAR},
+      contest_id = #{contestId,jdbcType=BIGINT},
       image = #{image,jdbcType=VARCHAR},
       thesis = #{thesis,jdbcType=VARCHAR},
       score = #{score,jdbcType=REAL},
-      TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
-      COMMIT = #{commit,jdbcType=INTEGER}
+      timestamp = #{timestamp,jdbcType=TIMESTAMP},
+      commit = #{commit,jdbcType=INTEGER}
     where w_id = #{wId,jdbcType=BIGINT}
   </update>
-   <!--根据学生Id查询报告 -->
-  <select id="selectWorksBySIdAndCommitStatus" resultMap="BaseResultMap">
-   SELECT * FROM works
-      LEFT JOIN student_competition ON works.team_id = student_competition.team_id
-    WHERE student_competition.student_id = #{sId}
-      AND works.COMMIT = #{commit}
-  </select>
+
+  <update id="updateScoreAvg" parameterType="xy.alcs.dto.CommentAvgDto">
+    <foreach collection="scoreList" item="score" separator=";" close="" open="">
+        UPDATE
+          set score = #{score.avg}
+        WHERE
+          contest_id = #{score.contestId,jdbcType=BIGINT},
+          AND team_id = #{score.teamId,jdbcType=VARCHAR},
+    </foreach>
+  </update>
 </mapper>

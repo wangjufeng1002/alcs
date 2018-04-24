@@ -7,6 +7,8 @@ public class Works {
 
     private String teamId;
 
+    private Long contestId;
+
     private String image;
 
     private String thesis;
@@ -33,6 +35,14 @@ public class Works {
 
     public void setTeamId(String teamId) {
         this.teamId = teamId == null ? null : teamId.trim();
+    }
+
+    public Long getContestId() {
+        return contestId;
+    }
+
+    public void setContestId(Long contestId) {
+        this.contestId = contestId;
     }
 
     public String getImage() {

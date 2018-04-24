@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xy.alcs.dao.CommentMapper">
+    <resultMap id="BaseResultMap" type="xy.alcs.domain.Comment">
+        <id column="com_id" property="comId" jdbcType="BIGINT"/>
+        <result column="work_id" property="workId" jdbcType="BIGINT"/>
+        <result column="rater_id" property="raterId" jdbcType="INTEGER"/>
+        <result column="score" property="score" jdbcType="REAL"/>
+        <result column="contest_id" property="contestId" jdbcType="BIGINT"/>
+        <result column="team_id" property="teamId" jdbcType="VARCHAR"/>
+        <result column="TIMESTAMP" property="timestamp" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="xy.alcs.domain.Comment" extends="BaseResultMap">
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <resultMap id="AvgResultMap" type="xy.alcs.dto.CommentAvgDto">
+        <result column="team_id" property="teamId" jdbcType="VARCHAR"/>
+        <result column="avg" property="avg" jdbcType="REAL"/>
+        <result column="size" property="size" jdbcType="INTEGER"/>
+        <result column="contest_id" property="contestId" jdbcType="BIGINT"/>
+        <result column="work_id" property="workId" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    com_id, work_id, rater_id, score, contest_id, team_id, TIMESTAMP
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="xy.alcs.domain.CommentExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from comment
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="xy.alcs.domain.CommentExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from comment
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from comment
+        where com_id = #{comId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from comment
+    where com_id = #{comId,jdbcType=BIGINT}
+  </delete>
+    <delete id="deleteByExample" parameterType="xy.alcs.domain.CommentExample">
+        delete from comment
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="xy.alcs.domain.Comment">
+    insert into comment (com_id, work_id, rater_id, 
+      score, contest_id, team_id, 
+      TIMESTAMP, content)
+    values (#{comId,jdbcType=BIGINT}, #{workId,jdbcType=BIGINT}, #{raterId,jdbcType=INTEGER}, 
+      #{score,jdbcType=REAL}, #{contestId,jdbcType=BIGINT}, #{teamId,jdbcType=VARCHAR}, 
+      #{timestamp,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="xy.alcs.domain.Comment">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="comId != null">
+                com_id,
+            </if>
+            <if test="workId != null">
+                work_id,
+            </if>
+            <if test="raterId != null">
+                rater_id,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="contestId != null">
+                contest_id,
+            </if>
+            <if test="teamId != null">
+                team_id,
+            </if>
+            <if test="timestamp != null">
+                TIMESTAMP,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="comId != null">
+                #{comId,jdbcType=BIGINT},
+            </if>
+            <if test="workId != null">
+                #{workId,jdbcType=BIGINT},
+            </if>
+            <if test="raterId != null">
+                #{raterId,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=REAL},
+            </if>
+            <if test="contestId != null">
+                #{contestId,jdbcType=BIGINT},
+            </if>
+            <if test="teamId != null">
+                #{teamId,jdbcType=VARCHAR},
+            </if>
+            <if test="timestamp != null">
+                #{timestamp,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="xy.alcs.domain.CommentExample" resultType="java.lang.Integer">
+        select count(*) from comment
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update comment
+        <set>
+            <if test="record.comId != null">
+                com_id = #{record.comId,jdbcType=BIGINT},
+            </if>
+            <if test="record.workId != null">
+                work_id = #{record.workId,jdbcType=BIGINT},
+            </if>
+            <if test="record.raterId != null">
+                rater_id = #{record.raterId,jdbcType=INTEGER},
+            </if>
+            <if test="record.score != null">
+                score = #{record.score,jdbcType=REAL},
+            </if>
+            <if test="record.contestId != null">
+                contest_id = #{record.contestId,jdbcType=BIGINT},
+            </if>
+            <if test="record.teamId != null">
+                team_id = #{record.teamId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.timestamp != null">
+                TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.content != null">
+                content = #{record.content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExampleWithBLOBs" parameterType="map">
+        update comment
+        set com_id = #{record.comId,jdbcType=BIGINT},
+        work_id = #{record.workId,jdbcType=BIGINT},
+        rater_id = #{record.raterId,jdbcType=INTEGER},
+        score = #{record.score,jdbcType=REAL},
+        contest_id = #{record.contestId,jdbcType=BIGINT},
+        team_id = #{record.teamId,jdbcType=VARCHAR},
+        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
+        content = #{record.content,jdbcType=LONGVARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update comment
+        set com_id = #{record.comId,jdbcType=BIGINT},
+        work_id = #{record.workId,jdbcType=BIGINT},
+        rater_id = #{record.raterId,jdbcType=INTEGER},
+        score = #{record.score,jdbcType=REAL},
+        contest_id = #{record.contestId,jdbcType=BIGINT},
+        team_id = #{record.teamId,jdbcType=VARCHAR},
+        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="xy.alcs.domain.Comment">
+        update comment
+        <set>
+            <if test="workId != null">
+                work_id = #{workId,jdbcType=BIGINT},
+            </if>
+            <if test="raterId != null">
+                rater_id = #{raterId,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=REAL},
+            </if>
+            <if test="contestId != null">
+                contest_id = #{contestId,jdbcType=BIGINT},
+            </if>
+            <if test="teamId != null">
+                team_id = #{teamId,jdbcType=VARCHAR},
+            </if>
+            <if test="timestamp != null">
+                TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where com_id = #{comId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="xy.alcs.domain.Comment">
+    update comment
+    set work_id = #{workId,jdbcType=BIGINT},
+      rater_id = #{raterId,jdbcType=INTEGER},
+      score = #{score,jdbcType=REAL},
+      contest_id = #{contestId,jdbcType=BIGINT},
+      team_id = #{teamId,jdbcType=VARCHAR},
+      TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where com_id = #{comId,jdbcType=BIGINT}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="xy.alcs.domain.Comment">
+    update comment
+    set work_id = #{workId,jdbcType=BIGINT},
+      rater_id = #{raterId,jdbcType=INTEGER},
+      score = #{score,jdbcType=REAL},
+      contest_id = #{contestId,jdbcType=BIGINT},
+      team_id = #{teamId,jdbcType=VARCHAR},
+      TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP}
+    where com_id = #{comId,jdbcType=BIGINT}
+  </update>
+
+    <select id="selectAvgSorceByContest" parameterType="java.lang.Long" resultMap="AvgResultMap">
+      SELECT team_id ,COUNT(*) AS size ,AVG(score) AS avg ,contest_id,work_id FROM  COMMENT  WHERE  contest_id = #{contestId} GROUP BY team_id;
+  </select>
+</mapper>

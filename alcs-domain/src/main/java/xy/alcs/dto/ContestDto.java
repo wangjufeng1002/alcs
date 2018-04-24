@@ -40,6 +40,7 @@ public class ContestDto {
 
     private List<RaterDto> raters;     //评委集合
 
+    private Integer scoreStatus;
 
 
     //显示属性
@@ -52,12 +53,14 @@ public class ContestDto {
 
 
     private static Calendar today = Calendar.getInstance();
+
     static {
         today.setTime(new Date());
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.HOUR_OF_DAY, 0);
         today.set(Calendar.SECOND, 0);
     }
+
     public String getScoreTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String start = format.format(this.scoreStartDate);
@@ -135,10 +138,16 @@ public class ContestDto {
         }
         else if(today.after(endDate)){
             nEnroll = "2"; //比赛已结束
-        } else if(today.before(startDate)){
+        }
+        else if(today.before(startDate)){
             nEnroll = "3"; //比赛未开始
+        }
+        else if(today.before(eStartDate) && today.after(startDate)){
+            nEnroll = "4"; //报名未开始
+        }else if(today.after(eEndDate) && today.before(endDate)){
+            nEnroll = "5"; //报名已结束
         }else{
-            nEnroll = "0"; //不能报名
+            nEnroll = "6"; //比赛进行中
         }
         return nEnroll;
     }
@@ -248,5 +257,13 @@ public class ContestDto {
 
     public void setRaters(List<RaterDto> raters) {
         this.raters = raters;
+    }
+
+    public Integer getScoreStatus() {
+        return scoreStatus;
+    }
+
+    public void setScoreStatus(Integer scoreStatus) {
+        this.scoreStatus = scoreStatus;
     }
 }

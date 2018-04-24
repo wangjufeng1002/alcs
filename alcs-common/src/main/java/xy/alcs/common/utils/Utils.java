@@ -12,6 +12,7 @@ public class Utils {
      * 创建32位seqid 采用uuid算法
      * @return
      */
+
     public static String getUUID(){
         UUID uuid = UUID.randomUUID();
         String str = uuid.toString();

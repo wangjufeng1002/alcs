@@ -1,4 +1,4 @@
-package xy.alcs.json;
+package xy.alcs.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +12,7 @@ import xy.alcs.common.utils.Result;
 import xy.alcs.domain.Works;
 import xy.alcs.service.WorksService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -21,9 +22,9 @@ import java.util.List;
  * @Date:Create in 17:58 2018-03-04
  */
 @Controller
-public class WorksJson {
+public class WorksController {
 
-    Logger logger = LoggerFactory.getLogger(WorksJson.class);
+    Logger logger = LoggerFactory.getLogger(WorksController.class);
 
 
     @Autowired
@@ -37,7 +38,7 @@ public class WorksJson {
      */
     @RequestMapping("/works/listMyWorks")
     @ResponseBody
-    public Result<List<Works>> getMyWorksList(String sId,String status){
+    public Result<List<Works>> getMyWorksList(HttpServletRequest request,String sId, String status){
 
         if(StringUtils.isBlank(sId)){
             logger.error("ContestJson.getMyConetestDetail 参数异常，sId为空");

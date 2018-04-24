@@ -12,6 +12,8 @@ public class RaterDto {
 
     private String ratAccount;
 
+    private Boolean alloted = false;
+
     public Integer getRid() {
         return rid;
     }
@@ -34,5 +36,13 @@ public class RaterDto {
 
     public void setRatAccount(String ratAccount) {
         this.ratAccount = ratAccount;
+    }
+
+    public Boolean getAlloted() {
+        return alloted;
+    }
+
+    public void setAlloted(Boolean alloted) {
+        this.alloted = alloted;
     }
 }
