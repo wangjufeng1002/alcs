@@ -1,0 +1,57 @@
+.pageFooter{
+    padding: 20px 20px 20px 0;
+    overflow: hidden;
+    -moz-user-select:none; /*火狐*/
+    -webkit-user-select:none; /*webkit浏览器*/
+    -ms-user-select:none; /*IE10*/
+    -khtml-user-select:none; /*早期浏览器*/
+    user-select:none; /*文本不被选中*/
+}
+.pageFooterCon{
+    float: right;
+}
+.pageFooter .totalCount, .pageFooter .lastPage, .pageFooter .pageItemCon, .pageFooter .nextPage, .pageFooter .skipPage, .pageFooter .pageSelect{
+    float: left;
+}
+.pageFooter .totalCount{
+    height: 28px;
+    line-height: 28px;
+    margin-right: 10px;
+}
+.pageFooter .lastPage,.pageFooter .nextPage{
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border: solid 1px #d7dde4;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.pageFooter .pageItemCon{
+    overflow: hidden;
+}
+.pageFooter .pageItem,.pageFooter .ellipsis{
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border: solid 1px #d7dde4;
+    margin-right: 5px;
+    float: left;
+    cursor: pointer;
+}
+.pageFooter .pageItem.current{
+    color: #ff6e00;
+    border: solid 1px #ff6e00;
+}
+.pageFooter .pageSelect{
+    width: 80px;
+    height: 30px;
+    margin: 0 20px 0 5px;
+}
+.pageFooter .pageInput{
+    width: 30px;
+    padding: 0 10px;
+    height: 26px;
+    margin: 0 5px;
+}

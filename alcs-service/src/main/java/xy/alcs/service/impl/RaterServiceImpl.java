@@ -53,55 +53,53 @@ public class RaterServiceImpl implements RaterService {
 
 
     @Override
-    public List<RaterDto> listRater(Map<String,Object> queryMap,Long cid) {
+    public List<RaterDto> queryRaterList(Map<String,Object> queryMap,Long cid) {
 
         if(MapUtils.isEmpty(queryMap)){
             throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
         }
         Map map = this.buildQueryMap(queryMap);
         List<Integer> raterIds = raterCompetitionMapper.selectAllotedRaterId(cid);
-        map.put("rids",raterIds);
+        if(raterIds.size() == 0){
+            map.put("rids",raterIds);
+        }
         List<RaterDto> raterDtos = raterMapper.selectRaterByParam(map);
         return raterDtos;
     }
 
     @Override
     public Integer countRater(Map<String,Object> queryMap,Long cid) {
-        if(MapUtils.isEmpty(queryMap)){
-            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
-        }
-        Map map =  this.buildQueryMap(queryMap);
-        List<Integer> raterIds = raterCompetitionMapper.selectAllotedRaterId(cid);
-        map.put("rids",raterIds);
-        return raterMapper.countTotalByParam(map);
+      //  Map map =  this.buildQueryMap(queryMap);
+        return raterMapper.countTotalByParam(queryMap);
     }
 
     @Override
-    public List<RaterDto> queryRaterList(Long cid) {
-        List<RaterDto> raterDtos = raterMapper.selectRaterByParam(new LinkedHashMap<>());
+    public List<RaterDto> listRater(Map<String,Object> queryMap,Long cid) {
+        List<RaterDto> raterDtos = raterMapper.selectRaterByParam(queryMap);
         RaterCompetitionExample example = new RaterCompetitionExample();
-        List<Long> cids = new ArrayList<>();
-        cids.add(cid);
-        example.createCriteria().andContestIdIn(cids);
+        example.createCriteria().andContestIdIn(Arrays.asList(cid));
         List<RaterCompetition> raterCompetitions = raterCompetitionMapper.selectByExample(example);
-        List<RaterDto> res = new LinkedList<>();
-        Boolean flag = false;
-        for(RaterDto raterDto : raterDtos){
+        for(RaterDto raterDto :raterDtos){
             for(RaterCompetition raterCompetition : raterCompetitions){
-                if(raterCompetition.getRaterId().equals(raterDto.getRid())){
-                    flag = true;
-                    break;
+                if(raterDto.getRid().equals(raterCompetition.getRaterId())){
+                    raterDto.setAlloted(true);
                 }
             }
-            if(!flag){
-                res.add(raterDto);
-            }
-
         }
-        return res;
+        return raterDtos;
     }
-
+    private Boolean removeAlloted(RaterDto raterDto,List<RaterCompetition> raterCompetitions){
+        for(RaterCompetition raterCompetition : raterCompetitions){
+            if(raterCompetition.getRaterId().equals(raterDto.getRid())){
+               return true;
+            }
+        }
+        return false;
+    }
     private Map buildQueryMap(Map<String, Object> queryMap) {
+        if(MapUtils.isEmpty(queryMap)){
+            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
+        }
         Map<String, Object>  resultMap = new HashMap<>();
 
         for(Map.Entry item : queryMap.entrySet()){
@@ -130,8 +128,10 @@ public class RaterServiceImpl implements RaterService {
                 }
             }
         }
-        Integer offset = ((Integer) resultMap.get("page") - 1) * (Integer) queryMap.get("rows");
-        resultMap.put("offset",offset);
+        if(resultMap.get("page") != null && queryMap.get("rows")!=null){
+            Integer offset = ((Integer) resultMap.get("page") - 1) * (Integer) queryMap.get("rows");
+            resultMap.put("offset",offset);
+        }
         return resultMap;
     }
 

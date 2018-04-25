@@ -58,22 +58,24 @@ public class ContestServiceImpl implements ContestService {
     private String rows;
 
 
-    public List<ContestDto> listMyContestByParam(String sId, Integer offset, Integer limit, Integer status) {
+    public List<ContestDto> listMyContestByParam(String sId, Integer page, Integer rows, Integer status) {
         Map queryParamMap = new HashMap();
         queryParamMap.put("sId", sId);
-        queryParamMap.put("offset", offset);
-        queryParamMap.put("limit", limit);
-        queryParamMap.put("status", status);
+        queryParamMap.put("page", page);
+        queryParamMap.put("rows", rows);
+        queryParamMap.put("contestStatus", status);
+        this.buildQueryMap(queryParamMap);
         return contestMapper.selectMyContestByParam(queryParamMap);
     }
 
     @Override
-    public Integer countMyContestByParam(String sId, Integer offset, Integer limit, Integer status) {
+    public Integer countMyContestByParam(String sId, Integer page, Integer rows, Integer status) {
         Map queryParamMap = new HashMap();
         queryParamMap.put("sId", sId);
-        queryParamMap.put("offset", offset);
-        queryParamMap.put("limit", limit);
-        queryParamMap.put("status", status);
+        queryParamMap.put("page", page);
+        queryParamMap.put("rows", rows);
+        queryParamMap.put("contestStatus", status);
+        this.buildQueryMap(queryParamMap);
         return contestMapper.countMyContestByParam(queryParamMap);
     }
 
@@ -185,6 +187,8 @@ public class ContestServiceImpl implements ContestService {
             } else if (item.getKey().toString().equals("title")) {
                 if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
                     resultMap.put("title", null);
+                }else{
+                    resultMap.put("title", (String) item.getValue());
                 }
             } else if (item.getKey().toString().equals("cid")) {
                 if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
@@ -192,11 +196,31 @@ public class ContestServiceImpl implements ContestService {
                 } else {
                     resultMap.put("cid", Integer.parseInt((String) item.getValue()));
                 }
+            }else if(item.getKey().toString().equals("status")){
+                if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
+                    resultMap.put("status", null);
+                } else {
+                    resultMap.put("status",item.getValue());
+                }
+            }else if(item.getKey().toString().equals("scoreStatus")){
+                if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
+                    resultMap.put("scoreStatus", null);
+                } else {
+                    resultMap.put("scoreStatus",item.getValue());
+                }
             }
         }
         Integer offset = ((Integer) resultMap.get("page") - 1) * (Integer) queryMap.get("rows");
         resultMap.put("offset", offset);
         return resultMap;
 
+    }
+
+    @Override
+    public ContestDto queryContestDtoById(Integer cid) {
+        if(cid == null){
+            logger.error("#ContestServiceImpl queryContestDtoById param  cid is empty");
+        }
+        return   contestMapper.selectContestDtoById(cid);
     }
 }

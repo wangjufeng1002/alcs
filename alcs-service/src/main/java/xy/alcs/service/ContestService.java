@@ -83,4 +83,12 @@ public interface ContestService {
      */
     Boolean delContestByIds(List<Long> cIds);
 
+    /**
+     * 根据id进行查询
+     * @param cid
+     * @return
+     */
+
+    ContestDto queryContestDtoById(Integer cid);
+
 }

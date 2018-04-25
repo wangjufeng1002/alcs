@@ -33,7 +33,7 @@ public interface RaterService {
      * 查询比赛可分配的评委
      * @return
      */
-     List<RaterDto> queryRaterList(Long cid);
+     List<RaterDto> queryRaterList(Map<String,Object> queryMap,Long cid);
 
     /**
      * 分配评委
