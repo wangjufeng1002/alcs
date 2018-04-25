@@ -11,6 +11,7 @@ import xy.alcs.dao.RaterCompetitionMapper;
 import xy.alcs.dao.RaterMapper;
 import xy.alcs.domain.Contest;
 import xy.alcs.domain.Rater;
+import xy.alcs.domain.RaterCompetitionExample;
 import xy.alcs.domain.RaterExample;
 import xy.alcs.manager.BaseManager;
 import xy.alcs.manager.ContestManager;
@@ -44,6 +45,12 @@ public class RaterManagerImpl extends BaseManager implements RaterManager {
                     logger.error("#RaterManagerImpl batchInsertRaterContest param  cIds is empty");
                     throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_ISNULL);
                 }
+
+                //删出之前的分配关系
+                RaterCompetitionExample raterCompetitionExample = new RaterCompetitionExample();
+                raterCompetitionExample.createCriteria().andContestIdEqualTo(cid);
+                raterCompetitionMapper.deleteByExample(raterCompetitionExample);
+
                 RaterExample example = new RaterExample();
                 example.createCriteria().andRidIn(rids);
                 List<Rater> list = raterMapper.selectByExample(example);
@@ -59,7 +66,8 @@ public class RaterManagerImpl extends BaseManager implements RaterManager {
                 addMap.put("rids",rids);
                 addMap.put("cid",cid);
                 int insert = raterCompetitionMapper.insertRaterForContest(addMap);
-                if(update < insert){
+
+                if(insert < 1){
                     throw BussinessException.asBussinessException(AlcsErrorCode.DAO_EXCEPTION);
                 }
             } catch (BussinessException e) {
