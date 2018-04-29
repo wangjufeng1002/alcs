@@ -2,6 +2,12 @@ $(function () {
     //定义变量
     var contestListData; //江赛列表数据
     var myContestListData;//我的竞赛数据
+    var myContestWorkData;//我的竞赛作品列表
+    var imageName = "";
+    var fileName ="";
+    var submitType = ""; //2 确定报名，3，提交报告，4，保存报告
+    var globalCid ="";
+    var editor;
 
     getStudentInfo();
 
@@ -16,7 +22,7 @@ $(function () {
     //初始化编辑器
     function initEditor() {
         var E = window.wangEditor;
-        var editor = new E('#editor');
+        editor = new E('#editor');
         // 或者 var editor = new E( document.getElementById('editor') )
         editor.create();
     }
@@ -43,35 +49,35 @@ $(function () {
         });
         //点击所有竞赛
         $('.menu-list-first.all-competition').on('click', function () {
-            initTable("allCompetition",null);
+            initTable("allCompetition", null);
         });
         //点击我的竞赛--正在进行
         $('.menu-list-first.my-competition').siblings('.menu-list-second').children('.my-competition-doing').on('click', function () {
-            initTable("myCompetitionDoing",null);
+            initTable("myCompetitionDoing", null);
         });
         //点击我的竞赛--正在进行
         $('.menu-list-first.my-competition').siblings('.menu-list-second').children('.my-competition-done').on('click', function () {
-            initTable("myCompetitionDone");
+            initTable("myCompetitionDone", null);
         });
         //点击我的报告--已提交
         $('.menu-list-first.my-report').siblings('.menu-list-second').children('.my-report-done').on('click', function () {
-            initTable("myReportDone");
+            initTable("myReportDone", null);
         });
         //点击我的报告--待提交
         $('.menu-list-first.my-report').siblings('.menu-list-second').children('.my-report-will').on('click', function () {
-            initTable("myReportWill");
+            initTable("myReportWill", null);
         });
         //点击我的获奖
         $('.menu-list-first.my-award').on('click', function () {
-            initTable("myAward");
+            initTable("myAward", null);
         });
         //点击个人中心--个人信息
         $('.menu-list-first.my-personal').siblings('.menu-list-second').children('.my-personal-situation').on('click', function () {
-            initTable("myPersonalSituation");
+            initTable("myPersonalSituation", null);
         });
         //点击个人中心--密码修改
         $('.menu-list-first.my-personal').siblings('.menu-list-second').children('.my-personal-password').on('click', function () {
-            initTable("myPersonalPassword");
+            initTable("myPersonalPassword", null);
         });
         // 点击查看详情弹窗
         $('body').on('click', '.look-details', function () {
@@ -90,21 +96,13 @@ $(function () {
         //点击【我要报名】弹出二次确认窗
         $('body').on('click', '.apply-competition', function () {
             var cid = $(this).children('input').val();
-            toastAdd(2, '', cid);
+            globalCid = cid;
+            toastAdd(2, '');
         });
         //二次确认弹窗点击确认
         $('body').on('click', '.sure-window .submit-btn', function () {
-            var cid = $(this).children('input').val();
-            $.ajax({
-                data: {cid: cid},
-                url: '',
-                success: function (result) {
-                    toastAdd(1, '成功报名', '')
-                },
-                fail: function () {
-                    toastAdd(1, '报名失败请重试', '')
-                }
-            })
+            debugger
+            makeSure(submitType);
         });
         //点击上传图片触发input=file事件
         $('body').on('click', '.pop-window .upload-name', function (e) {
@@ -142,11 +140,17 @@ $(function () {
         });
         //点击提交报告弹出弹窗
         $('body').on('click', '.submit-report', function () {
+            debugger
+            var cid = $(this).children('input').val();
+            globalCid = cid;
             reportShow(1);
             initEditor();
         });
         //点击查看报告弹出弹窗
         $('body').on('click', '.look-report', function () {
+            debugger
+            var cid = $(this).children('input').val();
+            globalCid = cid;
             reportShow(2);
             initEditor();
         });
@@ -170,6 +174,11 @@ $(function () {
                 toastAdd(1, '两次密码输入不一致，请重新输入');
             }
         })
+
+        $('body').on('click','.look-report-window .submit-btn',function () {
+            toastAdd(3, '');
+        })
+
     }
 
     // 初始化所有菜单项数据
@@ -220,7 +229,7 @@ $(function () {
                 if (rows[i].nEnroll == 1) {
                     tableBody +=
                         '<span class="apply-competition">点我报名' +
-                        '<input value="' + rows[i].cid + '">' +
+                        '<input type="hidden" value="' + rows[i].cid + '">' +
                         '</span></td>' +
                         '</tr>';
                 }
@@ -285,7 +294,7 @@ $(function () {
         else if (type == "myCompetitionDoing") {
             var rows;
             if (resultData == null) {
-                getMyContestList(1,10,1);
+                getMyContestList(1, 10, 1);
                 resultData = myContestListData;
                 rows = myContestListData.rows;
             } else {
@@ -328,7 +337,7 @@ $(function () {
             pageAdd();
             new pageInit({
                 totalCount: resultData.total,//总页数
-                currIndex:  resultData.page - 1,//当前页，0为第一页
+                currIndex: resultData.page - 1,//当前页，0为第一页
                 pageSize: $('.pageSelect option:selected').val(),//每页数据量
                 initCurrIndex: 0,//页面一进来的时候展示的页码，默认展示第一页,0为第一页
                 nextCallback: function () {
@@ -343,15 +352,16 @@ $(function () {
                 pageCallback: function () {
                     //点击页码的回调函数和跳至几页的回调函数
                     debugger
-                    getMyContestList(currIndex + 1, this.pageSize,1);
+                    getMyContestList(currIndex + 1, this.pageSize, 1);
                     initTable("myCompetitionDoing", myContestListData);
                 },
             })
         }
         else if (type == "myCompetitionDone") {
+            debugger
             var rows;
             if (resultData == null) {
-                getMyContestList(1,10,2);
+                getMyContestList(1, 10, 2);
                 resultData = myContestListData;
                 rows = myContestListData.rows;
             } else {
@@ -394,7 +404,7 @@ $(function () {
             pageAdd();
             new pageInit({
                 totalCount: resultData.total,//总页数
-                currIndex:  resultData.page - 1,//当前页，0为第一页
+                currIndex: resultData.page - 1,//当前页，0为第一页
                 pageSize: $('.pageSelect option:selected').val(),//每页数据量
                 initCurrIndex: 0,//页面一进来的时候展示的页码，默认展示第一页,0为第一页
                 nextCallback: function () {
@@ -409,78 +419,58 @@ $(function () {
                 pageCallback: function () {
                     //点击页码的回调函数和跳至几页的回调函数
                     debugger
-                    getMyContestList(currIndex + 1, this.pageSize,2);
+                    getMyContestList(currIndex + 1, this.pageSize, 2);
                     initTable("myCompetitionDoing", myContestListData);
                 },
             })
         }
         else if (type == "myReportDone") {
-            var data = {
-                "rows": [
-                    {
-                        "itemid": "1",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017年比赛',
-                        "status": '已提交',
-                    },
-                    {
-                        "itemid": "2",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017年比赛',
-                        "status": '已提交',
-                    },
-                    {
-                        "itemid": "3",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017年比赛',
-                        "status": '已提交',
-                    },
-                    {
-                        "itemid": "4",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017年比赛',
-                        "status": '已提交',
-                    },
-                    {
-                        "itemid": "5",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017年比赛',
-                        "status": '已提交',
-                    },
-                ]
-            };
+            debugger
+            var rows;
+            if (resultData == null) {
+                getMyWorkList(1, 10, 2);
+                resultData = myContestWorkData;
+                rows = myContestWorkData.rows;
+            } else {
+                rows = resultData.rows;
+            }
             var headData = {
-                "itemid": "赛事编码",
-                "startTime": '开始时间',
-                "endTime": '结束时间',
-                "name": '比赛名称',
-                "status": '状态',
-                "operation": '操作',
+                "cid": "赛事编码",
+                "title": '比赛名称',
+                "startEndTime": '竞赛时间',
+                "scoreTime": "评分时间",
+                "workEndTime": "作品提交截止时间",
+                "workSatus": "作品状态",
+                "operation": "操作"
             };
             var tableHead =
                 '<tr class="table-body">' +
-                '<td>' + headData.itemid + '</td>' +
-                '<td>' + headData.startTime + '</td>' +
-                '<td>' + headData.endTime + '</td>' +
-                '<td>' + headData.name + '</td>' +
-                '<td>' + headData.status + '</td>' +
+                '<td>' + headData.cid + '</td>' +
+                '<td>' + headData.title + '</td>' +
+                '<td>' + headData.startEndTime + '</td>' +
+                '<td>' + headData.scoreTime + '</td>' +
+                '<td>' + headData.workEndTime + '</td>' +
+                '<td>' + headData.workSatus + '</td>' +
                 '<td>' + headData.operation + '</td>' +
                 '</tr>';
             var tableBody = '';
-            for (var i = 0; i < data.rows.length; i++) {
+            for (var i = 0; i < rows.length; i++) {
                 tableBody +=
                     '<tr class="table-body">' +
-                    '<td>' + data.rows[i].itemid + '</td>' +
-                    '<td>' + data.rows[i].startTime + '</td>' +
-                    '<td>' + data.rows[i].endTime + '</td>' +
-                    '<td>' + data.rows[i].name + '</td>' +
-                    '<td>' + data.rows[i].status + '</td>' +
-                    '<td><span class="look-details">查看竞赛详情</span><span class="look-report">查看我的报告</span></td>' +
+                    '<td>' + rows[i].cid + '</td>' +
+                    '<td>' + rows[i].title + '</td>' +
+                    '<td>' + rows[i].startEndTime + '</td>' +
+                    '<td>' + rows[i].scoreTime + '</td>' +
+                    '<td>' + rows[i].workEndTime + '</td>' +
+                    '<td>' + rows[i].workSatus + '</td>' +
+                    '<td>' +
+                    '<span class="look-details">' +
+                    '查看竞赛详情' +
+                    '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '</span>' +
+                    '<span class="look-report">' +
+                    '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '查看我的报告</span></td>' +
                     '</tr>';
             }
             var table = '<table class="table" id="table">' + tableHead + tableBody + '</table>';
@@ -488,8 +478,8 @@ $(function () {
             //初始化分页
             pageAdd();
             new pageInit({
-                totalCount: 200,//总页数
-                currIndex: 0,//当前页，0为第一页
+                totalCount: resultData.total,//总页数
+                currIndex: resultData.page - 1,//当前页，0为第一页
                 pageSize: $('.pageSelect option:selected').val(),//每页数据量
                 initCurrIndex: 0,//页面一进来的时候展示的页码，默认展示第一页,0为第一页
                 nextCallback: function () {
@@ -503,76 +493,58 @@ $(function () {
                 },
                 pageCallback: function () {
                     //点击页码的回调函数和跳至几页的回调函数
+                    getMyWorkList(currIndex + 1, this.pageSize, 2);
+                    initTable("myReportDone", myContestListData);
                 },
             })
         }
         else if (type == "myReportWill") {
-            var data = {
-                "rows": [
-                    {
-                        "itemid": "1",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017比赛',
-                        "status": '待提交',
-                    },
-                    {
-                        "itemid": "2",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017比赛',
-                        "status": '待提交',
-                    },
-                    {
-                        "itemid": "3",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017比赛',
-                        "status": '待提交',
-                    },
-                    {
-                        "itemid": "4",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017比赛',
-                        "status": '待提交',
-                    },
-                    {
-                        "itemid": "5",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '2017比赛',
-                        "status": '待提交',
-                    },
-                ]
-            };
+            debugger
+            var rows;
+            if (resultData == null) {
+                getMyWorkList(1, 10, 0);
+                resultData = myContestWorkData;
+                rows = myContestWorkData.rows;
+            } else {
+                rows = resultData.rows;
+            }
             var headData = {
-                "itemid": "赛事编码",
-                "startTime": '开始时间',
-                "endTime": '结束时间',
-                "name": '比赛名称',
-                "status": '状态',
-                "operation": '操作',
+                "cid": "赛事编码",
+                "title": '比赛名称',
+                "startEndTime": '竞赛时间',
+                "scoreTime": "评分时间",
+                "workEndTime": "作品提交截止时间",
+                "workSatus": "作品状态",
+                "operation": "操作"
             };
             var tableHead =
                 '<tr class="table-body">' +
-                '<td>' + headData.itemid + '</td>' +
-                '<td>' + headData.startTime + '</td>' +
-                '<td>' + headData.endTime + '</td>' +
-                '<td>' + headData.name + '</td>' +
-                '<td>' + headData.status + '</td>' +
+                '<td>' + headData.cid + '</td>' +
+                '<td>' + headData.title + '</td>' +
+                '<td>' + headData.startEndTime + '</td>' +
+                '<td>' + headData.scoreTime + '</td>' +
+                '<td>' + headData.workEndTime + '</td>' +
+                '<td>' + headData.workSatus + '</td>' +
                 '<td>' + headData.operation + '</td>' +
                 '</tr>';
             var tableBody = '';
-            for (var i = 0; i < data.rows.length; i++) {
+            for (var i = 0; i < rows.length; i++) {
                 tableBody +=
                     '<tr class="table-body">' +
-                    '<td>' + data.rows[i].itemid + '</td>' +
-                    '<td>' + data.rows[i].startTime + '</td>' +
-                    '<td>' + data.rows[i].endTime + '</td>' +
-                    '<td>' + data.rows[i].name + '</td>' +
-                    '<td>' + data.rows[i].status + '</td>' +
-                    '<td><span class="look-details">查看竞赛详情</span><span class="submit-report">提交报告</span></td>' +
+                    '<td>' + rows[i].cid + '</td>' +
+                    '<td>' + rows[i].title + '</td>' +
+                    '<td>' + rows[i].startEndTime + '</td>' +
+                    '<td>' + rows[i].scoreTime + '</td>' +
+                    '<td>' + rows[i].workEndTime + '</td>' +
+                    '<td>' + rows[i].workSatus + '</td>' +
+                    '<td>' +
+                    '<span class="look-details">' +
+                    '查看竞赛详情' +
+                    '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '</span>' +
+                    '<span class="submit-report">' +
+                    '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '提交报告</span></td>' +
                     '</tr>';
             }
             var table = '<table class="table" id="table">' + tableHead + tableBody + '</table>';
@@ -580,8 +552,8 @@ $(function () {
             //初始化分页
             pageAdd();
             new pageInit({
-                totalCount: 200,//总页数
-                currIndex: 0,//当前页，0为第一页
+                totalCount: resultData.total,//总页数
+                currIndex: resultData.page - 1,//当前页，0为第一页
                 pageSize: $('.pageSelect option:selected').val(),//每页数据量
                 initCurrIndex: 0,//页面一进来的时候展示的页码，默认展示第一页,0为第一页
                 nextCallback: function () {
@@ -595,6 +567,8 @@ $(function () {
                 },
                 pageCallback: function () {
                     //点击页码的回调函数和跳至几页的回调函数
+                    getMyWorkList(currIndex + 1, this.pageSize, 0);
+                    initTable("myReportDone", myContestListData);
                 },
             })
         }
@@ -831,8 +805,8 @@ $(function () {
     }
 
     // toast提示
-    function toastAdd(type, text, cid) {
-        $('.fade').remove();
+    function toastAdd(type, text) {
+      /*  $('.fade').remove();*/
         if (type == 1) {
             var delay = {
                 showIn: 1200, // 显示时间
@@ -845,6 +819,7 @@ $(function () {
             }, delay.showIn);
         }
         else if (type == 2) {
+            submitType =2;
             var toast =
                 '<div class="fade sure-window">' +
                 '<div class="pop-window">' +
@@ -853,7 +828,23 @@ $(function () {
                 '</div>' +
                 '<div class="pop-window-footer">' +
                 '<span class="pop-window-footer-btn submit-btn">确定' +
-                '<input type="hidden" value="' + cid + '"/>' +
+                '</span>' +
+                '<span class="pop-window-footer-btn cancel-btn">取消</span>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }
+        //提交报告
+        else if (type == 3) {
+            submitType =3;
+            var toast =
+                '<div class="fade sure-window">' +
+                '<div class="pop-window">' +
+                '<div class="pop-window-item">' +
+                '<div class="sure-title">确定提交？提交后不可修改！</div>' +
+                '</div>' +
+                '<div class="pop-window-footer">' +
+                '<span class="pop-window-footer-btn submit-btn">确定' +
                 '</span>' +
                 '<span class="pop-window-footer-btn cancel-btn">取消</span>' +
                 '</div>' +
@@ -865,6 +856,7 @@ $(function () {
 
     //选择图片,上传
     function uploadFile(obj, type) {
+        debugger
         var file = obj.files[0];
         var reader = new FileReader();
         //读取文件过程方法
@@ -883,6 +875,10 @@ $(function () {
         reader.onload = function (e) {
             console.log("成功读取....");
             successLoad(e, type);
+            //上传文件或者照片方法；
+            //TODO
+            ajaxUploadFile(e.target.result, type);
+
         };
         reader.readAsDataURL(file);
     }
@@ -949,8 +945,8 @@ $(function () {
                 '</div>' +
                 '</div>' +
                 '<div class="pop-window-footer">' +
-                '<span class="pop-window-footer-btn submit-btn">提交</span>' +
-                '<span class="pop-window-footer-btn save-btn">保存</span>' +
+                '<span class="pop-window-footer-btn submit-btn" id="submit">提交</span>' +
+                '<span class="pop-window-footer-btn save-btn" id="save">保存</span>' +
                 '<span class="pop-window-footer-btn cancel-btn">取消</span>' +
                 '</div>' +
                 '</div>' +
@@ -1013,6 +1009,7 @@ $(function () {
         }
     }
 
+
     //请求获取列表数据
     function getContestList(page, rows) {
         $.ajax({
@@ -1030,10 +1027,11 @@ $(function () {
 
         });
     }
-    function getMyContestList(page,rows,status) {
+
+    function getMyContestList(page, rows, status) {
         $.ajax({
             url: "/client/contest/listMyContest",
-            data: {"page": page, "rows": rows,"contestStatus":status},
+            data: {"page": page, "rows": rows, "contestStatus": status},
             type: "post",
             dataType: "json",
             async: false,
@@ -1047,9 +1045,25 @@ $(function () {
         });
     }
 
-    /**
-     * 获取学生基本信息
-     */
+    //获取作品列表
+    function getMyWorkList(page, rows, workCommit) {
+        $.ajax({
+            url: "/client/contest/works",
+            data: {"page": page, "rows": rows, "workCommit": workCommit},
+            type: "post",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                myContestWorkData = result;
+            },
+            error: function () {
+
+            }
+
+        });
+    }
+
+    //获取学生的基本信息
     function getStudentInfo() {
         $.ajax({
             url: "/client/user/getStuInfo",
@@ -1057,16 +1071,16 @@ $(function () {
             dataType: "json",
             async: false,
             success: function (result) {
-                if(result.code == "0000"){
+                if (result.code == "0000") {
                     debugger
                     var stuInfo = result.data;
-                    var showStr = stuInfo.colName + "-" + stuInfo.majName +"-" + stuInfo.stuId;
+                    var showStr = stuInfo.colName + "-" + stuInfo.majName + "-" + stuInfo.stuId;
                     $(".menu-user-identity").html(showStr);
                     $(".menu-user-name").html(stuInfo.stuName);
 
-                    showStr = stuInfo.stuName + " - " +stuInfo.colName;
+                    showStr = stuInfo.stuName + " - " + stuInfo.colName;
                     $(".right-head-personal-name").html(stuInfo.colName);
-                }else{
+                } else {
                     window.location.href = "http://127.0.0.1/graduation/html/login.html";
                 }
 
@@ -1078,6 +1092,65 @@ $(function () {
         });
     }
 
+    //上传文件
+    function ajaxUploadFile(content, type) {
+        var url = "";
+        var data;
+        if (type == 'img') {
+            url = "/client/upload/image";
+            data = {'base64Data': content};
+
+        } else if (type == 'file') {
+            url = "/client/upload/file";
+            data = {"base64Data": content}
+
+        }
+        $.ajax({
+            url: url,
+            type: "post",
+            data: data,
+            success: function (result) {
+                if(result.code == "0000"){
+                    if (type == 'img') {
+                        imageName = result.data;
+
+                    } else if (type == 'file') {
+                        fileName = result.data;
+                    }
+                }
+
+            },
+            error: function (result) {
+
+            }
+        });
+    }
+
+    //弹窗2次确认按钮
+
+    function  makeSure(type) {
+        if(type == 2){
+            $.ajax({
+                data: {cId: globalCid},
+                url: '/client/contest/enroll',
+                success: function (result) {
+                    if (result.code == "0000") {
+                        toastAdd(1, '成功报名', '')
+                    } else {
+                        toastAdd(1, '报名失败', '')
+                    }
+                },
+                fail: function () {
+                    toastAdd(1, '报名失败请重试', '')
+                }
+            })
+        }
+        if(type == 3){
+            var text = editor.txt.html();
+            alert(text);
+            editor.txt.html("<p>dadsadsadwoangdecdnincndinine</p>")
+        }
+    }
 });
 
 

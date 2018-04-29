@@ -16,12 +16,6 @@
 	<task:annotation-driven scheduler="myScheduler"/>
 	<task:scheduler id="myScheduler" pool-size="5"/>
 
-	<!--<context:property-placeholder location="classpath:properties/db.properties" />-->
-
-	<!--<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:properties/application.properties"/>
-	</bean>-->
-
 
 
 	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">

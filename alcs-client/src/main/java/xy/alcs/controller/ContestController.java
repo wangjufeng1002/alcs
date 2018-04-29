@@ -14,6 +14,7 @@ import xy.alcs.common.enums.AlcsErrorCode;
 import xy.alcs.common.utils.Result;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.MyContestDetailDto;
+import xy.alcs.dto.MyContestWorkDto;
 import xy.alcs.dto.StudentDto;
 import xy.alcs.service.ContestService;
 
@@ -157,11 +158,49 @@ public class ContestController {
         }
     }
 
+    /**
+     * 报名controller
+     *
+     * @param request 请求体
+     * @param cId     竞赛id
+     * @return
+     */
 
     @RequestMapping("/contest/enroll")
     @ResponseBody
-    public Result enrollContest(HttpServletRequest request,Integer cId) {
-        return null;
+    public Result enrollContest(HttpServletRequest request, Integer cId) {
+        String stuId = (String) request.getSession().getAttribute("stu_id");
+        if (stuId == null) {
+            Result.buildErrorResult(AlcsErrorCode.NOT_LOGIN);
+        }
+        if (cId == null) {
+            Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
+        }
+        return contestService.enrollContest(new Long(cId), stuId);
+    }
+
+    @RequestMapping("/contest/works")
+    @ResponseBody
+    public PageData<MyContestWorkDto> listMyContestWork(HttpServletRequest request, Integer workCommit, Integer page, Integer rows) {
+        String stuId = (String) request.getSession().getAttribute("stu_id");
+        if (stuId == null) {
+            Result.buildErrorResult(AlcsErrorCode.NOT_LOGIN);
+        }
+        if (workCommit == null) {
+            Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
+        }
+        Map queryMap = new HashMap();
+        queryMap.put("page",page);
+        queryMap.put("rows",rows);
+        queryMap.put("stuId",stuId);
+        queryMap.put("workCommit",workCommit);
+
+        PageData<MyContestWorkDto> pageData = new PageData();
+        pageData.setRows(contestService.listMyContestWork(queryMap));
+        pageData.setPage(page);
+        pageData.setPageSize(rows);
+        pageData.setTotal(contestService.countMyContestWork(queryMap));
+        return pageData;
     }
 
 }

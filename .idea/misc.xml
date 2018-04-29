@@ -3,6 +3,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/alcs-client" />
     <file type="web" url="file://$PROJECT_DIR$/alcs-man" />
+    <file type="web" url="file://$PROJECT_DIR$/image-web" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">

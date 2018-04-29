@@ -47,19 +47,12 @@ public class RaterJson {
 
     @RequestMapping("/rater/listByCid")
     @ResponseBody
-    public PageData<RaterDto> listRater(Integer page,Integer rows,String queryParam,Long cid){
+    public PageData<RaterDto> listRater(String queryParam,Long cid){
         Map<String,Object> map = new HashMap<>();
-        if (rows == null || rows.intValue() <= 0) {
-            rows = Integer.parseInt(PAGELIMIT);
-        }
-        if (page == null || page.intValue() < 0) {
-            page = Integer.parseInt(PAGENOW);
-        }
+
         if(!StringUtils.isEmpty(queryParam)){
             map = JSONObject.parseObject(queryParam,Map.class);
         }
-        map.put("rows",rows);
-        map.put("page",page);
         List<RaterDto> raterDtos = raterService.listRater(map,cid);
         Integer total = raterService.countRater(map,cid);
         PageData<RaterDto> pageData = new PageData();

@@ -1,0 +1,298 @@
+<div class="easyui-layout" data-options="fit:true">
+    <table id="contestList" toolbar="#toolbar" pagination="true" style="width:1000px;height:800px"></table>
+    </div>
+    <div id="toolbar">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">New</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="del()">Destroy</a>
+        <span>竞赛 ID:</span>
+        <input id="conId" style="line-height:26px;border:1px solid #ccc">
+
+        <span>竞赛 题目:</span>
+        <input id="conTitle" style="line-height:26px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+    </div>
+
+    <!--对话框-->
+    <div id="addContestModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
+         title="添加竞赛" iconCls="icon-ok"
+         toolbar="#dlg-toolbar" buttons="#add-buttons">
+        <form id="addContestForm" action="/man/json/contest/addOrUpdate" method="post">
+            <table style="border-collapse: separate;border-spacing: 0px 10px;">
+                <tr>
+                    <td class="tdName">题目:</td>
+                    <td><input  name="title" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">竞赛要求:</td>
+                    <td><textarea  name="summary" maxlength="1000" required cols="50" rows="5" placeholder="请输入少于500字的简介"></textarea></td>
+                </tr>
+                <tr>
+                    <td class="tdName">竞赛起始时间:</td>
+                    <td><input  name="startDateStr" type="text" placeholder="2018-03-18" > - <input name="endDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">报名起始时间:</td>
+                    <td><input name="enrollStartDateStr" type="text" placeholder="2018-03-18" /> - <input name="enrollEndDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">评分起始时间:</td>
+                    <td><input  name="scoreStartDateStr" type="text" placeholder="2018-03-18"> - <input  name="scoreEndDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">作品提交结束时间:</td>
+                    <td><input   name="worksEndDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="add-buttons" style="display: none;overflow: hidden;" >
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveContest('add')">Ok</a>
+        <a href="javascript:void(0)"  class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeModel()">Cancel</a>
+    </div>
+    <!--编辑对话框-->
+    <div id="editContestModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'" style="width:800px; padding:10px;"
+         title="编辑竞赛" iconCls="icon-ok"
+         buttons="#edit-buttons" >
+        <form id="editContestForm" action="/man/json/contest/addOrUpdate" method="post">
+            <table style="border-collapse: separate;border-spacing: 0px 10px;">
+                <tr>
+                    <td ><input type="hidden"  name="cid" id="cCid" /></td>
+                </tr>
+                <tr>
+                    <td class="tdName">题目:</td>
+                    <td><input id="cTitle" name="title" type="text"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">竞赛要求:</td>
+                    <td><textarea id="cSummary" name="summary" maxlength="1000" required cols="50" rows="5" placeholder="请输入少于500字的简介"></textarea></td>
+                </tr>
+                <tr>
+                    <td class="tdName">竞赛起始时间:</td>
+                    <td><input id="cStartDateStr" name="startDateStr" type="text" placeholder="2018-03-18" > - <input id="cEndDateStr" name="endDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">报名起始时间:</td>
+                    <td><input id="cEnrollStartDateStr" name="enrollStartDateStr" type="text" placeholder="2018-03-18" /> - <input id="cEnrollEndDateStr" name="enrollEndDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">评分起始时间:</td>
+                    <td><input id="cScoreStartDateStr" name="scoreStartDateStr" type="text" placeholder="2018-03-18"> - <input  id="cScoreEndDateStr" name="scoreEndDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+                <tr>
+                    <td class="tdName">作品提交结束时间:</td>
+                    <td><input  id="cWorksEndDateStr" name="worksEndDateStr" type="text" placeholder="2018-03-18"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="edit-buttons" style="display: none;overflow: hidden;" >
+        <a href="javascript:void(0)" id="okButton" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveContest('edit')">Ok</a>
+        <a href="javascript:void(0)" id="calcelButton"    class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeModel()">Cancel</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //关闭对话框
+    function closeModel(){
+        $("#editContestModel").dialog("close");
+        $("#addContestModel").dialog("close");
+
+    }
+    //显示对话框
+    function add(){
+
+        $("#addContestModel").dialog("open");
+    }
+    function saveContest(type) {
+        if(type == 'add'){
+            $('#addContestForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "添加成功", 'info');
+                    }
+                    else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#addContestModel").dialog("close");
+                    queryList();
+
+                }
+            });
+            $('#addContestForm').submit();
+        }
+        if(type == 'edit'){
+            $('#editContestForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "修改成功", 'info');
+                    }else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#editContestModel").dialog("close");
+                    queryList();
+
+                }
+            });
+            $('#editContestForm').submit();
+        }
+
+    }
+    function del() {
+        debugger
+        var selected = $("#contestList").datagrid('getChecked');
+        if(selected == null || selected.length == 0){
+            $.messager.alert('Info',"请选择要删除的数据", 'info');
+            return;
+        }
+        var cids = [];
+        for(var row in  selected){
+            cids.push(selected[row].cid+"");
+        }
+        $.ajax({
+            url:"/man/json/contest/delete",
+            data:{"cIds":JSON.stringify(cids)},
+            success:function (result) {
+                if(result.code == "0000"){
+                    $.messager.alert('Info', "删除成功", 'info');
+                    queryList();
+                }else{
+                    $.messager.alert('Info', result.msg, 'info');
+                }
+            },
+            error:function () {
+                $.messager.alert('Info', "系统出小差啦，请稍后重试", 'info');
+            }
+        });
+
+    }
+    //查询
+    function doSearch() {
+        var cId  = $("#conId").val();
+        var cTitle = $("#conTitle").val();
+        var searchParam = {"cid":cId,"title":cTitle};
+
+        $('#contestList').datagrid('load',{
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
+
+
+    setTimeout(function(){
+        //初始化表格，双击事件
+        queryList();
+        $("#contestList").datagrid({
+            //双击事件
+            onDblClickRow: function (index, row) {
+                debugger
+                var startDate       =  new Date(row.startDate).Format("yyyy-MM-dd");
+                var endDate         =  new Date(row.endDate).Format("yyyy-MM-dd");
+                var enrollStartDate =  new Date(row.enrollStartDate).Format("yyyy-MM-dd");
+                var enrollEndDate   =  new Date(row.enrollEndDate).Format("yyyy-MM-dd");
+                var scoreStartDate  =  new Date(row.scoreStartDate).Format("yyyy-MM-dd");
+                var scoreEndDate    =  new Date(row.scoreEndDate).Format("yyyy-MM-dd");
+                var worksEndDate    =  new Date(row.worksEndDate).Format("yyyy-MM-dd");
+
+                $("#cCid").val(row.cid);
+                $("#cTitle").val(row.title);
+                $("#cSummary").val(row.summary);
+                $("#cStartDateStr").val(startDate);
+                $("#cEndDateStr").val(endDate);
+                $("#cEnrollStartDateStr").val(enrollStartDate);
+                $("#cEnrollEndDateStr").val(enrollEndDate);
+                $("#cScoreStartDateStr").val(scoreStartDate);
+                $("#cScoreEndDateStr").val(scoreEndDate);
+                $("#cWorksEndDateStr").val(worksEndDate);
+
+                $("#editContestModel").dialog("open");
+            }
+        });
+
+    },5);
+    //查询列表
+    function queryList() {
+        $('#contestList').datagrid({
+            url:'/man/json/contest/list',
+            title: '竞赛列表',
+            iconCls:'icon-save',
+            pagination:true,
+            pageSize:10,
+            pageList:[10,20],
+            fit:true,//使表格自适应
+            fitColumns:true,//使得表格中所有的列宽相加等于自适应的宽度、也就是浏览器改变大小的时候下方会不会出现滚动条、一般只有在列较少的时候使用
+            nowrap:false,//表格中的文字可以换行、默认是false、不能换行、这样在文字很多的时候就看不到全部：使用真实的数据去测试
+            border:false,
+            idFeild:'cid',//标识、会记录我们选中项的id、不一定是id、通常使用主键
+            sortName:'cid',//设置默认排序时的 字段（必须是field中的一个字段）
+            sortOrder:'asc',//是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
+            columns:[[
+                {
+                    checkbox:true
+                },
+                {
+                    field: 'cid',
+                    title: '编号',
+                    width:100,
+                }, {
+                    field: 'title',
+                    title: '题目',
+                    width: 300,
+                    editor :{
+                        type:'validatebox',
+                        options:{
+                            required:true
+                        }
+                    },
+                }, {
+                    field: 'summary',
+                    title: '简介',
+                    width:500,
+                    editor :{
+                        type:'validatebox',
+                        options:{
+                            required:true
+                        }
+                    },
+                },
+                {
+                    field: 'startEndTime',
+                    title: '竞赛时间',
+                    width:300,
+                    editor :{
+                        type:'validatebox',
+                        options:{
+                            required:true
+                        }
+                    },
+
+                },
+                {
+                    field: 'enrollTime',
+                    title: '报名时间',
+                    width:300,
+                    editor :{
+                        type:'validatebox',
+                        options:{
+                            required:true
+                        }
+                    },
+                },
+                {
+                    field: 'workEndTime',
+                    title: '作品提交截止时间',
+                    width:300,
+                    editor :{
+                        type:'validatebox',
+                        options:{
+                            required:true
+                        }
+                    },
+                }
+            ]]
+
+        });
+    }
+</script>

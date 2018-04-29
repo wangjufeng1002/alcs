@@ -2,6 +2,7 @@ package xy.alcs.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @Author:ju
@@ -15,12 +16,26 @@ public class IndexController {
     public String adminIndex(){
         return "admin/index";
     }
-    @RequestMapping(value = "/admin/contestList")
-    public String contestList(){
-        return "admin/contestTable";
+
+
+    @RequestMapping(value = "/admin/contest")
+    public ModelAndView contestListOld(){
+        System.out.println("dasdsadsad");
+        ModelAndView modelAndView =new ModelAndView("admin/contest");
+        return modelAndView;
     }
     @RequestMapping(value = "/admin/allotRater")
-    public String rater(){
-        return "admin/allotRater";
+    public ModelAndView rater(){
+        System.out.println("dasdsadsad");
+        ModelAndView modelAndView =new ModelAndView("admin/allotRater");
+        return modelAndView;
     }
+    @RequestMapping(value = "/admin/scoreStatistics")
+    public ModelAndView score(){
+        System.out.println("dasdsadsad");
+        ModelAndView modelAndView =new ModelAndView("admin/scoreStatistics");
+        return modelAndView;
+    }
+
+
 }

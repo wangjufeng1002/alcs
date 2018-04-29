@@ -5,6 +5,7 @@ import xy.alcs.domain.Contest;
 import xy.alcs.dto.ContestDateDto;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.MyContestDetailDto;
+import xy.alcs.dto.MyContestWorkDto;
 
 import java.util.List;
 import java.util.Map;
@@ -20,13 +21,13 @@ public interface ContestService {
      * @param queryMap
      * @return
      */
-    public List<ContestDto> listContest(Map<String,Object> queryMap);
+     List<ContestDto> listContest(Map<String,Object> queryMap);
 
     /**
      * 统计总数
      * @return
      */
-    public Integer  countTotal(Map<String,Object> queryMap);
+     Integer  countTotal(Map<String,Object> queryMap);
 
     /**
      * 根据参数查询我的赛事
@@ -36,7 +37,7 @@ public interface ContestService {
      * @param status  赛事状态
      * @return
      */
-    public List<ContestDto> listMyContestByParam(String sId,Integer offset,Integer limit,Integer status);
+     List<ContestDto> listMyContestByParam(String sId,Integer offset,Integer limit,Integer status);
 
     /**
      * 统计我的赛事
@@ -91,4 +92,26 @@ public interface ContestService {
 
     ContestDto queryContestDtoById(Integer cid);
 
+    /**
+     * 报名
+     * @param cId  竞赛id
+     * @param sId  学生id
+     * @return
+     */
+    Result enrollContest(Long cId,String sId);
+
+
+    /**
+     * 查看我的比和作品提交信息
+     * @param queryMap 查询参数map
+     * @return
+     */
+    List<MyContestWorkDto> listMyContestWork(Map<String,Object> queryMap);
+
+    /**
+     * 计算我的报告总数
+     * @param queryMap 查询与参数map
+     * @return
+     */
+    Integer countMyContestWork(Map<String,Object> queryMap);
 }

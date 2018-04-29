@@ -47,7 +47,7 @@ public class Result<T> implements Serializable {
 
 
     public static  <R> Result<R> buildSuccessResult(R data){
-        return new Result<R>(data);
+        return new Result<R>(AlcsErrorCode.SUCCESS.getCode(),AlcsErrorCode.SUCCESS.getDescription(),data);
     }
     public static<R> Result<R> buildErrorResult(ErrorCode errorCode, R data){
         return  new Result<R>(errorCode,null);

@@ -13,6 +13,7 @@
         <module name="alcs-man" />
         <module name="alcs-manager" />
         <module name="alcs-service" />
+        <module name="image-web" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
@@ -24,6 +25,7 @@
       <module name="alcs-man" target="1.8" />
       <module name="alcs-manager" target="1.8" />
       <module name="alcs-service" target="1.8" />
+      <module name="image-web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

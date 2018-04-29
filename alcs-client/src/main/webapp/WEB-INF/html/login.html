@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery-1.12.4.min.js"></script>
+</head>
+<body>
+    用户名：<input type="text" id="account">
+    密码：  <input type="password" id="password">
+    <input type="button" value="登录哦" onclick="login()">
+</body>
+
+</html>
+
+
+<script>
+    function login() {
+        var account = $("#account").val();
+        var password = $("#password").val();
+        $.ajax({
+            url: "/client/stuLogin/",
+            data: {"account": account, "password": password},
+            type: "post",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                debugger
+
+                window.location.href="http://127.0.0.1/graduation/html/student.html"
+            },
+            error: function () {
+                alert("服务器开小差，请稍后重试");
+            }
+        });
+    }
+</script>

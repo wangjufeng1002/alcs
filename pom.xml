@@ -16,6 +16,7 @@
         <module>alcs-common</module>
         <module>alcs-dao</module>
         <module>alcs-manager</module>
+        <module>image-web</module>
 
     </modules>
     <properties>
@@ -193,11 +194,6 @@
             <version>${commons-lang}</version>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
@@ -219,7 +215,21 @@
             <version>1.3.2</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.19.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version>1.19.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
 
         <!-- <dependency>
              <groupId>org.codehaus.jackson</groupId>

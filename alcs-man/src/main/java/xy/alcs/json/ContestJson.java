@@ -74,7 +74,6 @@ public class ContestJson {
         pageData.setTotal(total);
         pageData.setPage(page);
         return pageData;
-
     }
 
     @RequestMapping(value = "/contest/addOrUpdate",method = {RequestMethod.POST,RequestMethod.GET})
@@ -108,21 +107,6 @@ public class ContestJson {
             return Result.buildSuccessResult(AlcsErrorCode.SYSTEM_ERROR);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 校验参数
      * @param contest

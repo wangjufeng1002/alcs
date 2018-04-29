@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<!--对话框-->
+<div id="addContestModel" class="easyui-dialog" style="display: none;padding:5px;width:1000px;height:60%; "
+     title="添加竞赛" iconCls="icon-ok"
+     toolbar="#dlg-toolbar" buttons="#add-buttons">
+    <form id="addContestForm" action="/man/json/contest/addOrUpdate" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <tr>
+                <td class="tdName">题目:</td>
+                <td><input  name="title" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">竞赛要求:</td>
+                <td><textarea  name="summary" maxlength="1000" required cols="50" rows="5" placeholder="请输入少于500字的简介"></textarea></td>
+            </tr>
+            <tr>
+                <td class="tdName">竞赛起始时间:</td>
+                <td><input  name="startDateStr" type="text" placeholder="2018-03-18" > - <input name="endDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+            <tr>
+                <td class="tdName">报名起始时间:</td>
+                <td><input name="enrollStartDateStr" type="text" placeholder="2018-03-18" /> - <input name="enrollEndDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+            <tr>
+                <td class="tdName">评分起始时间:</td>
+                <td><input  name="scoreStartDateStr" type="text" placeholder="2018-03-18"> - <input  name="scoreEndDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+            <tr>
+                <td class="tdName">作品提交结束时间:</td>
+                <td><input   name="worksEndDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="add-buttons" style="display: none;overflow: hidden;" >
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveContest('add')">Ok</a>
+    <a href="javascript:void(0)"  class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeModel()">Cancel</a>
+</div>
+<!--编辑对话框-->
+<div id="editContestModel" class="easyui-dialog" style="display: none;padding:5px;width:1000px;height:60%; "
+     title="编辑竞赛" iconCls="icon-ok"
+     toolbar="#dlg-toolbar" buttons="#edit-buttons" >
+    <form id="editContestForm" action="/man/json/contest/addOrUpdate" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <tr>
+                <td ><input type="hidden"  name="cid" id="cid" /></td>
+            </tr>
+            <tr>
+                <td class="tdName">题目:</td>
+                <td><input id="title" name="title" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">竞赛要求:</td>
+                <td><textarea id="summary" name="summary" maxlength="1000" required cols="50" rows="5" placeholder="请输入少于500字的简介"></textarea></td>
+            </tr>
+            <tr>
+                <td class="tdName">竞赛起始时间:</td>
+                <td><input id="startDateStr" name="startDateStr" type="text" placeholder="2018-03-18" > - <input id="endDateStr" name="endDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+            <tr>
+                <td class="tdName">报名起始时间:</td>
+                <td><input id="enrollStartDateStr" name="enrollStartDateStr" type="text" placeholder="2018-03-18" /> - <input id="enrollEndDateStr" name="enrollEndDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+            <tr>
+                <td class="tdName">评分起始时间:</td>
+                <td><input id="scoreStartDateStr" name="scoreStartDateStr" type="text" placeholder="2018-03-18"> - <input  id="scoreEndDateStr" name="scoreEndDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+            <tr>
+                <td class="tdName">作品提交结束时间:</td>
+                <td><input  id="worksEndDateStr" name="worksEndDateStr" type="text" placeholder="2018-03-18"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="edit-buttons" style="display: none;overflow: hidden;" >
+    <a href="javascript:void(0)" id="okButton" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveContest('edit')">Ok</a>
+    <a href="javascript:void(0)" id="calcelButton"    class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeModel()">Cancel</a>
+</div>
+
+
+</html>

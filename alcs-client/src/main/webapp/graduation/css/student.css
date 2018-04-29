@@ -360,3 +360,54 @@
     transform:translate(-50%,-50%);
     -webkit-transform:translate(-50%,-50%);
 }
+#content{
+    border: solid 1px #e4e9ec;
+    padding: 10px;
+}
+.grade{
+    width: 530px;
+    height: 38px;
+    padding-left: 8px;
+    border: solid 1px #e4e9ec;
+    background: #fdfbfc;
+}
+/*登录*/
+.login-title{
+    font-size: 18px;
+    font-weight: bold;
+}
+.login-container{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-image: url(../img/login.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.login-content{
+    position: fixed;
+    top: 250px;
+    right: 300px;
+}
+.login-input{
+    display: block;
+    width: 200px;
+    height: 30px;
+    padding-left: 8px;
+    border: solid 1px #e4e9ec;
+    background: #fdfbfc;
+    margin-top: 10px;
+}
+.login-btn{
+    width: 210px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: #ec762f;
+    font-size: 14px;
+    color: #fff;
+    margin-top: 10px;
+    cursor: pointer;
+}

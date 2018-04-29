@@ -1,10 +1,13 @@
 package xy.alcs.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import xy.alcs.domain.Works;
 import xy.alcs.domain.WorksExample;
 import xy.alcs.dto.CommentAvgDto;
+import xy.alcs.dto.MyContestDetailDto;
 
 public interface WorksMapper {
     int countByExample(WorksExample example);
@@ -37,4 +40,5 @@ public interface WorksMapper {
 
 
     int updateScoreAvg(@Param("scoreList") List<CommentAvgDto> scoreList);
+
 }

@@ -49,8 +49,6 @@
     </bean>
     <!--事务结束 -->
 
-
-
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage"  value="xy.alcs.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>

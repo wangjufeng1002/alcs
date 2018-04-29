@@ -1,5 +1,6 @@
 package xy.alcs.interceptors;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import xy.alcs.domain.StudentExample;
 import xy.alcs.manager.RaterManager;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,24 +38,32 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         try {
             String requestURI = request.getRequestURI();
-            if (requestURI.equals("/client/stuLogin/") || requestURI.equals("/client/RatLogin/")) {
+            if (requestURI.equals("/client/login/")) {
                 return true;
             } else {
-                Object stu_id = request.getSession().getAttribute("stu_id");
-                Object rat_id = request.getSession().getAttribute("rat_id");
-                if (stu_id == null && rat_id == null) {
+              /*  String account=null ;
+                Cookie[] cookies = request.getCookies();
+                for(Cookie cookie : cookies){
+                   if(cookie.getName().equals("user_id")){
+                         account = cookie.getValue();
+                   }
+                }*/
+
+                String stu_id =(String) request.getSession().getAttribute("stu_id");
+                String rat_id = (String) request.getSession().getAttribute("rat_id");
+                if (StringUtils.isEmpty(stu_id) && StringUtils.isEmpty(rat_id)) {
                     this.reDirect(request,response);
                     return false;
                 } else {
                     StudentExample example = new StudentExample();
-                    example.createCriteria().andStuIdEqualTo((String) stu_id);
+                    example.createCriteria().andStuIdEqualTo(stu_id);
                     List<Student> students = studentMapper.selectByExample(example);
                     if (students != null && students.size() != 0) {
                         return true;
                     }
 
                     RaterExample raterExample = new RaterExample();
-                    raterExample.createCriteria().andRatAccountEqualTo((String) rat_id);
+                    raterExample.createCriteria().andRatAccountEqualTo(rat_id);
                     List<Rater> raterList = raterMapper.selectByExample(raterExample);
                     if (raterList != null && raterList.size() != 0) {
                         return true;

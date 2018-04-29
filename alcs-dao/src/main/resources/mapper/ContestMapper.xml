@@ -373,7 +373,7 @@
   </sql>
     <sql id="limit_select">
     LIMIT #{offset},#{limit};
-  </sql>
+</sql>
 
     <select id="selectContest" resultMap="DtoResultMap" parameterType="java.util.Map">
         SELECT

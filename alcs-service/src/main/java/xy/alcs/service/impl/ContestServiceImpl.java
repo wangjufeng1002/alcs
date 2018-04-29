@@ -1,6 +1,7 @@
 package xy.alcs.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.xml.internal.bind.v2.model.core.MaybeElement;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -10,27 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xy.alcs.common.enums.AlcsErrorCode;
+import xy.alcs.common.enums.TeamCaptainEnum;
+import xy.alcs.common.enums.WorkCommitEnum;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
+import xy.alcs.common.utils.Utils;
 import xy.alcs.dao.ContestMapper;
 import xy.alcs.dao.StudentCompetitionMapper;
-import xy.alcs.domain.Contest;
-import xy.alcs.domain.StudentCompetition;
-import xy.alcs.domain.StudentCompetitionExample;
-import xy.alcs.dto.ContestDateDto;
-import xy.alcs.dto.ContestDto;
-import xy.alcs.dto.MyContestDetailDto;
-import xy.alcs.dto.RaterDto;
+import xy.alcs.dao.StudentMapper;
+import xy.alcs.domain.*;
+import xy.alcs.dto.*;
 import xy.alcs.manager.ContestManager;
 import xy.alcs.service.ContestService;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author:ju
@@ -47,6 +44,8 @@ public class ContestServiceImpl implements ContestService {
 
     @Resource
     private StudentCompetitionMapper studentCompetitionMapper;
+    @Resource
+    private StudentMapper studentMapper;
 
     @Resource
     private ContestManager contestManager;
@@ -89,10 +88,10 @@ public class ContestServiceImpl implements ContestService {
         List<ContestDto> contests = contestMapper.selectContest(map);
 
         for (ContestDto dto : contests) {
-            if (! StringUtils.isEmpty(dto.getExtendJson())) {
+            if (!StringUtils.isEmpty(dto.getExtendJson())) {
                 dto.setRaters(JSONObject.parseArray(dto.getExtendJson(), RaterDto.class));
                 dto.setRaterSize(dto.getRaters().size());
-            }else{
+            } else {
                 dto.setRaterSize(0);
                 dto.setRaters(null);
             }
@@ -121,7 +120,6 @@ public class ContestServiceImpl implements ContestService {
         List<String> teamIds = new ArrayList<>();
         studentCompetitions.forEach(stu -> teamIds.add(stu.getStudentId()));
         myContestDetailDto.setTeammate(teamIds);
-
         return myContestDetailDto;
     }
 
@@ -169,6 +167,60 @@ public class ContestServiceImpl implements ContestService {
         return contestManager.batchDelete(cIds);
     }
 
+    @Override
+    public ContestDto queryContestDtoById(Integer cid) {
+        if (cid == null) {
+            logger.error("#ContestServiceImpl queryContestDtoById param  cid is empty");
+        }
+        return contestMapper.selectContestDtoById(cid);
+    }
+
+    @Override
+    public List<MyContestWorkDto> listMyContestWork(Map<String,Object> queryMap) {
+        return studentCompetitionMapper.selectContestByWorkCommitStatus(this.buildQueryMap(queryMap));
+    }
+
+    @Override
+    public Integer countMyContestWork(Map<String,Object> queryMap) {
+        return studentCompetitionMapper.countContestByWorkCommitStatus(queryMap);
+    }
+
+    @Override
+    public Result enrollContest(Long cId, String sId) {
+        try {
+            if (StringUtils.isBlank(sId) || cId == null) {
+                return Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
+            }
+            Contest contest = contestMapper.selectByPrimaryKey(cId);
+
+            StudentExample studentExample = new StudentExample();
+            studentExample.createCriteria().andStuIdEqualTo(sId);
+            List<Student> students = studentMapper.selectByExample(studentExample);
+            if (contest == null) {
+                return Result.buildErrorResult(AlcsErrorCode.CONETST_NOT_EXIST);
+            }
+            if (CollectionUtils.isEmpty(students)) {
+                return Result.buildErrorResult(AlcsErrorCode.USER_NOT_EXIST);
+            }
+            StudentCompetition studentCompetition = new StudentCompetition();
+            studentCompetition.setStudentId(sId);
+            studentCompetition.setContestId(cId);
+            studentCompetition.setTeamId(Utils.getUUID());
+            studentCompetition.setStudentN(TeamCaptainEnum.IS_CAPTAIN.getCode());
+            studentCompetition.setTimestamp(new Date());
+            studentCompetition.setWorkcommit(WorkCommitEnum.NOT_SAVE_COMIIT.getCode());
+
+            if (studentCompetitionMapper.insert(studentCompetition) > 0) {
+                return Result.buildSuccessResult(AlcsErrorCode.SUCCESS);
+            } else {
+                return Result.buildSuccessResult(AlcsErrorCode.ENROLL_FAIL);
+            }
+        } catch (Exception e) {
+            return Result.buildErrorResult(AlcsErrorCode.DAO_EXCEPTION);
+        }
+
+
+    }
 
     private Map buildQueryMap(Map<String, Object> queryMap) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -187,7 +239,7 @@ public class ContestServiceImpl implements ContestService {
             } else if (item.getKey().toString().equals("title")) {
                 if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
                     resultMap.put("title", null);
-                }else{
+                } else {
                     resultMap.put("title", (String) item.getValue());
                 }
             } else if (item.getKey().toString().equals("cid")) {
@@ -196,17 +248,29 @@ public class ContestServiceImpl implements ContestService {
                 } else {
                     resultMap.put("cid", Integer.parseInt((String) item.getValue()));
                 }
-            }else if(item.getKey().toString().equals("status")){
+            } else if (item.getKey().toString().equals("status")) {
                 if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
                     resultMap.put("status", null);
                 } else {
-                    resultMap.put("status",item.getValue());
+                    resultMap.put("status", item.getValue());
                 }
-            }else if(item.getKey().toString().equals("scoreStatus")){
+            } else if (item.getKey().toString().equals("scoreStatus")) {
                 if (item.getValue() == null || StringUtils.isEmpty((String) item.getValue())) {
                     resultMap.put("scoreStatus", null);
                 } else {
-                    resultMap.put("scoreStatus",item.getValue());
+                    resultMap.put("scoreStatus", item.getValue());
+                }
+            }else if(item.getKey().toString().equals("workCommit")){
+                if (item.getValue() == null) {
+                    resultMap.put("workCommit", null);
+                } else {
+                    resultMap.put("workCommit", item.getValue());
+                }
+            }else if(item.getKey().toString().equals("stuId")){
+                if (item.getValue() == null) {
+                    resultMap.put("stuId", null);
+                } else {
+                    resultMap.put("stuId", item.getValue());
                 }
             }
         }
@@ -216,11 +280,5 @@ public class ContestServiceImpl implements ContestService {
 
     }
 
-    @Override
-    public ContestDto queryContestDtoById(Integer cid) {
-        if(cid == null){
-            logger.error("#ContestServiceImpl queryContestDtoById param  cid is empty");
-        }
-        return   contestMapper.selectContestDtoById(cid);
-    }
+
 }

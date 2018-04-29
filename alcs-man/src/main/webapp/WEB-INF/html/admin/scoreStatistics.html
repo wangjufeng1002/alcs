@@ -1,0 +1,315 @@
+<div class="easyui-layout" data-options="fit:true">
+    <table id="scoreContestList" toolbar="#scoreToolbar" style="width:1000px;height:800px"></table>
+    <div id="scoreToolbar">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-computer-edit" plain="true" onclick="countScore()">统计所选的竞赛</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-computer-edit" plain="true" onclick="showScoreList()">统计所选的竞赛</a>
+        <span>竞赛 ID:</span>
+        <input id="conId" style="line-height:26px;border:1px solid #ccc">
+
+        <span>竞赛 题目:</span>
+        <input id="conTitle" style="line-height:26px;border:1px solid #ccc">
+        <span>竞赛状态:</span>
+        <select id="status" style="line-height:26px;border:1px solid #ccc">
+            <option value="3">正在打分</option>
+            <option value="4" selected>打分完成</option>
+            <option value="5">已结束</option>
+        </select>
+        <span>统计分数:</span>
+        <select id="scoreStatus">
+            <option value="0" selected>未统计</option>
+            <option value="1">已统计</option>
+        </select>
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+    </div>
+
+    <!--编辑对话框-->
+    <div id="scoreDetailContestModal" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
+         title="赛事详情" iconCls="icon-ok"
+         buttons="#edit-buttons">
+        <form id="editContestForm" method="post">
+            <table style="border-collapse: separate;border-spacing: 0px 10px;">
+                <tr>
+                    <td><input type="hidden" name="cid" id="cid"/></td>
+                </tr>
+                <tr>
+                    <td class="tdName">题目:</td>
+                    <td><input id="title" name="title" type="text" disabled></td>
+                </tr>
+                <tr>
+                    <td class="tdName">竞赛要求:</td>
+                    <td><textarea id="summary" name="summary" maxlength="1000" required cols="50" rows="5"
+                                  placeholder="请输入少于500字的简介" disabled></textarea></td>
+                </tr>
+                <tr>
+                    <td class="tdName">竞赛起始时间:</td>
+                    <td><input id="startDateStr" name="startDateStr" type="text" placeholder="2018-03-18" disabled> - <input
+                            id="endDateStr" name="endDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                </tr>
+                <tr>
+                    <td class="tdName">报名起始时间:</td>
+                    <td><input id="enrollStartDateStr" name="enrollStartDateStr" type="text" placeholder="2018-03-18" disabled/>
+                        -
+                        <input id="enrollEndDateStr" name="enrollEndDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                </tr>
+                <tr>
+                    <td class="tdName">评分起始时间:</td>
+                    <td><input id="scoreStartDateStr" name="scoreStartDateStr" type="text" placeholder="2018-03-18" disabled> -
+                        <input id="scoreEndDateStr" name="scoreEndDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                </tr>
+                <tr>
+                    <td class="tdName">作品提交结束时间:</td>
+                    <td><input id="worksEndDateStr" name="worksEndDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div id="edit-buttons" style="display: none;overflow: hidden;">
+        <a href="javascript:void(0)" id="calcelButton" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="closeModel()">Cancel</a>
+    </div>
+</div>
+
+
+<script>
+    //关闭对话框
+    function closeModel() {
+        $("#scoreDetailContestModal").dialog("close");
+
+
+    }
+
+    //查询
+    function doSearch() {
+        var cId = $("#conId").val();
+        var cTitle = $("#conTitle").val();
+        var status = $("#status").val();
+        var scoreStatus = $("#scoreStatus").val();
+        var searchParam = {"cid": cId, "title": cTitle, "status": status, "scoreStatus": scoreStatus};
+        $('#scoreContestList').datagrid('load', {
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
+</script>
+<script type="text/javascript">
+    setTimeout(function () {
+        //关闭对话框
+        debugger
+        $("#scoreDetailContestModal").dialog("close");
+        //初始化表格，双击事件
+        queryList();
+        scoreList();
+        $("#scoreContestList").datagrid({
+            //双击事件
+            onDblClickRow: function (index, row) {
+                debugger
+                var startDate = new Date(row.startDate).Format("yyyy-MM-dd");
+                var endDate = new Date(row.endDate).Format("yyyy-MM-dd");
+                var enrollStartDate = new Date(row.enrollStartDate).Format("yyyy-MM-dd");
+                var enrollEndDate = new Date(row.enrollEndDate).Format("yyyy-MM-dd");
+                var scoreStartDate = new Date(row.scoreStartDate).Format("yyyy-MM-dd");
+                var scoreEndDate = new Date(row.scoreEndDate).Format("yyyy-MM-dd");
+                var worksEndDate = new Date(row.worksEndDate).Format("yyyy-MM-dd");
+
+                $("#cid").val(row.cid);
+                $("#title").val(row.title);
+                $("#summary").val(row.summary);
+                $("#startDateStr").val(startDate);
+                $("#endDateStr").val(endDate);
+                $("#enrollStartDateStr").val(enrollStartDate);
+                $("#enrollEndDateStr").val(enrollEndDate);
+                $("#scoreStartDateStr").val(scoreStartDate);
+                $("#scoreEndDateStr").val(scoreEndDate);
+                $("#worksEndDateStr").val(worksEndDate);
+                $("#scoreDetailContestModal").dialog("open");
+            }
+        });
+
+
+    }, 0.3);
+
+    //查询列表
+    function queryList() {
+        $('#scoreContestList').datagrid({
+            url: '/man/json/contest/list',
+            iconCls: 'icon-save',
+            pagination: true,
+            pageSize: 10,
+            pageList: [10],
+            fit: true,//使表格自适应
+            fitColumns: true,//使得表格中所有的列宽相加等于自适应的宽度、也就是浏览器改变大小的时候下方会不会出现滚动条、一般只有在列较少的时候使用
+            nowrap: false,//表格中的文字可以换行、默认是false、不能换行、这样在文字很多的时候就看不到全部：使用真实的数据去测试
+            border: false,
+            idFeild: 'cid',  //标识、会记录我们选中项的id、不一定是id、通常使用主键
+            sortName: 'cid', //设置默认排序时的 字段（必须是field中的一个字段）
+            sortOrder: 'asc', //是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
+            columns: [[
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'cid',
+                    title: '编号',
+                    width: 100,
+                }, {
+                    field: 'title',
+                    title: '题目',
+                    width: 300,
+                }, {
+                    field: 'summary',
+                    title: '简介',
+                    width: 500,
+                },
+                {
+                    field: 'startEndTime',
+                    title: '竞赛时间',
+                    width: 300,
+
+                },
+                {
+                    field: 'scoreTime',
+                    title: '打分时间',
+                    width: 300,
+
+                },
+                {
+                    field: "status",
+                    title: "竞赛状态",
+                    width: 100,
+                    formatter: statusFormat
+                },
+                {
+                    field: "scoreStatus",
+                    title: "统状态",
+                    width: 200,
+                    formatter: operateFormatter
+                }
+
+            ]]
+
+        });
+    }
+
+    function scoreList() {
+        $('#scoreList').datagrid({
+            url: '/man/json/contest/list',
+            iconCls: 'icon-save',
+            pagination: true,
+            pageSize: 10,
+            pageList: [10],
+            fit: true,//使表格自适应
+            fitColumns: true,//使得表格中所有的列宽相加等于自适应的宽度、也就是浏览器改变大小的时候下方会不会出现滚动条、一般只有在列较少的时候使用
+            nowrap: false,//表格中的文字可以换行、默认是false、不能换行、这样在文字很多的时候就看不到全部：使用真实的数据去测试
+            border: false,
+            idFeild: 'cid',  //标识、会记录我们选中项的id、不一定是id、通常使用主键
+            sortName: 'cid', //设置默认排序时的 字段（必须是field中的一个字段）
+            sortOrder: 'asc', //是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
+            columns: [[
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'cid',
+                    title: '编号',
+                    width: 100,
+                }, {
+                    field: 'title',
+                    title: '题目',
+                    width: 300,
+                }, {
+                    field: 'summary',
+                    title: '简介',
+                    width: 500,
+                },
+                {
+                    field: 'startEndTime',
+                    title: '竞赛时间',
+                    width: 300,
+
+                },
+                {
+                    field: 'scoreTime',
+                    title: '打分时间',
+                    width: 300,
+
+                },
+                {
+                    field: "status",
+                    title: "竞赛状态",
+                    width: 100,
+                    formatter: statusFormat
+                },
+                {
+                    field: "scoreStatus",
+                    title: "统状态",
+                    width: 200,
+                    formatter: operateFormatter
+                }
+
+            ]]
+
+        });
+    }
+
+    function statusFormat(val, row) {
+        if (val == "0") {
+            return '未开始';
+        }
+        else if (val == "1") {
+            return '比赛已启动'
+        }
+        else if (val == "2") {
+            return '开始报名';
+        }
+        else if (val == "3") {
+            return '正在打分';
+        }
+        else if (val == "4") {
+            return '打分已结束';
+        } else {
+            return '比赛结束';
+        }
+    }
+
+    function operateFormatter(value, row, index) {
+        if (value == "0") {
+            return '<span>未统计</span>';
+
+        }
+        if (value == "1") {
+            return '<span>已统计完成</span>';
+
+        }
+    }
+    function countScore() {
+        debugger
+        var selected = $("#scoreContestList").datagrid('getChecked');
+        if(selected.length > 3){
+            $.messager.alert('Info',"每次最多只能同时统计三个竞赛成绩", 'info');
+            return;
+        }
+        var cid = [];
+        for(var item in selected){
+            if(item.status <= 3 ){
+                $.messager.alert('Info',"竞赛打分未完成，不能统计", 'info');
+                return;
+            } else if(item.scoreStatus == 1){
+                $.messager.alert('Info',"，竞赛已经统计过分数，不能重复统计", 'info');
+                return;
+            }
+            cid.push(item.cid);
+        }
+    }
+
+    function showScoreList() {
+        var selected = $("#scoreContestList").datagrid('getChecked');
+        if(selected.length > 1){
+            $.messager.alert('Info',"每次只能查看一个竞赛的成绩列表", 'info');
+            return;
+        }
+        if(selected.length == 0){
+            $.messager.alert('Info',"请选择您要查看竞赛", 'info');
+            return;
+        }
+
+    }
+</script>

@@ -22,11 +22,4 @@ public class WorksServiceImpl implements WorksService {
     @Resource
     private WorksMapper worksMapper;
 
-
-    @Override
-    public List<Works> listWorksBySidAndCommitStatus(String sId,Integer commit) {
-
-       // return worksMapper.selectWorksBySIdAndCommitStatus(sId,commit);
-        return null;
-    }
 }
