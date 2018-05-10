@@ -104,6 +104,7 @@ public class ContestTaskImpl implements ContestTask {
                 this.updateStatusHandler(contestDto.getCid(),ContestStatusEnum.CONTEST_NOT_START);
                 continue;
             }
+            this.updateStatusHandler(contestDto.getCid(),ContestStatusEnum.CONTEST_END);
 
         }
     }
