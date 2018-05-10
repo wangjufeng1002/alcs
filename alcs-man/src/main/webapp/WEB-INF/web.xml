@@ -51,6 +51,7 @@
       <param-name>contextConfigLocation</param-name>
       <param-value>classpath:spring-mvc.xml</param-value>
     </init-param>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>man-html</servlet-name>
@@ -70,6 +71,7 @@
     <url-pattern>/man/json/*</url-pattern>
   </servlet-mapping>
 
-
-
+  <welcome-file-list>
+    <welcome-file>man/html/admin/loginHtml</welcome-file>
+  </welcome-file-list>
 </web-app>

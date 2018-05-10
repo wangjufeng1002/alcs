@@ -16,11 +16,11 @@
           <element id="archive" name="alcs-manager-1.0-SNAPSHOT.jar">
             <element id="module-output" name="alcs-manager" />
           </element>
-          <element id="archive" name="alcs-domain-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="alcs-domain" />
-          </element>
           <element id="archive" name="alcs-common-1.0-SNAPSHOT.jar">
             <element id="module-output" name="alcs-common" />
+          </element>
+          <element id="archive" name="alcs-domain-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="alcs-domain" />
           </element>
           <element id="library" level="project" name="Maven: junit:junit:4.12" />
           <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.3" />

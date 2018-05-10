@@ -1,8 +1,17 @@
 package xy.alcs.json;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import xy.alcs.common.enums.AlcsErrorCode;
+import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
+import xy.alcs.service.ScoreService;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author:ju
@@ -12,9 +21,20 @@ import xy.alcs.common.utils.Result;
 @Controller
 public class ScoreJson {
 
-    @RequestMapping(value = "/score/count")
-    public Result startStatistic(String cids){
+    @Resource
+    private ScoreService scoreService;
 
-      return null;
+    @ResponseBody
+    @RequestMapping(value = "/score/count")
+    public Result startStatistic(String cids) {
+        if (StringUtils.isBlank(cids)) {
+            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
+        }
+        List<Long> cidList = JSON.parseObject(cids, List.class);
+        Boolean res = scoreService.countContestScore(cidList);
+        if (res) {
+            return Result.buildSuccessResult();
+        }
+        return Result.buildErrorResult(AlcsErrorCode.SYSTEM_ERROR);
     }
 }

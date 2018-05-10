@@ -32,7 +32,12 @@ public interface RaterMapper {
     int updateByPrimaryKey(Rater record);
 
 
-    List<RaterDto> selectRaterByParam(Map<String,Object> queryMap);
+    List<RaterDto> selectRaterByParam(Map<String, Object> queryMap);
 
-    Integer countTotalByParam(Map<String,Object> queryMap);
+    Integer countTotalByParam(Map<String, Object> queryMap);
+
+
+    List<Rater> selectRaterList(Map<String, Object> queryParam);
+
+    Integer     countRaterList(Map<String, Object> queryParam);
 }

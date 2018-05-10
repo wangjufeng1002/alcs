@@ -23,11 +23,16 @@ public enum AlcsErrorCode implements ErrorCode {
     PASSWORD_ERROR("0008", "密错误"),
     NOT_LOGIN("0009", "未登录"),
     ENROLL_FAIL("0008", "报名失败"),
-    IMAGE_UPLOAD_FAIL("0009","图片上传失败"),
-    FILE_UPLOAD_FAIL("0010","文件上传失败"),
-    IMAGE_FORMAT_ERROR("0011","图片格式错误"),
-    FILE_FORMAT_ERROR("0012","文件格式错误"),
-
+    IMAGE_UPLOAD_FAIL("0009", "图片上传失败"),
+    FILE_UPLOAD_FAIL("0010", "文件上传失败"),
+    IMAGE_FORMAT_ERROR("0011", "图片格式错误"),
+    FILE_FORMAT_ERROR("0012", "文件格式错误"),
+    SAVE_WORK_FAIL("0013", "保存失败"),
+    SUBMIT_WORK_FAIL("0014", "提交失败"),
+    USER_IS_EXIST("0015", "用户已存在"),
+    SUPER_ADMIN("00016", "超级管理员"),
+    ORDINARY_ADMIN("00017", "普通管理员"),
+    LOGIN_FAIL("00018", "登录失败"),
     ;
     private String code;
     private String description;

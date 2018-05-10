@@ -11,8 +11,8 @@
 	   default-autowire="byName">
 
 
-	<task:annotation-driven scheduler="myScheduler"/>
-	<task:scheduler id="myScheduler" pool-size="5"/>
+	<!--<task:annotation-driven scheduler="myScheduler"/>
+	<task:scheduler id="myScheduler" pool-size="5"/>-->
 
 
 

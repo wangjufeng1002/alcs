@@ -9,6 +9,7 @@
         <result column="contest_id" property="contestId" jdbcType="BIGINT"/>
         <result column="team_id" property="teamId" jdbcType="VARCHAR"/>
         <result column="TIMESTAMP" property="timestamp" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="xy.alcs.domain.Comment" extends="BaseResultMap">
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
@@ -82,7 +83,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    com_id, work_id, rater_id, score, contest_id, team_id, TIMESTAMP
+    com_id, work_id, rater_id, score, contest_id, team_id, TIMESTAMP, status
   </sql>
     <sql id="Blob_Column_List">
     content
@@ -138,10 +139,12 @@
     <insert id="insert" parameterType="xy.alcs.domain.Comment">
     insert into comment (com_id, work_id, rater_id, 
       score, contest_id, team_id, 
-      TIMESTAMP, content)
+      TIMESTAMP, status, content
+      )
     values (#{comId,jdbcType=BIGINT}, #{workId,jdbcType=BIGINT}, #{raterId,jdbcType=INTEGER}, 
       #{score,jdbcType=REAL}, #{contestId,jdbcType=BIGINT}, #{teamId,jdbcType=VARCHAR}, 
-      #{timestamp,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR})
+      #{timestamp,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
+      )
   </insert>
     <insert id="insertSelective" parameterType="xy.alcs.domain.Comment">
         insert into comment
@@ -166,6 +169,9 @@
             </if>
             <if test="timestamp != null">
                 TIMESTAMP,
+            </if>
+            <if test="status != null">
+                status,
             </if>
             <if test="content != null">
                 content,
@@ -192,6 +198,9 @@
             </if>
             <if test="timestamp != null">
                 #{timestamp,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
             </if>
             <if test="content != null">
                 #{content,jdbcType=LONGVARCHAR},
@@ -228,6 +237,9 @@
             <if test="record.timestamp != null">
                 TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
             </if>
+            <if test="record.status != null">
+                status = #{record.status,jdbcType=INTEGER},
+            </if>
             <if test="record.content != null">
                 content = #{record.content,jdbcType=LONGVARCHAR},
             </if>
@@ -245,6 +257,7 @@
         contest_id = #{record.contestId,jdbcType=BIGINT},
         team_id = #{record.teamId,jdbcType=VARCHAR},
         TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
+        status = #{record.status,jdbcType=INTEGER},
         content = #{record.content,jdbcType=LONGVARCHAR}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -258,7 +271,8 @@
         score = #{record.score,jdbcType=REAL},
         contest_id = #{record.contestId,jdbcType=BIGINT},
         team_id = #{record.teamId,jdbcType=VARCHAR},
-        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP}
+        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
+        status = #{record.status,jdbcType=INTEGER}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
@@ -284,6 +298,9 @@
             <if test="timestamp != null">
                 TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
             </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
             <if test="content != null">
                 content = #{content,jdbcType=LONGVARCHAR},
             </if>
@@ -298,6 +315,7 @@
       contest_id = #{contestId,jdbcType=BIGINT},
       team_id = #{teamId,jdbcType=VARCHAR},
       TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
       content = #{content,jdbcType=LONGVARCHAR}
     where com_id = #{comId,jdbcType=BIGINT}
   </update>
@@ -308,11 +326,25 @@
       score = #{score,jdbcType=REAL},
       contest_id = #{contestId,jdbcType=BIGINT},
       team_id = #{teamId,jdbcType=VARCHAR},
-      TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP}
+      TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
     where com_id = #{comId,jdbcType=BIGINT}
   </update>
 
     <select id="selectAvgSorceByContest" parameterType="java.lang.Long" resultMap="AvgResultMap">
-      SELECT team_id ,COUNT(*) AS size ,AVG(score) AS avg ,contest_id,work_id FROM  COMMENT  WHERE  contest_id = #{contestId} GROUP BY team_id;
+    SELECT team_id ,COUNT(*) AS size ,AVG(score) AS avg ,contest_id,work_id FROM  COMMENT  WHERE  contest_id = #{contestId} GROUP BY team_id;
   </select>
+
+
+    <update id="updateSoceAndContent" parameterType="java.util.Map">
+        UPDATE comment
+        SET
+            score = #{score,jdbcType=REAL},
+            content = #{content,jdbcType=LONGVARCHAR},
+            status = 1
+        WHERE
+        work_id = #{wid,jdbcType=BIGINT}
+        and team_id = #{teamId,jdbcType=VARCHAR}
+        and contest_id = #{cid,jdbcType=BIGINT}
+    </update>
 </mapper>

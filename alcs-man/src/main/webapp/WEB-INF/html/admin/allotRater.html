@@ -12,47 +12,47 @@
     </div>
 
     <!--编辑对话框-->
-    <div id="contestDetailModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
+    <div id="aContestDetailModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
          title="详细信息" iconCls="icon-ok"
          buttons="#edit-buttons">
         <form id="editContestForm">
             <table style="border-collapse: separate;border-spacing: 0px 10px;">
                 <tr>
-                    <td><input type="hidden" name="cid" id="cid"/></td>
+                    <td><input type="hidden" name="cid" id="aCid"/></td>
                 </tr>
                 <tr>
                     <td class="tdName">题目:</td>
-                    <td><input id="title" name="title" disabled="disabled" type="text"></td>
+                    <td><input id="aTitle" name="title" disabled="disabled" type="text"></td>
                 </tr>
                 <tr>
                     <td class="tdName">竞赛要求:</td>
-                    <td><textarea id="summary" name="summary" maxlength="1000" required cols="50" rows="5"
+                    <td><textarea id="aSummary" name="summary" maxlength="1000" required cols="50" rows="5"
                                   placeholder="请输入少于500字的简介" disabled="disabled"></textarea></td>
                 </tr>
                 <tr>
                     <td class="tdName">竞赛起始时间:</td>
-                    <td><input id="startDateStr" name="startDateStr" type="text" disabled="disabled"
+                    <td><input id="aStartDateStr" name="startDateStr" type="text" disabled="disabled"
                                placeholder="2018-03-18"> - <input
-                            id="endDateStr" name="endDateStr" type="text" disabled="disabled" placeholder="2018-03-18">
+                            id="aEndDateStr" name="endDateStr" type="text" disabled="disabled" placeholder="2018-03-18">
                     </td>
                 </tr>
                 <tr>
                     <td class="tdName">报名起始时间:</td>
-                    <td><input id="enrollStartDateStr" name="enrollStartDateStr" disabled="disabled" type="text"
+                    <td><input id="aEnrollStartDateStr" name="enrollStartDateStr" disabled="disabled" type="text"
                                placeholder="2018-03-18"/> -
-                        <input id="enrollEndDateStr" name="enrollEndDateStr" disabled="disabled" type="text"
+                        <input id="aEnrollEndDateStr" name="enrollEndDateStr" disabled="disabled" type="text"
                                placeholder="2018-03-18"></td>
                 </tr>
                 <tr>
                     <td class="tdName">评分起始时间:</td>
-                    <td><input id="scoreStartDateStr" name="scoreStartDateStr" disabled="disabled" type="text"
+                    <td><input id="aScoreStartDateStr" name="scoreStartDateStr" disabled="disabled" type="text"
                                placeholder="2018-03-18"> -
-                        <input id="scoreEndDateStr" name="scoreEndDateStr" disabled="disabled" type="text"
+                        <input id="aScoreEndDateStr" name="scoreEndDateStr" disabled="disabled" type="text"
                                placeholder="2018-03-18"></td>
                 </tr>
                 <tr>
                     <td class="tdName">作品提交结束时间:</td>
-                    <td><input id="worksEndDateStr" name="worksEndDateStr" disabled="disabled" type="text"
+                    <td><input id="aWorksEndDateStr" name="worksEndDateStr" disabled="disabled" type="text"
                                placeholder="2018-03-18"></td>
                 </tr>
             </table>
@@ -60,10 +60,10 @@
     </div>
     <div id="edit-buttons" style="display: none;overflow: hidden;">
         <a href="javascript:void(0)" id="calcelButton" class="easyui-linkbutton" iconCls="icon-cancel"
-           onclick="closeModel()">Cancel</a>
+           onclick="closeAlloterRaterModel()">Cancel</a>
     </div>
-
-    <div id="raterListModel" class="easyui-dialog"  style="width: 1000px;height: 800px" data-options="closed:true,iconCls:'icon-add'"
+    <!--显示分配评委对话框 -->
+    <div id="raterListModel" class="easyui-dialog"  style="overflow:scroll;width: 1000px;height: 600px" data-options="closed:true,iconCls:'icon-add'"
          title="评委信息" iconCls="icon-ok"
          buttons="#rater-buttons">
         <input type="hidden" id="rater_cid">
@@ -75,9 +75,9 @@
     </div>
     <div id="rater-buttons" style="display: none;overflow: hidden;">
         <a href="javascript:void(0)" id="okButton" class="easyui-linkbutton" iconCls="icon-ok"
-           onclick="saveRater('edit')">Ok</a>
+           onclick="saveRater()">Ok</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
-           onclick="closeModel()">Cancel</a>
+           onclick="closeAlloterRaterModel()">Cancel</a>
     </div>
 
 </div>
@@ -95,8 +95,8 @@
     }
 
     //关闭对话框
-    function closeModel() {
-        $("#contestDetailModel").dialog("close");
+    function closeAlloterRaterModel() {
+        $("#aContestDetailModel").dialog("close");
         $("#raterListModel").dialog("close");
     }
 
@@ -112,7 +112,9 @@
             data: {"rids": JSON.stringify(rids), "cid": $("#rater_cid").val()},
             success: function (result) {
                 if (result.code == "0000") {
-                    allotRater();
+                    var selected = $("#raterContestList").datagrid('getChecked');
+                    allotRater(selected);
+                    queryList();
                 } else {
 
                 }
@@ -124,9 +126,11 @@
 
     }
 
-    function allotRater() {
+    function allotRater(selected) {
         debugger
-        var selected = $("#raterContestList").datagrid('getChecked');
+        if(selected == null){
+            selected = $("#raterContestList").datagrid('getChecked');
+        }
         var cids = [];
         for (var row in  selected) {
             cids.push(selected[row].cid + "");
@@ -190,8 +194,7 @@
 <script type="text/javascript">
     setTimeout(function(){
         //关闭对话框
-        $("#contestDetailModel").dialog("close");
-        $("#raterListModel").dialog("close");
+        closeAlloterRaterModel();
         //初始化表格，双击事件
         queryList();
         $("#raterContestList").datagrid({
@@ -206,18 +209,18 @@
                 var scoreEndDate = new Date(row.scoreEndDate).Format("yyyy-MM-dd");
                 var worksEndDate = new Date(row.worksEndDate).Format("yyyy-MM-dd");
 
-                $("#cid").val(row.cid);
-                $("#title").val(row.title);
-                $("#summary").val(row.summary);
-                $("#startDateStr").val(startDate);
-                $("#endDateStr").val(endDate);
-                $("#enrollStartDateStr").val(enrollStartDate);
-                $("#enrollEndDateStr").val(enrollEndDate);
-                $("#scoreStartDateStr").val(scoreStartDate);
-                $("#scoreEndDateStr").val(scoreEndDate);
-                $("#worksEndDateStr").val(worksEndDate);
+                $("#aCid").val(row.cid);
+                $("#aTitle").val(row.title);
+                $("#aSummary").val(row.summary);
+                $("#aStartDateStr").val(startDate);
+                $("#aEndDateStr").val(endDate);
+                $("#aEnrollStartDateStr").val(enrollStartDate);
+                $("#aEnrollEndDateStr").val(enrollEndDate);
+                $("#aScoreStartDateStr").val(scoreStartDate);
+                $("#aScoreEndDateStr").val(scoreEndDate);
+                $("#aWorksEndDateStr").val(worksEndDate);
 
-                $("#contestDetailModel").dialog("open");
+                $("#aContestDetailModel").dialog("open");
             }
         });
 

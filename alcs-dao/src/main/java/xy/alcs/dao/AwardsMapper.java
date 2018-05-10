@@ -1,9 +1,12 @@
 package xy.alcs.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import xy.alcs.domain.Awards;
 import xy.alcs.domain.AwardsExample;
+import xy.alcs.dto.AwardsDto;
 import xy.alcs.dto.CommentAvgDto;
 
 public interface AwardsMapper {
@@ -30,4 +33,17 @@ public interface AwardsMapper {
     int updateByPrimaryKey(Awards record);
 
     int batchInsertAward(@Param("scoreList") List<CommentAvgDto> scoreList);
+
+    /**
+     * 查询我的奖项
+     * @param queryMap
+     * @return
+     */
+    List<AwardsDto> selectMyAwardsList(Map<String, Object> queryMap);
+    /**
+     * 统计我的奖项个数
+     * @param queryMap
+     * @return
+     */
+    Integer countMyAwardsTotal(Map<String, Object> queryMap);
 }

@@ -2,8 +2,11 @@ package xy.alcs.manager.impl;
 
 import org.springframework.stereotype.Repository;
 import xy.alcs.common.enums.AlcsErrorCode;
+import xy.alcs.common.enums.CommentStatusEnum;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.dao.*;
+import xy.alcs.domain.Contest;
+import xy.alcs.domain.ContestExample;
 import xy.alcs.domain.RaterCompetition;
 import xy.alcs.domain.RaterCompetitionExample;
 import xy.alcs.dto.CommentAvgDto;
@@ -39,15 +42,15 @@ public class ScoreManagerImpl  extends BaseManager implements ScoreManager {
     public Boolean batchCountScore(List<Long> cids) {
         return this.getTransactionTemplate().execute(transactionStatus -> {
             try {
-                for (Long cid : cids) {
+                for (Object cid : cids) {
                     RaterCompetitionExample example = new RaterCompetitionExample();
-                    example.createCriteria().andContestIdEqualTo(cid);
+                    example.createCriteria().andContestIdEqualTo(Long.valueOf(cid.toString()));
                     List<RaterCompetition> raterCompetitions = raterCompetitionMapper.selectByExample(example);
                     if (raterCompetitions.size() < 1) {
                         throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
                     }
                     Integer size = raterCompetitions.size();
-                    List<CommentAvgDto> commentAvgDtos = commentMapper.selectAvgSorceByContest(cid);
+                    List<CommentAvgDto> commentAvgDtos = commentMapper.selectAvgSorceByContest(Long.valueOf(cid.toString()));
                     for (CommentAvgDto dto : commentAvgDtos) {
                         if (!dto.getSize().equals(size)) {
                             throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
@@ -60,7 +63,11 @@ public class ScoreManagerImpl  extends BaseManager implements ScoreManager {
                     commentAvgDtos.stream().sorted(Comparator.comparing(CommentAvgDto::getAvg).reversed());
                     //插入操作
                     awardsMapper.batchInsertAward(commentAvgDtos);
-
+                    //更新竞赛表中的字段
+                    Contest contest = new Contest();
+                    contest.setCid(Long.valueOf(cid.toString()));
+                    contest.setScoreStatus(CommentStatusEnum.YES.getCode());
+                    contestMapper.updateByPrimaryKeySelective(contest);
                 }
             } catch (Exception e) {
                 if (e instanceof BussinessException){

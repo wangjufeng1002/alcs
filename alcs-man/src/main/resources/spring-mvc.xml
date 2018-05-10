@@ -36,14 +36,20 @@
     </context:component-scan>
 
 
-    <!-- jsp视图 -->
+    <!-- html视图 -->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/html/"/>
         <property name="suffix" value=".html"></property>
     </bean>
     <!-- 拦截器 -->
      <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+         <property name="interceptors">
+             <list>
+                 <bean class="xy.alcs.interceptors.LoginInterceptor">
 
+                 </bean>
+             </list>
+         </property>
      </bean>
 
     <!-- 适配器 -->

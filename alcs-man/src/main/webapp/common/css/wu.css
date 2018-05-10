@@ -53,5 +53,9 @@ input[type="checkbox"] { cursor: pointer;}
 .wu-toolbar-search { padding:3px 5px;}
 
 .wu-footer { height:20px; padding:5px; text-align:center; overflow:hidden; background:#e0ecff;}
+.content{
+    border: solid 1px #e4e9ec;
+    padding: 10px;
+}
 
 

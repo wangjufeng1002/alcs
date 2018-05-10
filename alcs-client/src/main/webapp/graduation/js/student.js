@@ -3,11 +3,17 @@ $(function () {
     var contestListData; //江赛列表数据
     var myContestListData;//我的竞赛数据
     var myContestWorkData;//我的竞赛作品列表
+    var myAwardsListData;// 我的获奖列表
+    var stuInfo;        //学生信息
     var imageName = "";
-    var fileName ="";
+    var fileName = "";
     var submitType = ""; //2 确定报名，3，提交报告，4，保存报告
-    var globalCid ="";
+    var globalCid = null;
+    var globalWid = null;
+    //编辑器
     var editor;
+    //我的报告，
+    var myWork;
 
     getStudentInfo();
 
@@ -73,7 +79,7 @@ $(function () {
         });
         //点击个人中心--个人信息
         $('.menu-list-first.my-personal').siblings('.menu-list-second').children('.my-personal-situation').on('click', function () {
-            initTable("myPersonalSituation", null);
+            initTable("myPersonalSituation", stuInfo);
         });
         //点击个人中心--密码修改
         $('.menu-list-first.my-personal').siblings('.menu-list-second').children('.my-personal-password').on('click', function () {
@@ -141,18 +147,31 @@ $(function () {
         //点击提交报告弹出弹窗
         $('body').on('click', '.submit-report', function () {
             debugger
-            var cid = $(this).children('input').val();
+            var cid = $(this).children('input:first-child').val();
             globalCid = cid;
+            var wId = $(this).children('input:last-child').val();
+            globalWid = wId;
+
+
             reportShow(1);
             initEditor();
+            getWork(globalWid, globalCid);
+
+
         });
         //点击查看报告弹出弹窗
         $('body').on('click', '.look-report', function () {
             debugger
-            var cid = $(this).children('input').val();
+            var cid = $(this).children('input:first-child').val();
             globalCid = cid;
+            var wId = $(this).children('input:last-child').val();
+            globalWid = wId;
+            debugger
             reportShow(2);
             initEditor();
+            getWork(globalWid, globalCid);
+
+
         });
         //确认修改密码
         $('body').on('click', '.amend-password-button', function () {
@@ -160,10 +179,17 @@ $(function () {
             if ($('.amend-password').val() == $('.amend-password-second').val()) {
                 //请求
                 $.ajax({
-                    data: {},
-                    url: '',
+                    data: {type:1,password:$('.amend-password').val()},
+                    url: '/client/user/changePass',
                     success: function () {
-                        toastAdd(1, '修改成功');
+                        if(res.code == '0000'){
+                            toastAdd(1, '修改成功');
+                            setTimeout(function () {
+                                window.location.href = "/graduation/html/login.html";
+                            }, 1);
+                        }else{
+                            toastAdd(1, '网络失败请重试');
+                        }
                     },
                     error: function () {
                         toastAdd(1, '网络失败请重试');
@@ -175,9 +201,29 @@ $(function () {
             }
         })
 
-        $('body').on('click','.look-report-window .submit-btn',function () {
+        $('body').on('click', '.look-report-window .submit-btn', function () {
             toastAdd(3, '');
-        })
+        });
+        $('body').on('click', '.look-report-window .save-btn', function () {
+            toastAdd(4, '');
+        });
+        $('body').on('click', '.right-container .right-head-personal-exit', function () {
+            $.ajax({
+                url:"/client/outLogin",
+                type:"post",
+                success:function (res) {
+                    if(res.code == "0000"){
+                        window.location.href="/graduation/html/login.html";
+                    }
+                    else{
+                        toastAdd(1, '网络失败请重试');
+                    }
+                },
+                error: function () {
+                    toastAdd(1, '网络失败请重试');
+                }
+            });
+        });
 
     }
 
@@ -467,9 +513,11 @@ $(function () {
                     '<span class="look-details">' +
                     '查看竞赛详情' +
                     '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '<input type="hidden" value="' + rows[i].wId + '"/>' +
                     '</span>' +
                     '<span class="look-report">' +
                     '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '<input type="hidden" value="' + rows[i].wId + '"/>' +
                     '查看我的报告</span></td>' +
                     '</tr>';
             }
@@ -541,9 +589,11 @@ $(function () {
                     '<span class="look-details">' +
                     '查看竞赛详情' +
                     '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '<input type="hidden" value="' + rows[i].wId + '"/>' +
                     '</span>' +
                     '<span class="submit-report">' +
                     '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '<input type="hidden" value="' + rows[i].wId + '"/>' +
                     '提交报告</span></td>' +
                     '</tr>';
             }
@@ -573,64 +623,45 @@ $(function () {
             })
         }
         else if (type == "myAward") {
-            var data = {
-                "rows": [
-                    {
-                        "itemid": "1",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '我的获奖',
-                    },
-                    {
-                        "itemid": "2",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '我的获奖',
-                    },
-                    {
-                        "itemid": "3",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '我的获奖',
-                    },
-                    {
-                        "itemid": "4",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '我的获奖',
-                    },
-                    {
-                        "itemid": "5",
-                        "startTime": '2017-05-01',
-                        "endTime": '2017-05-10',
-                        "name": '我的获奖',
-                    },
-                ]
-            };
+            debugger
+            var rows;
+            if (resultData == null) {
+                getMyAwards(1, 10);
+                resultData = myAwardsListData;
+                rows = myAwardsListData.rows;
+            } else {
+                rows = resultData.rows;
+            }
             var headData = {
-                "itemid": "赛事编码",
-                "startTime": '开始时间',
-                "endTime": '结束时间',
-                "name": '比赛名称',
+                "cid": "赛事编码",
+                "startEndTime": '竞赛时间',
+                "title": '比赛名称',
+                "score": "分数",
+                "prizeStr": "奖项",
                 "operation": '操作'
             };
             var tableHead =
                 '<tr class="table-body">' +
-                '<td>' + headData.itemid + '</td>' +
-                '<td>' + headData.startTime + '</td>' +
-                '<td>' + headData.endTime + '</td>' +
-                '<td>' + headData.name + '</td>' +
+                '<td>' + headData.cid + '</td>' +
+                '<td>' + headData.startEndTime + '</td>' +
+                '<td>' + headData.title + '</td>' +
+                '<td>' + headData.score + '</td>' +
+                '<td>' + headData.prizeStr + '</td>' +
                 '<td>' + headData.operation + '</td>' +
                 '</tr>';
             var tableBody = '';
-            for (var i = 0; i < data.rows.length; i++) {
+            for (var i = 0; i < rows.length; i++) {
                 tableBody +=
                     '<tr class="table-body">' +
-                    '<td>' + data.rows[i].itemid + '</td>' +
-                    '<td>' + data.rows[i].startTime + '</td>' +
-                    '<td>' + data.rows[i].endTime + '</td>' +
-                    '<td>' + data.rows[i].name + '</td>' +
-                    '<td><span class="look-details">查看竞赛详情</span></td>' +
+                    '<td>' + rows[i].cid + '</td>' +
+                    '<td>' + rows[i].startEndTime + '</td>' +
+                    '<td>' + rows[i].title + '</td>' +
+                    '<td>' + rows[i].score + '</td>' +
+                    '<td>' + rows[i].prizeStr + '</td>' +
+                    '<td>' +
+                    '<span class="look-details">' + '查看竞赛详情' +
+                    '<input type="hidden" value="' + rows[i].cid + '"/>' +
+                    '</span></td>' +
                     '</tr>';
             }
             var table = '<table class="table" id="table">' + tableHead + tableBody + '</table>';
@@ -638,8 +669,8 @@ $(function () {
             //初始化分页
             pageAdd();
             new pageInit({
-                totalCount: 200,//总页数
-                currIndex: 0,//当前页，0为第一页
+                totalCount: resultData.total,//总页数
+                currIndex: resultData.page - 1,//当前页，0为第一页
                 pageSize: $('.pageSelect option:selected').val(),//每页数据量
                 initCurrIndex: 0,//页面一进来的时候展示的页码，默认展示第一页,0为第一页
                 nextCallback: function () {
@@ -652,11 +683,17 @@ $(function () {
                     //选择下拉框中页数的回调函数
                 },
                 pageCallback: function () {
+                    getMyAwards(currIndex + 1, this.pageSize);
+                    initTable("myAward", myAwardsListData);
                     //点击页码的回调函数和跳至几页的回调函数
                 },
             })
         }
         else if (type == "myPersonalSituation") {
+            if(resultData == null){
+                getStudentInfo();
+                resultData = stuInfo;
+            }
             var myPersonalSituation =
                 '<ul class="personal-con">' +
                 '<li class="personal-item">' +
@@ -665,19 +702,23 @@ $(function () {
                 '</li>' +
                 '<li class="personal-item">' +
                 '<div class="personal-item-title">院系</div>' +
-                '<div class="personal-item-content">计算机学院-计算机科学与技术</div>' +
+                '<div class="personal-item-content">' +resultData.colName + '-'+ resultData.majName +
+                '</div>' +
                 '</li>' +
                 '<li class="personal-item">' +
                 '<div class="personal-item-title">班级</div>' +
-                '<div class="personal-item-content">14-02班</div>' +
+                '<div class="personal-item-content">' +resultData.claName +
+                '</div>' +
                 '</li>' +
                 '<li class="personal-item">' +
                 '<div class="personal-item-title">学号</div>' +
-                '<div class="personal-item-content">04141063</div>' +
+                '<div class="personal-item-content">' + resultData.stuId +
+                '</div>' +
                 '</li>' +
                 '<li class="personal-item">' +
                 '<div class="personal-item-title">姓名</div>' +
-                '<div class="personal-item-content">王巨峰</div>' +
+                '<div class="personal-item-content">' + resultData.stuName +
+                '</div>' +
                 '</li>' +
                 '</ul>';
             $('.right-content').append(myPersonalSituation);
@@ -688,6 +729,8 @@ $(function () {
                 '<input type="password" class="amend-password-second" placeholder="请再次输入新密码">' +
                 '<div class="amend-password-button">确认修改</div>';
             $('.right-content').append(myPersonalPassword);
+
+            $('.amend-password').val('');
         }
     }
 
@@ -806,7 +849,7 @@ $(function () {
 
     // toast提示
     function toastAdd(type, text) {
-      /*  $('.fade').remove();*/
+        $('.fade.sure-window').remove();
         if (type == 1) {
             var delay = {
                 showIn: 1200, // 显示时间
@@ -819,7 +862,7 @@ $(function () {
             }, delay.showIn);
         }
         else if (type == 2) {
-            submitType =2;
+            submitType = 2;
             var toast =
                 '<div class="fade sure-window">' +
                 '<div class="pop-window">' +
@@ -836,12 +879,29 @@ $(function () {
         }
         //提交报告
         else if (type == 3) {
-            submitType =3;
+            submitType = 3;
             var toast =
                 '<div class="fade sure-window">' +
                 '<div class="pop-window">' +
                 '<div class="pop-window-item">' +
                 '<div class="sure-title">确定提交？提交后不可修改！</div>' +
+                '</div>' +
+                '<div class="pop-window-footer">' +
+                '<span class="pop-window-footer-btn submit-btn">确定' +
+                '</span>' +
+                '<span class="pop-window-footer-btn cancel-btn">取消</span>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }
+        //保存报告
+        else if (type == 4) {
+            submitType = 4;
+            var toast =
+                '<div class="fade sure-window">' +
+                '<div class="pop-window">' +
+                '<div class="pop-window-item">' +
+                '<div class="sure-title">确定保存？</div>' +
                 '</div>' +
                 '<div class="pop-window-footer">' +
                 '<span class="pop-window-footer-btn submit-btn">确定' +
@@ -1072,12 +1132,10 @@ $(function () {
             async: false,
             success: function (result) {
                 if (result.code == "0000") {
-                    debugger
-                    var stuInfo = result.data;
+                    stuInfo = result.data;
                     var showStr = stuInfo.colName + "-" + stuInfo.majName + "-" + stuInfo.stuId;
                     $(".menu-user-identity").html(showStr);
                     $(".menu-user-name").html(stuInfo.stuName);
-
                     showStr = stuInfo.stuName + " - " + stuInfo.colName;
                     $(".right-head-personal-name").html(stuInfo.colName);
                 } else {
@@ -1102,7 +1160,7 @@ $(function () {
 
         } else if (type == 'file') {
             url = "/client/upload/file";
-            data = {"base64Data": content}
+            data = {"base64Data": content};
 
         }
         $.ajax({
@@ -1110,7 +1168,7 @@ $(function () {
             type: "post",
             data: data,
             success: function (result) {
-                if(result.code == "0000"){
+                if (result.code == "0000") {
                     if (type == 'img') {
                         imageName = result.data;
 
@@ -1128,8 +1186,8 @@ $(function () {
 
     //弹窗2次确认按钮
 
-    function  makeSure(type) {
-        if(type == 2){
+    function makeSure(type) {
+        if (type == 2) {
             $.ajax({
                 data: {cId: globalCid},
                 url: '/client/contest/enroll',
@@ -1145,11 +1203,119 @@ $(function () {
                 }
             })
         }
-        if(type == 3){
-            var text = editor.txt.html();
-            alert(text);
-            editor.txt.html("<p>dadsadsadwoangdecdnincndinine</p>")
+        //提交报告
+        if (type == 3) {
+            debugger
+            var workContent = editor.txt.html();
+            var temp;
+            if (globalWid == null || globalWid == "null" || globalWid == "") {
+                temp = null;
+            } else {
+                temp = globalWid;
+            }
+            $.ajax({
+                data: {cid: globalCid, imageName: imageName, fileName: fileName, workContent: workContent, wId: temp},
+                url: '/client/work/submit',
+                type: "post",
+                success: function (result) {
+                    if (result.code == "0000") {
+                        $('.fade.sure-window').remove();
+                        $('.fade.look-report-window').remove();
+                        toastAdd(1, '提交成功')
+                    } else {
+                        $('.fade.sure-window').remove();
+                        toastAdd(1, '提交失败')
+                    }
+                },
+                fail: function () {
+                    $('.fade.sure-window').remove();
+                    toastAdd(1, '提交失败请重试')
+                }
+            })
         }
+        //保存报告
+        if (type == 4) {
+            debugger
+            var workContent = editor.txt.html();
+            var temp;
+            if (globalWid == null || globalWid == "null" || globalWid == "") {
+                temp = null;
+            } else {
+                temp = globalWid;
+            }
+            $.ajax({
+                data: {cid: globalCid, imageName: imageName, fileName: fileName, workContent: workContent, wId: temp},
+                url: '/client/work/save',
+                type: "post",
+                success: function (result) {
+                    if (result.code == "0000") {
+                        $('.fade.sure-window').remove();
+                        $('.fade.look-report-window').remove();
+                        toastAdd(1, '提交成功')
+                    } else {
+                        $('.fade.sure-window').remove();
+                        toastAdd(1, '提交失败')
+                    }
+                },
+                fail: function () {
+                    $('.fade.sure-window').remove();
+                    toastAdd(1, '提交失败请重试')
+                }
+            })
+        }
+    }
+
+
+    function getWork(wId, cId) {
+        debugger
+        var temp;
+        if (wId == null || wId == "null" || wId == "") {
+            temp = null;
+        } else {
+            temp = wId;
+        }
+        $.ajax({
+            data: {wId: temp, cId: cId},
+            url: '/client/work/get',
+            success: function (result) {
+                if (result.code == "0000") {
+                    myWork = result.data;
+                    if (myWork.imageName != null && myWork.imageName != "") {
+                        imageName = myWork.imageName;
+                        $('.picture').attr("src", myWork.imageName).show();
+                    }
+                    if (myWork.workContent != null && myWork.workContent != "") {
+                        editor.txt.html(myWork.workContent);
+                    }
+                    if (myWork.fileName != null && myWork.fileName != "") {
+                        fileName = myWork.fileName;
+                    }
+
+                } else {
+                    toastAdd(1, '系统错误', '')
+                }
+            },
+            fail: function () {
+                toastAdd(1, '报名失败请重试', '')
+            }
+        })
+    }
+
+    function getMyAwards(page, rows) {
+        $.ajax({
+            url: "/client/award/myAwards",
+            data: {"page": page, "rows": rows},
+            type: "post",
+            dataType: "json",
+            async: false,
+            success: function (result) {
+                myAwardsListData = result;
+            },
+            error: function () {
+
+            }
+
+        });
     }
 });
 

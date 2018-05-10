@@ -1,6 +1,8 @@
 package xy.alcs.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 import xy.alcs.domain.Admin;
 import xy.alcs.domain.AdminExample;
@@ -27,4 +29,9 @@ public interface AdminMapper {
     int updateByPrimaryKeySelective(Admin record);
 
     int updateByPrimaryKey(Admin record);
+
+
+    List<Admin> selectAdminList(Map<String, Object> queryMap);
+
+    Integer countAdminList(Map<String, Object> queryMap);
 }

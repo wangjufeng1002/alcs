@@ -1,0 +1,266 @@
+<div class="easyui-layout" data-options="fit:true">
+    <table id="adminList" toolbar="#adminToolbar" pagination="true" style="width:1000px;height:800px"></table>
+</div>
+<div id="adminToolbar">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addAdmin()">New</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delAdmin()">Destroy</a>
+    <span>姓名:</span>
+    <input id="name" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <span>账号:</span>
+    <input id="account" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch(null)">Search</a>
+</div>
+<!--编辑对话框-->
+<div id="adminDetailEditModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:800px;height: 600px; padding:10px;"
+     title="编辑管理员信息" iconCls="icon-ok"
+     buttons="#adminDetailEdit-buttons">
+    <form id="adminEditForm" action="/man/json/admin/edit" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <input type="hidden" id="aid" name="aid">
+            <tr>
+                <td class="tdName">姓名:</td>
+                <td><input id="eAName" name="name" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">账号:</td>
+                <td><input id="eAAccount" name="account" disabled type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">角色:</td>
+                <td>
+                    <select id="eAPower" name="power">
+                        <option value="1">超级管理员</option>
+                        <option value="2">普通管理员</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdName">密码:</td>
+                <td><input type="password"  id="eAPass" name="password"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="adminDetailEdit-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="adminSubmit('edit')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeAdminModel()">Cancel</a>
+</div>
+<!--添加对话框-->
+<div id="adminDetailAddModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:1200px;height: 700px; padding:10px;"
+     title="添加管理员信息" iconCls="icon-ok"
+     buttons="#adminDetail-buttons">
+    <form id="adminAddForm" action="/man/json/admin/add" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <tr>
+                <td class="tdName">姓名:</td>
+                <td><input id="aName" name="name" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">账号:</td>
+                <td><input id="aAccount" name="account" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">角色:</td>
+                <td>
+                    <select id="aPower" name="power">
+                        <option value="1">超级管理员</option>
+                        <option value="2" selected>普通管理员</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdName">密码:</td>
+                <td><input type="password"  id="aPass" name="password"/></td>
+            </tr>
+        </table>
+        </table>
+    </form>
+</div>
+<div id="adminDetail-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="adminSubmit('add')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeAdminModel()">Cancel</a>
+</div>
+</div>
+
+<script type="text/javascript">
+    //关闭对话框
+    function closeAdminModel() {
+        $("#adminDetailAddModel").dialog("close");
+        $("#adminDetailEditModel").dialog("close");
+
+    }
+
+    //查询
+    function doSearch(searchParam) {
+        if (searchParam == null || searchParam == "") {
+            searchParam = buildAllSearchParam();
+        }
+        $('#adminList').datagrid('load', {
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
+
+    function adminSubmit(type) {
+        if(type == 'add'){
+            $('#adminAddForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "添加成功", 'info');
+                    }
+                    else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#adminDetailAddModel").dialog("close");
+                    doSearch(null);
+
+                }
+            });
+            $('#adminAddForm').submit();
+        }
+        if(type == 'edit'){
+            $('#adminEditForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "修改成功", 'info');
+                    }else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#adminDetailEditModel").dialog("close");
+                    doSearch(null);
+
+                }
+            });
+            $('#adminEditForm').submit();
+        }
+    }
+
+    setTimeout(function () {
+        //初始化表格，双击事件
+        queryList();
+        $("#adminList").datagrid({
+            //双击事件
+            onDblClickRow: function (index, row) {
+                debugger
+                $('#eAName').val(row.name);
+                $('#eAAccount').val(row.account);
+                $('#eAPass').val(row.password);
+                $('#aid').val(row.aid);
+                $('#eAPower').val(row.power);
+                $("#adminDetailEditModel").dialog("open");
+            }
+        });
+
+    }, 5);
+
+    //查询列表
+    function queryList() {
+        $('#adminList').datagrid({
+            url: '/man/json/admin/list',
+            title: '学生信息列表',
+            iconCls: 'icon-save',
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20],
+            fit: true,//使表格自适应
+            fitColumns: true,//使得表格中所有的列宽相加等于自适应的宽度、也就是浏览器改变大小的时候下方会不会出现滚动条、一般只有在列较少的时候使用
+            nowrap: false,//表格中的文字可以换行、默认是false、不能换行、这样在文字很多的时候就看不到全部：使用真实的数据去测试
+            border: false,
+            idFeild: 'wId',//标识、会记录我们选中项的id、不一定是id、通常使用主键
+            //sortName:'cid',//设置默认排序时的 字段（必须是field中的一个字段）
+            // sortOrder:'asc',//是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
+            columns: [[
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'aid',
+                    title: '编号',
+                    width: 300,
+                },
+                {
+                    field: 'account',
+                    title: '账号',
+                    width: 300,
+                },
+                {
+                    field: 'name',
+                    title: '姓名',
+                    width: 300,
+                }
+                , {
+                    field: 'power',
+                    title: '角色',
+                    width: 300,
+                    formatter: powerFormat,
+                }
+            ]]
+
+        });
+    }
+    function powerFormat(val, row) {
+        if(val == 1){
+            return "超级管理员";
+        }
+        return "普通管理员";
+    }
+    //构建所有查询参数
+    function buildAllSearchParam() {
+        //colName majorName clasName stuId colId majId claId
+        var name = $('#name').val();
+        var account = $('#account').val();
+
+        if (name == "") {
+            name = null;
+        }
+        if (account == "") {
+            account = null;
+        }
+        var queryJson = {
+            name: name,
+            account: account,
+        }
+        return queryJson;
+    }
+
+    function addAdmin() {
+        $('#aName').val('');
+        $('#aAccount').val('');
+        $('#aPass').val(null);
+        $("#adminDetailAddModel").dialog("open");
+    }
+    function delAdmin() {
+        debugger
+        var selected = $("#adminList").datagrid('getChecked');
+        if(selected == null || selected.length == 0){
+            $.messager.alert('Info',"请选择要删除的数据", 'info');
+            return;
+        }
+        var aids = [];
+        for(var row in  selected){
+            aids.push(selected[row].aid);
+        }
+        $.ajax({
+            url:"/man/json/admin/del",
+            data:{"aids":JSON.stringify(aids)},
+            success:function (result) {
+                if(result.code == "0000"){
+                    $.messager.alert('Info', "删除成功", 'info');
+                    doSearch(null);
+                }else{
+                    $.messager.alert('Info', result.msg, 'info');
+                }
+            },
+            error:function () {
+                $.messager.alert('Info', "系统出小差啦，请稍后重试", 'info');
+            }
+        });
+    }
+</script>

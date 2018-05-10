@@ -1,107 +1,118 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="xy.alcs.dao.AwardsMapper" >
-  <resultMap id="BaseResultMap" type="xy.alcs.domain.Awards" >
-    <id column="award_id" property="awardId" jdbcType="BIGINT" />
-    <result column="contest_id" property="contestId" jdbcType="BIGINT" />
-    <result column="team_id" property="teamId" jdbcType="VARCHAR" />
-    <result column="work_id" property="workId" jdbcType="BIGINT" />
-    <result column="prize" property="prize" jdbcType="INTEGER" />
-    <result column="score" property="score" jdbcType="REAL" />
-    <result column="TIMESTAMP" property="timestamp" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+<mapper namespace="xy.alcs.dao.AwardsMapper">
+    <resultMap id="BaseResultMap" type="xy.alcs.domain.Awards">
+        <id column="award_id" property="awardId" jdbcType="BIGINT"/>
+        <result column="contest_id" property="contestId" jdbcType="BIGINT"/>
+        <result column="team_id" property="teamId" jdbcType="VARCHAR"/>
+        <result column="work_id" property="workId" jdbcType="BIGINT"/>
+        <result column="prize" property="prize" jdbcType="INTEGER"/>
+        <result column="score" property="score" jdbcType="REAL"/>
+        <result column="TIMESTAMP" property="timestamp" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="myAwardsResultMap" type="xy.alcs.dto.AwardsDto">
+        <result column="cid" property="cid" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="end_date" property="endDate" jdbcType="DATE"/>
+        <result column="start_date" property="startDate" jdbcType="DATE"/>
+        <result column="prize" property="prize" jdbcType="INTEGER"/>
+        <result column="score" property="score" jdbcType="REAL"/>
+        <result column="student_id" property="studentId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
     award_id, contest_id, team_id, work_id, prize, score, TIMESTAMP
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="xy.alcs.domain.AwardsExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from awards
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from awards
-    where award_id = #{awardId,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="xy.alcs.domain.AwardsExample">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from awards
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from awards
+        where award_id = #{awardId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from awards
     where award_id = #{awardId,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="xy.alcs.domain.AwardsExample" >
-    delete from awards
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="xy.alcs.domain.Awards" >
+    <delete id="deleteByExample" parameterType="xy.alcs.domain.AwardsExample">
+        delete from awards
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="xy.alcs.domain.Awards">
     insert into awards (award_id, contest_id, team_id, 
       work_id, prize, score, TIMESTAMP
       )
@@ -109,128 +120,128 @@
       #{workId,jdbcType=BIGINT}, #{prize,jdbcType=INTEGER}, #{score,jdbcType=REAL}, #{timestamp,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="xy.alcs.domain.Awards" >
-    insert into awards
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="awardId != null" >
-        award_id,
-      </if>
-      <if test="contestId != null" >
-        contest_id,
-      </if>
-      <if test="teamId != null" >
-        team_id,
-      </if>
-      <if test="workId != null" >
-        work_id,
-      </if>
-      <if test="prize != null" >
-        prize,
-      </if>
-      <if test="score != null" >
-        score,
-      </if>
-      <if test="timestamp != null" >
-        TIMESTAMP,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="awardId != null" >
-        #{awardId,jdbcType=BIGINT},
-      </if>
-      <if test="contestId != null" >
-        #{contestId,jdbcType=BIGINT},
-      </if>
-      <if test="teamId != null" >
-        #{teamId,jdbcType=VARCHAR},
-      </if>
-      <if test="workId != null" >
-        #{workId,jdbcType=BIGINT},
-      </if>
-      <if test="prize != null" >
-        #{prize,jdbcType=INTEGER},
-      </if>
-      <if test="score != null" >
-        #{score,jdbcType=REAL},
-      </if>
-      <if test="timestamp != null" >
-        #{timestamp,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="xy.alcs.domain.AwardsExample" resultType="java.lang.Integer" >
-    select count(*) from awards
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update awards
-    <set >
-      <if test="record.awardId != null" >
-        award_id = #{record.awardId,jdbcType=BIGINT},
-      </if>
-      <if test="record.contestId != null" >
+    <insert id="insertSelective" parameterType="xy.alcs.domain.Awards">
+        insert into awards
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="awardId != null">
+                award_id,
+            </if>
+            <if test="contestId != null">
+                contest_id,
+            </if>
+            <if test="teamId != null">
+                team_id,
+            </if>
+            <if test="workId != null">
+                work_id,
+            </if>
+            <if test="prize != null">
+                prize,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="timestamp != null">
+                TIMESTAMP,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="awardId != null">
+                #{awardId,jdbcType=BIGINT},
+            </if>
+            <if test="contestId != null">
+                #{contestId,jdbcType=BIGINT},
+            </if>
+            <if test="teamId != null">
+                #{teamId,jdbcType=VARCHAR},
+            </if>
+            <if test="workId != null">
+                #{workId,jdbcType=BIGINT},
+            </if>
+            <if test="prize != null">
+                #{prize,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=REAL},
+            </if>
+            <if test="timestamp != null">
+                #{timestamp,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="xy.alcs.domain.AwardsExample" resultType="java.lang.Integer">
+        select count(*) from awards
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update awards
+        <set>
+            <if test="record.awardId != null">
+                award_id = #{record.awardId,jdbcType=BIGINT},
+            </if>
+            <if test="record.contestId != null">
+                contest_id = #{record.contestId,jdbcType=BIGINT},
+            </if>
+            <if test="record.teamId != null">
+                team_id = #{record.teamId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.workId != null">
+                work_id = #{record.workId,jdbcType=BIGINT},
+            </if>
+            <if test="record.prize != null">
+                prize = #{record.prize,jdbcType=INTEGER},
+            </if>
+            <if test="record.score != null">
+                score = #{record.score,jdbcType=REAL},
+            </if>
+            <if test="record.timestamp != null">
+                TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update awards
+        set award_id = #{record.awardId,jdbcType=BIGINT},
         contest_id = #{record.contestId,jdbcType=BIGINT},
-      </if>
-      <if test="record.teamId != null" >
         team_id = #{record.teamId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.workId != null" >
         work_id = #{record.workId,jdbcType=BIGINT},
-      </if>
-      <if test="record.prize != null" >
         prize = #{record.prize,jdbcType=INTEGER},
-      </if>
-      <if test="record.score != null" >
         score = #{record.score,jdbcType=REAL},
-      </if>
-      <if test="record.timestamp != null" >
-        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update awards
-    set award_id = #{record.awardId,jdbcType=BIGINT},
-      contest_id = #{record.contestId,jdbcType=BIGINT},
-      team_id = #{record.teamId,jdbcType=VARCHAR},
-      work_id = #{record.workId,jdbcType=BIGINT},
-      prize = #{record.prize,jdbcType=INTEGER},
-      score = #{record.score,jdbcType=REAL},
-      TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="xy.alcs.domain.Awards" >
-    update awards
-    <set >
-      <if test="contestId != null" >
-        contest_id = #{contestId,jdbcType=BIGINT},
-      </if>
-      <if test="teamId != null" >
-        team_id = #{teamId,jdbcType=VARCHAR},
-      </if>
-      <if test="workId != null" >
-        work_id = #{workId,jdbcType=BIGINT},
-      </if>
-      <if test="prize != null" >
-        prize = #{prize,jdbcType=INTEGER},
-      </if>
-      <if test="score != null" >
-        score = #{score,jdbcType=REAL},
-      </if>
-      <if test="timestamp != null" >
-        TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where award_id = #{awardId,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="xy.alcs.domain.Awards" >
+        TIMESTAMP = #{record.timestamp,jdbcType=TIMESTAMP}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="xy.alcs.domain.Awards">
+        update awards
+        <set>
+            <if test="contestId != null">
+                contest_id = #{contestId,jdbcType=BIGINT},
+            </if>
+            <if test="teamId != null">
+                team_id = #{teamId,jdbcType=VARCHAR},
+            </if>
+            <if test="workId != null">
+                work_id = #{workId,jdbcType=BIGINT},
+            </if>
+            <if test="prize != null">
+                prize = #{prize,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=REAL},
+            </if>
+            <if test="timestamp != null">
+                TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where award_id = #{awardId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="xy.alcs.domain.Awards">
     update awards
     set contest_id = #{contestId,jdbcType=BIGINT},
       team_id = #{teamId,jdbcType=VARCHAR},
@@ -240,25 +251,52 @@
       TIMESTAMP = #{timestamp,jdbcType=TIMESTAMP}
     where award_id = #{awardId,jdbcType=BIGINT}
   </update>
-  <sql id="insertColumn">
+    <sql id="insertColumn">
     (contest_id, team_id, work_id, prize, score)
   </sql>
-  <insert id="batchInsertAward" parameterType="xy.alcs.dto.CommentAvgDto">
-    <foreach collection="scoreList" open="" close="" separator=";" item="score" index="index">
-       <if test="index == 0">
-         INSERT into awards <include refid="insertColumn"></include>
-         VALUES (#{score.contestId},#{score.teamId},#{score.workId},1,#{score.avg})
-       </if>
-       <if test="index &lt;= 2 ">
-         INSERT into awards <include refid="insertColumn"></include>
-         VALUES (#{score.contestId},#{score.teamId},#{score.workId},2,#{score.avg})
-       </if>
-      <if test="index &lt;= 5 ">
-        INSERT into awards <include refid="insertColumn"></include>
-        VALUES (#{score.contestId},#{score.teamId},#{score.workId},3,#{score.avg})
-      </if>
-      INSERT into awards <include refid="insertColumn"></include>
-      VALUES (#{score.contestId},#{score.teamId},#{score.workId},667,#{score.avg})
-    </foreach>
-  </insert>
+    <insert id="batchInsertAward" parameterType="xy.alcs.dto.CommentAvgDto">
+        <foreach collection="scoreList" open="" close="" separator=";" item="score" index="index">
+            <if test="index == 0">
+                INSERT into awards
+                <include refid="insertColumn"></include>
+                VALUES (#{score.contestId},#{score.teamId},#{score.workId},1,#{score.avg})
+            </if>
+            <if test="index &lt;= 2 and index &gt;0 ">
+                INSERT into awards
+                <include refid="insertColumn"></include>
+                VALUES (#{score.contestId},#{score.teamId},#{score.workId},2,#{score.avg})
+            </if>
+            <if test="index &lt;= 5 and index &gt; 2">
+                INSERT into awards
+                <include refid="insertColumn"></include>
+                VALUES (#{score.contestId},#{score.teamId},#{score.workId},3,#{score.avg})
+            </if>
+            <if test="index &gt; 5 ">
+                INSERT into awards
+                <include refid="insertColumn"></include>
+                VALUES (#{score.contestId},#{score.teamId},#{score.workId},667,#{score.avg})
+            </if>
+        </foreach>
+    </insert>
+    <sql id="limit_select">
+        LIMIT #{offset},#{limit};
+    </sql>
+
+    <select id="selectMyAwardsList" parameterType="java.util.Map" resultMap="myAwardsResultMap">
+        SELECT c.cid,c.title,c.end_date,c.start_date,a.prize,a.score,sc.student_id FROM awards AS a
+        INNER JOIN student_competition AS sc ON a.team_id = sc.team_id
+        INNER JOIN contest AS c ON a.contest_id = c.cid
+        WHERE sc.student_id = #{studentId}
+        order by a.timestamp DESC
+        <if test="offset != null and limit!= null">
+            <include refid="limit_select"></include>
+        </if>
+    </select>
+    <select id="countMyAwardsTotal" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(*) FROM awards AS a
+        INNER JOIN student_competition AS sc ON a.team_id = sc.team_id
+        INNER JOIN contest AS c ON a.contest_id = c.cid
+        WHERE sc.student_id = #{studentId}
+        order by a.timestamp DESC
+    </select>
 </mapper>

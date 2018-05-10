@@ -246,4 +246,30 @@
       </foreach>
     </if>
   </select>
+
+
+
+  <select id="selectRaterList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT * FROM rater
+    where 1 =1
+    <if test="ratName != null">
+      and rater.rat_name LIKE #{ratName}
+    </if>
+    <if test="ratAccount != null">
+      and rater.rat_account = #{ratAccount}
+    </if>
+    <if test="offset != null and limit!= null">
+      <include refid="limit_select"></include>
+    </if>
+  </select>
+  <select id="countRaterList"  parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT count(*) FROM rater
+    where 1 =1
+    <if test="ratName != null">
+      and rater.rat_name LIKE #{ratName}
+    </if>
+    <if test="ratAccount != null">
+      and rater.rat_account = #{ratAccount}
+    </if>
+  </select>
 </mapper>

@@ -40,6 +40,7 @@ public class MyContestWorkDto {
 
     private List<String> teammate;  //队友列表   ； 若是个人赛，则只显示本人学号
 
+    private Long wId;
 
 
     //前端显示Str
@@ -279,5 +280,14 @@ public class MyContestWorkDto {
 
     public void setTeammate(List<String> teammate) {
         this.teammate = teammate;
+    }
+
+
+    public Long getwId() {
+        return wId;
+    }
+
+    public void setwId(Long wId) {
+        this.wId = wId;
     }
 }

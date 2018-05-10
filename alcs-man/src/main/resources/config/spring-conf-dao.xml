@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="GBK"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
@@ -8,51 +8,50 @@
             http://www.springframework.org/schema/tx
            http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
            http://www.springframework.org/schema/aop
-           http://www.springframework.org/schema/aop/spring-aop.xsd "
-       >
+           http://www.springframework.org/schema/aop/spring-aop.xsd"
+>
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close" >
         <property name="driverClassName" value="${driverClass}"/>
         <property name="url" value="${jdbcUrl}"/>
         <property name="username" value="${user}"/>
         <property name="password" value="${password}"/>
-        <!--   åˆå§‹åŒ–è¿žæŽ¥æ•°é‡   -->
+        <!--   ³õÊ¼»¯Á¬½ÓÊýÁ¿   -->
         <property name="initialSize" value="15"/>
-        <!--   æœ€å¤§æ´»åŠ¨è¿žæŽ¥æ•°é‡   -->
+        <!--   ×î´ó»î¶¯Á¬½ÓÊýÁ¿   -->
         <property name="maxTotal" value="30"/>
-        <!--   æœ€å¤§ç©ºé—²è¿žæŽ¥æ•°é‡   -->
+        <!--   ×î´ó¿ÕÏÐÁ¬½ÓÊýÁ¿   -->
         <property name="maxIdle" value="15"/>
-        <!--   æœ€å°ç©ºé—²è¿žæŽ¥æ•°é‡   -->
+        <!--   ×îÐ¡¿ÕÏÐÁ¬½ÓÊýÁ¿   -->
         <property name="minIdle" value="5"/>
-        <!--   èŽ·å–è¿žæŽ¥æ—¶ç­‰å¾…æ—¶é—´ï¼Œè¶…å‡ºå°†æŠ›å¼‚å¸¸ï¼Œå•ä½æ¯«ç§’   -->
+        <!--   »ñÈ¡Á¬½ÓÊ±µÈ´ýÊ±¼ä£¬³¬³ö½«Å×Òì³££¬µ¥Î»ºÁÃë   -->
         <property name="maxWaitMillis" value="10000"/>
-        <!--   ç©ºé—²è¿žæŽ¥è¢«å›žæ”¶æ—¶é—´ï¼Œå›žæ”¶ç©ºé—²è¿žæŽ¥è‡³minIdleæŒ‡å®šæ•°é‡ï¼Œå•ä½æ¯«ç§’   -->
+        <!--   ¿ÕÏÐÁ¬½Ó±»»ØÊÕÊ±¼ä£¬»ØÊÕ¿ÕÏÐÁ¬½ÓÖÁminIdleÖ¸¶¨ÊýÁ¿£¬µ¥Î»ºÁÃë   -->
         <property name="minEvictableIdleTimeMillis" value="600000"/>
-        <!--   æ£€æŸ¥ç©ºé—²è¿žæŽ¥æ˜¯å¦å¯è¢«å›žæ”¶ï¼Œå¦‚æžœå°äºŽç­‰äºŽ0ï¼Œä¸ä¼šå¯åŠ¨æ£€æŸ¥çº¿ç¨‹ï¼Œé»˜è®¤-1ï¼Œå•ä½æ¯«ç§’   -->
+        <!--   ¼ì²é¿ÕÏÐÁ¬½ÓÊÇ·ñ¿É±»»ØÊÕ£¬Èç¹ûÐ¡ÓÚµÈÓÚ0£¬²»»áÆô¶¯¼ì²éÏß³Ì£¬Ä¬ÈÏ-1£¬µ¥Î»ºÁÃë   -->
         <property name="timeBetweenEvictionRunsMillis" value="600000"/>
-        <!--   æ³„éœ²çš„è¿žæŽ¥å¯ä»¥è¢«åˆ é™¤çš„è¶…æ—¶å€¼,   å•ä½ç§’   -->
+        <!--   Ð¹Â¶µÄÁ¬½Ó¿ÉÒÔ±»É¾³ýµÄ³¬Ê±Öµ,   µ¥Î»Ãë   -->
         <property name="removeAbandonedTimeout" value="180"/>
     </bean>
 
-    <!-- mybatis è®¾ç½® -->
+    <!-- mybatis ÉèÖÃ -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
         <property name="configLocation" value="classpath:config/mybatis-config.xml" />
     </bean>
 
-    <!-- äº‹åŠ¡ -->
-    <!--ç¨‹åºä¸­ç»Ÿä¸€ä½¿ç”¨ç¼–ç å¼äº‹åŠ¡ -->
+    <!-- ÊÂÎñ -->
+    <!--³ÌÐòÖÐÍ³Ò»Ê¹ÓÃ±àÂëÊ½ÊÂÎñ -->
     <bean name="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
-    <!--äº‹åŠ¡ç»“æŸ -->
+    <!--ÊÂÎñ½áÊø -->
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage"  value="xy.alcs.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
-
 
 </beans>

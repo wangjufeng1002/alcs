@@ -25,9 +25,9 @@
       http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
         
       ">
-    <mvc:resources mapping=".js" location="/common/"></mvc:resources>
-    <mvc:resources mapping=".css" location="/common/"></mvc:resources>
-    <mvc:resources mapping=".html" location="/common/"></mvc:resources>
+    <mvc:resources mapping=".js" location="/graduation/"></mvc:resources>
+    <mvc:resources mapping=".css" location="/graduation/"></mvc:resources>
+    <mvc:resources mapping=".html" location="/graduation/"></mvc:resources>
 
 
     <!-- springMVC 扫包 -->

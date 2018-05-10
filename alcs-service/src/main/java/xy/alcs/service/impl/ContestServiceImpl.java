@@ -176,12 +176,12 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public List<MyContestWorkDto> listMyContestWork(Map<String,Object> queryMap) {
+    public List<MyContestWorkDto> listMyContestWork(Map<String, Object> queryMap) {
         return studentCompetitionMapper.selectContestByWorkCommitStatus(this.buildQueryMap(queryMap));
     }
 
     @Override
-    public Integer countMyContestWork(Map<String,Object> queryMap) {
+    public Integer countMyContestWork(Map<String, Object> queryMap) {
         return studentCompetitionMapper.countContestByWorkCommitStatus(queryMap);
     }
 
@@ -222,6 +222,24 @@ public class ContestServiceImpl implements ContestService {
 
     }
 
+    @Override
+    public List<ContestDto> listRaterContest(Map<String, Object> queryMap) {
+        if (MapUtils.isEmpty(queryMap)) {
+            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
+        }
+        Map map = this.buildQueryMap(queryMap);
+        return contestMapper.selectRaterContest(map);
+
+    }
+
+    @Override
+    public Integer countRateContestTotal(Map<String, Object> queryMap) {
+        if (MapUtils.isEmpty(queryMap)) {
+            throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
+        }
+        return contestMapper.countRaterContest(this.buildQueryMap(queryMap));
+    }
+
     private Map buildQueryMap(Map<String, Object> queryMap) {
         Map<String, Object> resultMap = new HashMap<>();
 
@@ -260,17 +278,29 @@ public class ContestServiceImpl implements ContestService {
                 } else {
                     resultMap.put("scoreStatus", item.getValue());
                 }
-            }else if(item.getKey().toString().equals("workCommit")){
+            } else if (item.getKey().toString().equals("workCommit")) {
                 if (item.getValue() == null) {
                     resultMap.put("workCommit", null);
                 } else {
                     resultMap.put("workCommit", item.getValue());
                 }
-            }else if(item.getKey().toString().equals("stuId")){
+            } else if (item.getKey().toString().equals("stuId")) {
                 if (item.getValue() == null) {
                     resultMap.put("stuId", null);
                 } else {
                     resultMap.put("stuId", item.getValue());
+                }
+            } else if (item.getKey().equals("raterAccount")) {
+                if (StringUtils.isBlank((String) item.getValue())) {
+                    throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
+                } else {
+                    resultMap.put("raterAccount", item.getValue());
+                }
+            }else if(item.getKey().equals("contestStatus")){
+                if(StringUtils.isBlank(item.getValue().toString())){
+                   resultMap.put("contestStatus",null);
+                }else{
+                    resultMap.put("contestStatus",item.getValue());
                 }
             }
         }

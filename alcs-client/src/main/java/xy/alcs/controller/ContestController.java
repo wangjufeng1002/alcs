@@ -15,7 +15,6 @@ import xy.alcs.common.utils.Result;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.MyContestDetailDto;
 import xy.alcs.dto.MyContestWorkDto;
-import xy.alcs.dto.StudentDto;
 import xy.alcs.service.ContestService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -190,16 +189,45 @@ public class ContestController {
             Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
         }
         Map queryMap = new HashMap();
-        queryMap.put("page",page);
-        queryMap.put("rows",rows);
-        queryMap.put("stuId",stuId);
-        queryMap.put("workCommit",workCommit);
+        queryMap.put("page", page);
+        queryMap.put("rows", rows);
+        queryMap.put("stuId", stuId);
+        queryMap.put("workCommit", workCommit);
 
         PageData<MyContestWorkDto> pageData = new PageData();
         pageData.setRows(contestService.listMyContestWork(queryMap));
         pageData.setPage(page);
         pageData.setPageSize(rows);
         pageData.setTotal(contestService.countMyContestWork(queryMap));
+        return pageData;
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/contest/rater/list")
+    public PageData<ContestDto> listRaterConetst(HttpServletRequest request,Integer page, Integer rows, String queryParam) {
+        String ratId = (String) request.getSession().getAttribute("rat_id");
+        Map<String, Object> map = new HashMap<>();
+        if (page == null || page.intValue() <= 0) {
+            page = Integer.parseInt(PAGENOW);
+        }
+        if (rows == null || rows.intValue() < 0) {
+            rows = Integer.parseInt(PAGELIMIT);
+        }
+        if (!StringUtils.isEmpty(queryParam)) {
+            map = JSONObject.parseObject(queryParam, Map.class);
+        }
+        map.put("page", page);
+        map.put("rows", rows);
+        map.put("raterAccount",ratId);
+
+        List<ContestDto> contests = contestService.listRaterContest(map);
+        Integer total = contestService.countRateContestTotal(map);
+        PageData<ContestDto> pageData = new PageData();
+        pageData.setRows(contests);
+        pageData.setTotal(total);
+        pageData.setPage(page);
+        pageData.setPageSize(rows);
         return pageData;
     }
 

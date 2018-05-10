@@ -35,10 +35,10 @@ public interface ContestMapper {
 
     ///////////////////////////
     //分页查询
-    List<ContestDto> selectContest(Map<String,Object> queryMap);
+    List<ContestDto> selectContest(Map<String, Object> queryMap);
 
     //查询总记录数
-    Integer countTotal(Map<String,Object> queryMap);
+    Integer countTotal(Map<String, Object> queryMap);
 
 
     //根据参数进行查询我的竞赛
@@ -55,9 +55,27 @@ public interface ContestMapper {
 
     /**
      * 根据id进行查询
+     *
      * @param cid 竞赛主键
      * @return
      */
-   ContestDto selectContestDtoById(@Param("cid")Integer cid);
+    ContestDto selectContestDtoById(@Param("cid") Integer cid);
+
+    /**
+     * 查询分配给评委的信息
+     *
+     * @param queryMap
+     * @return
+     */
+    List<ContestDto> selectRaterContest(Map<String, Object> queryMap);
+
+    /**
+     * 统计分配给评委的信息总数
+     *
+     * @param queryMap
+     * @return
+     */
+    Integer countRaterContest(Map<String, Object> queryMap);
+
 
 }

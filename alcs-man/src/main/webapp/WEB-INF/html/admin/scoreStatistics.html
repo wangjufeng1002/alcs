@@ -1,8 +1,10 @@
 <div class="easyui-layout" data-options="fit:true">
     <table id="scoreContestList" toolbar="#scoreToolbar" style="width:1000px;height:800px"></table>
     <div id="scoreToolbar">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-computer-edit" plain="true" onclick="countScore()">统计所选的竞赛</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-computer-edit" plain="true" onclick="showScoreList()">统计所选的竞赛</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-computer-edit" plain="true"
+           onclick="countScore()">统计所选的竞赛</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-computer-edit" plain="true"
+           onclick="showScoreList()">显示竞赛分数</a>
         <span>竞赛 ID:</span>
         <input id="conId" style="line-height:26px;border:1px solid #ccc">
 
@@ -22,8 +24,9 @@
         <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
     </div>
 
-    <!--编辑对话框-->
-    <div id="scoreDetailContestModal" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
+    <!--详情对话框-->
+    <div id="scoreDetailContestModal" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'"
+         style="width:800px; padding:10px;"
          title="赛事详情" iconCls="icon-ok"
          buttons="#edit-buttons">
         <form id="editContestForm" method="post">
@@ -42,40 +45,56 @@
                 </tr>
                 <tr>
                     <td class="tdName">竞赛起始时间:</td>
-                    <td><input id="startDateStr" name="startDateStr" type="text" placeholder="2018-03-18" disabled> - <input
-                            id="endDateStr" name="endDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                    <td><input id="startDateStr" name="startDateStr" type="text" placeholder="2018-03-18" disabled> -
+                        <input
+                                id="endDateStr" name="endDateStr" type="text" placeholder="2018-03-18" disabled></td>
                 </tr>
                 <tr>
                     <td class="tdName">报名起始时间:</td>
-                    <td><input id="enrollStartDateStr" name="enrollStartDateStr" type="text" placeholder="2018-03-18" disabled/>
+                    <td><input id="enrollStartDateStr" name="enrollStartDateStr" type="text" placeholder="2018-03-18"
+                               disabled/>
                         -
-                        <input id="enrollEndDateStr" name="enrollEndDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                        <input id="enrollEndDateStr" name="enrollEndDateStr" type="text" placeholder="2018-03-18"
+                               disabled></td>
                 </tr>
                 <tr>
                     <td class="tdName">评分起始时间:</td>
-                    <td><input id="scoreStartDateStr" name="scoreStartDateStr" type="text" placeholder="2018-03-18" disabled> -
-                        <input id="scoreEndDateStr" name="scoreEndDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                    <td><input id="scoreStartDateStr" name="scoreStartDateStr" type="text" placeholder="2018-03-18"
+                               disabled> -
+                        <input id="scoreEndDateStr" name="scoreEndDateStr" type="text" placeholder="2018-03-18"
+                               disabled></td>
                 </tr>
                 <tr>
                     <td class="tdName">作品提交结束时间:</td>
-                    <td><input id="worksEndDateStr" name="worksEndDateStr" type="text" placeholder="2018-03-18" disabled></td>
+                    <td><input id="worksEndDateStr" name="worksEndDateStr" type="text" placeholder="2018-03-18"
+                               disabled></td>
                 </tr>
             </table>
         </form>
     </div>
     <div id="edit-buttons" style="display: none;overflow: hidden;">
         <a href="javascript:void(0)" id="calcelButton" class="easyui-linkbutton" iconCls="icon-cancel"
-           onclick="closeModel()">Cancel</a>
+           onclick="closeScoreModel()">Cancel</a>
+    </div>
+    <!-- 分数对话框 -->
+    <div id="scoreListModal" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'"
+         style="overflow:scroll;width:1400px;height: 800px; padding:10px;"
+         title="赛事详情" iconCls="icon-ok"
+         buttons="#edit-buttons">
+        <table id="scoreList" toolbar="#" style="width:1400px;height:800px"></table>
+    </div>
+    <div id="scoreListbuttons" style="display: none;overflow: hidden;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+           onclick="closeScoreModel()">Cancel</a>
     </div>
 </div>
 
 
 <script>
     //关闭对话框
-    function closeModel() {
+    function closeScoreModel() {
         $("#scoreDetailContestModal").dialog("close");
-
-
+        $("#scoreListModal").dialog("close");
     }
 
     //查询
@@ -94,10 +113,9 @@
     setTimeout(function () {
         //关闭对话框
         debugger
-        $("#scoreDetailContestModal").dialog("close");
+        closeScoreModel();
         //初始化表格，双击事件
         queryList();
-        scoreList();
         $("#scoreContestList").datagrid({
             //双击事件
             onDblClickRow: function (index, row) {
@@ -189,9 +207,9 @@
         });
     }
 
-    function scoreList() {
+    function scoreList(cid) {
         $('#scoreList').datagrid({
-            url: '/man/json/contest/list',
+            url: '/man/json/work/scoreList?cid='+cid,
             iconCls: 'icon-save',
             pagination: true,
             pageSize: 10,
@@ -205,45 +223,36 @@
             sortOrder: 'asc', //是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
             columns: [[
                 {
-                    checkbox: true
+                    field: 'cId',
+                    title: '竞赛编号',
+                    width: 100,
                 },
                 {
-                    field: 'cid',
-                    title: '编号',
+                    field: 'wId',
+                    title: '作品编号',
                     width: 100,
-                }, {
+                },
+                {
                     field: 'title',
                     title: '题目',
                     width: 300,
-                }, {
-                    field: 'summary',
-                    title: '简介',
-                    width: 500,
                 },
                 {
-                    field: 'startEndTime',
-                    title: '竞赛时间',
+                    field: 'studentId',
+                    title: '学生学号',
                     width: 300,
-
                 },
                 {
-                    field: 'scoreTime',
-                    title: '打分时间',
-                    width: 300,
-
-                },
-                {
-                    field: "status",
-                    title: "竞赛状态",
-                    width: 100,
-                    formatter: statusFormat
-                },
-                {
-                    field: "scoreStatus",
-                    title: "统状态",
+                    field: "score",
+                    title: "分数",
                     width: 200,
-                    formatter: operateFormatter
-                }
+
+                },
+                {
+                    field: "prizeStr",
+                    title: "分数",
+                    width: 200,
+                },
 
             ]]
 
@@ -280,36 +289,51 @@
 
         }
     }
+
     function countScore() {
         debugger
         var selected = $("#scoreContestList").datagrid('getChecked');
-        if(selected.length > 3){
-            $.messager.alert('Info',"每次最多只能同时统计三个竞赛成绩", 'info');
+        if (selected.length > 3) {
+            $.messager.alert('Info', "每次最多只能同时统计三个竞赛成绩", 'info');
             return;
         }
         var cid = [];
-        for(var item in selected){
-            if(item.status <= 3 ){
-                $.messager.alert('Info',"竞赛打分未完成，不能统计", 'info');
+        for (var item in selected) {
+            if (selected[item].status <= 3) {
+                $.messager.alert('Info', "竞赛打分未完成，不能统计", 'info');
                 return;
-            } else if(item.scoreStatus == 1){
-                $.messager.alert('Info',"，竞赛已经统计过分数，不能重复统计", 'info');
+            } else if (selected[item].scoreStatus == 1) {
+                $.messager.alert('Info', "，竞赛已经统计过分数，不能重复统计", 'info');
                 return;
             }
-            cid.push(item.cid);
+            cid.push(selected[item].cid);
         }
+        $.ajax({
+            url: "/man/json/score/count",
+            data: {cids: JSON.stringify(cid)},
+            type: 'post',
+            success: function (result) {
+                $.messager.alert('Info', "统计完成!", 'info');
+                queryList();
+            },
+            error: function () {
+                $.messager.alert('Info', "网络出错，请重试!", 'info');
+            }
+        });
     }
 
     function showScoreList() {
+        debugger
         var selected = $("#scoreContestList").datagrid('getChecked');
-        if(selected.length > 1){
-            $.messager.alert('Info',"每次只能查看一个竞赛的成绩列表", 'info');
+        if (selected.length > 1) {
+            $.messager.alert('Info', "每次只能查看一个竞赛的成绩列表", 'info');
             return;
         }
-        if(selected.length == 0){
-            $.messager.alert('Info',"请选择您要查看竞赛", 'info');
+        if (selected.length == 0) {
+            $.messager.alert('Info', "请选择您要查看竞赛", 'info');
             return;
         }
-
+        $("#scoreListModal").dialog("open");
+        scoreList(selected[0].cid);
     }
 </script>

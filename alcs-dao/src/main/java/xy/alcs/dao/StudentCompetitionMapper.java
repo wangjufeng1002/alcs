@@ -53,4 +53,8 @@ public interface StudentCompetitionMapper {
      * @return
      */
     Integer countContestByWorkCommitStatus(Map<String,Object> queryMap);
+
+
+
+    Integer updateCommitStatus(Map<String,Object> updateMap);
 }

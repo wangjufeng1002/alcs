@@ -25,14 +25,17 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap id="StudentDtoResultMap" type="xy.alcs.dto.StudentDto">
+        <result column="sid" property="sid" jdbcType="BIGINT"/>
         <result column="stu_id" property="stuId" jdbcType="VARCHAR"/>
         <result column="stu_name" property="stuName" jdbcType="VARCHAR"/>
         <result column="col_id" property="colId" jdbcType="INTEGER"/>
         <result column="col_name" property="colName" jdbcType="VARCHAR"/>
-        <result column="maj_id" property="majId" jdbcType="INTEGER" />
-        <result column="maj_name" property="majName" jdbcType="VARCHAR" />
-        <result column="cla_id" property="claId" jdbcType="INTEGER" />
-        <result column="cla_name" property="claName" jdbcType="VARCHAR" />
+        <result column="maj_id" property="majId" jdbcType="INTEGER"/>
+        <result column="maj_name" property="majName" jdbcType="VARCHAR"/>
+        <result column="cla_id" property="claId" jdbcType="INTEGER"/>
+        <result column="cla_name" property="claName" jdbcType="VARCHAR"/>
+        <result column="stu_gender" property="stuGender" jdbcType="INTEGER"/>
+        <result column="stu_password" property="stuPassword" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -288,5 +291,69 @@
             INNER JOIN major ON student.stu_maj_id = major.maj_id
             INNER JOIN college ON student.stu_col_id = college.col_id
             WHERE student.stu_id = #{stuId}
+    </select>
+    <sql id="limit_select">
+        LIMIT #{offset},#{limit};
+    </sql>
+    <select id="selectStuList" parameterType="java.util.Map" resultMap="StudentDtoResultMap">
+        SELECT * FROM
+        student
+        INNER JOIN clas ON student.stu_cla_id = clas.cla_id
+        INNER JOIN major ON student.stu_maj_id = major.maj_id
+        INNER JOIN college ON student.stu_col_id = college.col_id
+        WHERE 1=1
+        <if test="stuId != null">
+            and  student.stu_id = #{stuId}
+        </if>
+        <if test="majorName != null">
+            and major.maj_name LIKE #{majorName}
+        </if>
+        <if test="clasName != null">
+            and clas.cla_name LIKE #{clasName}
+        </if>
+        <if test="colName != null">
+            and college.col_name LIKE #{colName}
+        </if>
+        <if test="majId != null">
+            AND major.maj_id = #{majId}
+        </if>
+        <if test="claId != null">
+            AND clas.cla_id = #{claId}
+        </if>
+        <if test="colId != null">
+            AND college.col_id = #{colId}
+        </if>
+        <if test="offset != null and limit!= null">
+            <include refid="limit_select"></include>
+        </if>
+    </select>
+    <select id="countStuList" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(*) FROM
+        student
+        INNER JOIN clas ON student.stu_cla_id = clas.cla_id
+        INNER JOIN major ON student.stu_maj_id = major.maj_id
+        INNER JOIN college ON student.stu_col_id = college.col_id
+        WHERE 1=1
+        <if test="stuId != null">
+            and  student.stu_id = #{stuId}
+        </if>
+        <if test="majorName != null">
+            and major.maj_name LIKE #{majorName}
+        </if>
+        <if test="clasName != null">
+            and clas.cla_name LIKE #{clasName}
+        </if>
+        <if test="colName != null">
+            and college.col_name LIKE #{colName}
+        </if>
+        <if test="majId != null">
+            AND major.maj_id = #{majId}
+        </if>
+        <if test="claId != null">
+            AND clas.cla_id = #{claId}
+        </if>
+        <if test="colId != null">
+            AND college.col_id = #{colId}
+        </if>
     </select>
 </mapper>

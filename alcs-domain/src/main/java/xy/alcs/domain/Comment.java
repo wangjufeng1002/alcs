@@ -17,6 +17,8 @@ public class Comment {
 
     private Date timestamp;
 
+    private Integer status;
+
     private String content;
 
     public Long getComId() {
@@ -73,6 +75,14 @@ public class Comment {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getContent() {

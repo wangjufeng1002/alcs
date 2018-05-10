@@ -38,38 +38,33 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         try {
             String requestURI = request.getRequestURI();
-            if (requestURI.equals("/client/login/")) {
+            if (requestURI.equals("/client/login")) {
                 return true;
             } else {
-              /*  String account=null ;
-                Cookie[] cookies = request.getCookies();
-                for(Cookie cookie : cookies){
-                   if(cookie.getName().equals("user_id")){
-                         account = cookie.getValue();
-                   }
-                }*/
-
-                String stu_id =(String) request.getSession().getAttribute("stu_id");
+                String stu_id = (String) request.getSession().getAttribute("stu_id");
                 String rat_id = (String) request.getSession().getAttribute("rat_id");
                 if (StringUtils.isEmpty(stu_id) && StringUtils.isEmpty(rat_id)) {
-                    this.reDirect(request,response);
+                    this.reDirect(request, response);
                     return false;
                 } else {
-                    StudentExample example = new StudentExample();
-                    example.createCriteria().andStuIdEqualTo(stu_id);
-                    List<Student> students = studentMapper.selectByExample(example);
-                    if (students != null && students.size() != 0) {
-                        return true;
+                    if (StringUtils.isNotBlank(stu_id)) {
+                        StudentExample example = new StudentExample();
+                        example.createCriteria().andStuIdEqualTo(stu_id);
+                        List<Student> students = studentMapper.selectByExample(example);
+                        if (students != null && students.size() != 0) {
+                            return true;
+                        }
                     }
-
-                    RaterExample raterExample = new RaterExample();
-                    raterExample.createCriteria().andRatAccountEqualTo(rat_id);
-                    List<Rater> raterList = raterMapper.selectByExample(raterExample);
-                    if (raterList != null && raterList.size() != 0) {
-                        return true;
+                    if (StringUtils.isNotBlank(rat_id)) {
+                        RaterExample raterExample = new RaterExample();
+                        raterExample.createCriteria().andRatAccountEqualTo(rat_id);
+                        List<Rater> raterList = raterMapper.selectByExample(raterExample);
+                        if (raterList != null && raterList.size() != 0) {
+                            return true;
+                        }
                     }
                 }
-                this.reDirect(request,response);
+                this.reDirect(request, response);
                 return false;
             }
         } catch (Exception e) {
@@ -88,18 +83,19 @@ public class LoginInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) throws Exception {
 
     }
+
     //对于请求是ajax请求重定向问题的处理方法
     public static void reDirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //获取当前请求的路径
         //如果request.getHeader("X-Requested-With") 返回的是"XMLHttpRequest"说明就是ajax请求，需要特殊处理
-        if("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))){
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             //告诉ajax我是重定向
             response.setHeader("REDIRECT", "REDIRECT");
             response.setHeader("SESSIONSTATUS", "TIMEOUT");
             //告诉ajax我重定向的路径
             response.setHeader("CONTENTPATH", "http://127.0.0.1/graduation/html/login.html");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        }else{
+        } else {
             response.sendRedirect("http://127.0.0.1/graduation/html/login.html");
         }
     }

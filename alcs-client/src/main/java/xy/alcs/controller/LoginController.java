@@ -47,11 +47,11 @@ public class LoginController {
         if (students != null && students.size() == 1) {
             Student student = students.get(0);
             if (password.equals(student.getStuPassword())) {
-                Cookie cookie =new Cookie("user_id",account);
-                cookie.setMaxAge(3600*24*3);
+                Cookie cookie = new Cookie("user_id", account);
+                cookie.setMaxAge(3600 * 24 * 3);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                request.getSession().setAttribute("stu_id",account);
+                request.getSession().setAttribute("stu_id", account);
                 return Result.buildSuccessResult(AlcsErrorCode.STUDENT_LOGIN);
             }
             return Result.buildSuccessResult(AlcsErrorCode.PASSWORD_ERROR);
@@ -62,15 +62,24 @@ public class LoginController {
         if (raterList != null && raterList.size() == 1) {
             Rater rater = raterList.get(0);
             if (password.equals(rater.getRatPassword())) {
-                Cookie cookie =new Cookie("user_id",account);
-                cookie.setMaxAge(3600*24*3);
+                Cookie cookie = new Cookie("user_id", account);
+                cookie.setMaxAge(3600 * 24 * 3);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                request.getSession().setAttribute("rat_id",account);
+                request.getSession().setAttribute("rat_id", account);
                 return Result.buildSuccessResult(AlcsErrorCode.RATER_LOGIN);
             }
             return Result.buildSuccessResult(AlcsErrorCode.PASSWORD_ERROR);
         }
         return Result.buildSuccessResult(AlcsErrorCode.USER_NOT_EXIST);
     }
+
+    @RequestMapping("/outLogin")
+    @ResponseBody
+    public Result outLogin(HttpServletRequest request) {
+        request.getSession().removeAttribute("rat_id");
+        request.getSession().removeAttribute("stu_id");
+        return Result.buildSuccessResult();
+    }
+
 }

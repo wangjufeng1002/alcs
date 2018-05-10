@@ -1,0 +1,235 @@
+<div class="easyui-layout" data-options="fit:true">
+    <table id="raterList" toolbar="#raterToolbar" pagination="true" style="width:1000px;height:800px"></table>
+</div>
+<div id="raterToolbar">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addRater()">New</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delRater()">Destroy</a>
+    <span>姓名:</span>
+    <input id="ratName" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <span>账号:</span>
+    <input id="ratAccount" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch(null)">Search</a>
+</div>
+<!--编辑对话框-->
+<div id="raterDetailEditModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:800px;height: 600px; padding:10px;"
+     title="编辑管理员信息" iconCls="icon-ok"
+     buttons="#raterDetailEdit-buttons">
+    <form id="raterEditForm" action="/man/json/rater/edit" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <input type="hidden" id="rid" name="rid">
+            <tr>
+                <td class="tdName">姓名:</td>
+                <td><input id="eName" name="ratName" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">账号:</td>
+                <td><input id="eAccount" name="ratAccount" disabled type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">密码:</td>
+                <td><input type="password"  id="ePass" name="ratPassword"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="raterDetailEdit-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="raterSubmit('edit')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeRaterModel()">Cancel</a>
+</div>
+<!--添加对话框-->
+<div id="raterDetailAddModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:1200px;height: 700px; padding:10px;"
+     title="添加管理员信息" iconCls="icon-ok"
+     buttons="#raterDetail-buttons">
+    <form id="raterAddForm" action="/man/json/rater/add" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <tr>
+                <td class="tdName">姓名:</td>
+                <td><input id="aName" name="ratName" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">账号:</td>
+                <td><input id="aAccount" name="ratAccount" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">密码:</td>
+                <td><input type="password"  id="aPass" name="ratPassword"/></td>
+            </tr>
+        </table>
+        </table>
+    </form>
+</div>
+<div id="raterDetail-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="raterSubmit('add')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeRaterModel()">Cancel</a>
+</div>
+</div>
+
+<script type="text/javascript">
+    //关闭对话框
+    function closeRaterModel() {
+        $("#raterDetailAddModel").dialog("close");
+        $("#raterDetailEditModel").dialog("close");
+
+    }
+
+    //查询
+    function doSearch(searchParam) {
+        debugger
+        if (searchParam == null || searchParam == "") {
+            searchParam = buildAllSearchParam();
+        }
+        $('#raterList').datagrid('load', {
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
+
+    function raterSubmit(type) {
+        if(type == 'add'){
+            $('#raterAddForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "添加成功", 'info');
+                    }
+                    else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#raterDetailAddModel").dialog("close");
+                    doSearch(null);
+
+                }
+            });
+            $('#raterAddForm').submit();
+        }
+        if(type == 'edit'){
+            $('#raterEditForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "修改成功", 'info');
+                    }else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#raterDetailEditModel").dialog("close");
+                    doSearch(null);
+
+                }
+            });
+            $('#raterEditForm').submit();
+        }
+    }
+
+    setTimeout(function () {
+        //初始化表格，双击事件
+        queryList();
+        $("#raterList").datagrid({
+            //双击事件
+            onDblClickRow: function (index, row) {
+                $('#eName').val(row.ratName);
+                $('#eAccount').val(row.ratAccount);
+                $('#ePass').val(row.ratPassword);
+                $('#rid').val(row.rid);
+                $("#raterDetailEditModel").dialog("open");
+            }
+        });
+
+    }, 5);
+
+    //查询列表
+    function queryList() {
+        $('#raterList').datagrid({
+            url: '/man/json/rater/list',
+            title: '学生信息列表',
+            iconCls: 'icon-save',
+            pagination: true,
+            pageSize: 20,
+            pageList: [10, 20],
+            fit: true,//使表格自适应
+            fitColumns: true,//使得表格中所有的列宽相加等于自适应的宽度、也就是浏览器改变大小的时候下方会不会出现滚动条、一般只有在列较少的时候使用
+            nowrap: false,//表格中的文字可以换行、默认是false、不能换行、这样在文字很多的时候就看不到全部：使用真实的数据去测试
+            border: false,
+            idFeild: 'wId',//标识、会记录我们选中项的id、不一定是id、通常使用主键
+            //sortName:'cid',//设置默认排序时的 字段（必须是field中的一个字段）
+            // sortOrder:'asc',//是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
+            columns: [[
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'rid',
+                    title: '编号',
+                    width: 300,
+                },
+                {
+                    field: 'ratAccount',
+                    title: '账号',
+                    width: 300,
+                },
+                {
+                    field: 'ratName',
+                    title: '姓名',
+                    width: 300,
+                }
+            ]]
+
+        });
+    }
+    //构建所有查询参数
+    function buildAllSearchParam() {
+        //colName majorName clasName stuId colId majId claId
+        var ratName = $('#ratName').val();
+        var ratAccount = $('#ratAccount').val();
+
+        if (ratName == "") {
+            ratName = null;
+        }
+        if (ratAccount == "") {
+            ratAccount = null;
+        }
+        var queryJson = {
+            ratName: ratName,
+            ratAccount: ratAccount,
+        }
+        return queryJson;
+    }
+
+    function addRater() {
+        $('#aName').val('');
+        $('#aAccount').val('');
+        $('#aPass').val(null);
+        $("#raterDetailAddModel").dialog("open");
+    }
+    function delRater() {
+        debugger
+        var selected = $("#raterList").datagrid('getChecked');
+        if(selected == null || selected.length == 0){
+            $.messager.alert('Info',"请选择要删除的数据", 'info');
+            return;
+        }
+        var rids = [];
+        for(var row in  selected){
+            rids.push(selected[row].rid);
+        }
+        $.ajax({
+            url:"/man/json/rater/del",
+            data:{"rids":JSON.stringify(rids)},
+            success:function (result) {
+                if(result.code == "0000"){
+                    $.messager.alert('Info', "删除成功", 'info');
+                    doSearch(null);
+                }else{
+                    $.messager.alert('Info', result.msg, 'info');
+                }
+            },
+            error:function () {
+                $.messager.alert('Info', "系统出小差啦，请稍后重试", 'info');
+            }
+        });
+    }
+</script>

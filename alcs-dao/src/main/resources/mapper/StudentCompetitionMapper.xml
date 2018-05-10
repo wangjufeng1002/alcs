@@ -40,7 +40,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="team_id" property="teamId" jdbcType="VARCHAR"/>
         <result column="workcommit" property="workcommit" javaType="INTEGER"></result>
-        <result column="student_id" property="studentId" jdbcType="VARCHAR"/>
+        <result column="w_id" property="wId" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -284,20 +284,21 @@
       LEFT JOIN contest ON student_competition.contest_id = contest.cid
     WHERE student_competition.student_id = #{sId} AND contest.cid = #{cId}
   </select>
-    <select id="selectContestByWorkCommitStatus" resultMap="MyContestDetailDto" parameterType="java.util.Map">
-        SELECT * FROM student_competition
-        INNER JOIN contest ON student_competition.contest_id = contest.cid
-        WHERE student_competition.student_id = #{stuId}
+    <select id="selectContestByWorkCommitStatus" resultMap="MyContestWorkDto" parameterType="java.util.Map">
+        SELECT s.*,c.*,w.w_id FROM student_competition AS s
+        INNER JOIN contest AS c ON s.contest_id = c.cid
+        LEFT JOIN works AS w ON s.team_id = w.team_id
+        WHERE s.student_id = #{stuId}
         <if test="workCommit !=null and workCommit == 0">
-            AND student_competition.workcommit &lt; 2
+            AND s.workcommit &lt; 2
         </if>
         <if test="workCommit !=null and workCommit == 2">
-            AND student_competition.workcommit = 2
+            AND s.workcommit = 2
         </if>
         <include refid="limit_select"/>
     </select>
     <select id="countContestByWorkCommitStatus" resultType="java.lang.Integer" parameterType="java.util.Map">
-        SELECT  count(*) FROM student_competition
+        SELECT count(*) FROM student_competition
         INNER JOIN contest ON student_competition.contest_id = contest.cid
         WHERE student_competition.student_id = #{stuId}
         <if test="workCommit !=null and workCommit == 0">
@@ -307,4 +308,10 @@
             AND student_competition.workcommit = 2
         </if>
     </select>
+
+    <update id="updateCommitStatus" parameterType="java.util.Map">
+        UPDATE student_competition  set student_competition.workcommit = #{workcommit}
+
+        where  student_competition.team_id = #{teamId} and contest_id = #{contestId}
+    </update>
 </mapper>

@@ -114,4 +114,19 @@ public interface ContestService {
      * @return
      */
     Integer countMyContestWork(Map<String,Object> queryMap);
+
+    /**
+     * 查询分配给评委的竞赛信息
+     * @param queryMap
+     * @return
+     */
+    List<ContestDto> listRaterContest(Map<String,Object> queryMap);
+
+    /**
+     * 统计分配给评委的竞赛总数
+     * @param queryMap
+     * @return
+     */
+    Integer countRateContestTotal(Map<String,Object> queryMap);
+
 }

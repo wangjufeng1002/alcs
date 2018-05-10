@@ -6,6 +6,7 @@ package xy.alcs.dto;
  * @Date:Create in 21:33 2018-04-23
  */
 public class StudentDto {
+    private Long sid;
     private String stuId;   //学号
     private String stuName; //学生姓名
 
@@ -15,6 +16,10 @@ public class StudentDto {
     private String majName; //专业名称
     private Integer claId;   //班级id
     private String claName; //班级名称
+    private Integer stuGender;
+    private String stuPassword;
+
+    private String stuGenderStr;
 
 
     public String getStuId() {
@@ -80,4 +85,46 @@ public class StudentDto {
     public void setClaName(String claName) {
         this.claName = claName;
     }
+
+    public Integer getStuGender() {
+        return stuGender;
+    }
+
+    public void setStuGender(Integer stuGender) {
+        this.stuGender = stuGender;
+    }
+
+    public String getStuPassword() {
+        return stuPassword;
+    }
+
+    public void setStuPassword(String stuPassword) {
+        this.stuPassword = stuPassword;
+    }
+
+    public String getStuGenderStr() {
+        if (this.getStuGender().equals(0)) {
+            return "女";
+        }
+        if (this.getStuGender().equals(1)) {
+            return "男";
+        }
+        else{
+            return "男";
+        }
+    }
+
+    public void setStuGenderStr(String stuGenderStr) {
+        this.stuGenderStr = stuGenderStr;
+    }
+
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
+    }
+
+
 }

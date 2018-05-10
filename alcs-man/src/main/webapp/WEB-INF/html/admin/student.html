@@ -1,0 +1,486 @@
+<div class="easyui-layout" data-options="fit:true">
+    <table id="stuList" toolbar="#stuToolbar" pagination="true" style="width:1000px;height:800px"></table>
+</div>
+<div id="stuToolbar">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addStudent()">New</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delStudent()">Destroy</a>
+    <span>学院名称:</span>
+    <input id="colName" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <span>专业名称:</span>
+    <input id="majorName" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <span>班级名称：</span>
+    <input id="clasName" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <span>学生 id:</span>
+    <input id="stuId" style="width:100px;line-height:26px;border:1px solid #ccc">
+    <span>学院</span>
+    <select id="colId" onchange="departSearch(1)">
+        <option value="-1">选择学院</option>
+    </select>
+    <span>专业：</span>
+    <select id="majId" onchange="departSearch(2)">
+        <option value="-1">选择专业</option>
+    </select>
+    <span>班级：</span>
+    <select id="claId" onchange="departSearch(3)">
+        <option value="-1">选择班级</option>
+    </select>
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch(null)">Search</a>
+</div>
+<!--编辑对话框-->
+<div id="stuDetailEditModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:800px;height: 600px; padding:10px;"
+     title="编辑学生信息" iconCls="icon-ok"
+     buttons="#stuDetailEdit-buttons">
+    <form id="stuEditForm" action="/man/json/student/edit" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <input type="hidden" id="eSid" name="sid">
+            <tr>
+                <td class="tdName">姓名:</td>
+                <td><input id="eStuName" name="stuName" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">学号:</td>
+                <td><input id="eStuId" name="stuId" disabled type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">学院:</td>
+                <td><select id="eColId" name="colId" onchange="searchDepart(1,2)"></select></td>
+            </tr>
+            <tr>
+                <td class="tdName">专业:</td>
+                <td><select id="eMajId" name="majId" onchange="searchDepart(2,2)"></select></td>
+            </tr>
+            <tr>
+                <td class="tdName">班级:</td>
+                <td><select id="eClaId" name="claId"></select></td>
+            </tr>
+            <tr>
+                <td class="tdName">性别:</td>
+                <td>
+                    <select id="eStuGender" name="stuGender">
+                        <option value="0">女</option>
+                        <option value="1">男</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdName">密码:</td>
+                <td><input id="pass" name="stuPassword"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="stuDetailEdit-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="stuSubmit('edit')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeStudentModel()">Cancel</a>
+</div>
+<!--添加对话框-->
+<div id="stuDetailAddModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:1200px;height: 700px; padding:10px;"
+     title="添加学生信息" iconCls="icon-ok"
+     buttons="#stuDetail-buttons">
+    <form id="stuAddForm" action="/man/json/student/add" method="post">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <tr>
+                <td class="tdName">姓名:</td>
+                <td><input id="aStuName" name="stuName" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">学号:</td>
+                <td><input id="aStuId" name="stuId" type="text"></td>
+            </tr>
+            <tr>
+                <td class="tdName">学院:</td>
+                <td><select id="aColId" name="colId" onchange="searchDepart(1,3)"></select></td>
+            </tr>
+            <tr>
+                <td class="tdName">专业:</td>
+                <td><select id="aMajId" name="majId" onchange="searchDepart(2,3)"></select></td>
+            </tr>
+            <tr>
+                <td class="tdName">班级:</td>
+                <td><select id="aClaId" name="claId"></select></td>
+            </tr>
+            <tr>
+                <td class="tdName">性别:</td>
+                <td>
+                    <select id="aStuGender" name="stuGender">
+                        <option value="0">女</option>
+                        <option value="1" selected>男</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdName">密码:</td>
+                <td><input id="apass" name="stuPassword"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="stuDetail-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="stuSubmit('add')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeStudentModel()">Cancel</a>
+</div>
+</div>
+
+<script type="text/javascript">
+    //关闭对话框
+    function closeStudentModel() {
+        $("#stuDetailAddModel").dialog("close");
+        $("#stuDetailEditModel").dialog("close");
+
+    }
+
+    //查询
+    function doSearch(searchParam) {
+        if (searchParam == null || searchParam == "") {
+            searchParam = buildAllSearchParam();
+        }
+        $('#stuList').datagrid('load', {
+            queryParam: JSON.stringify(searchParam)
+        });
+    }
+
+    function stuSubmit(type) {
+        if(type == 'add'){
+            $('#stuAddForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "添加成功", 'info');
+                    }
+                    else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#stuDetailAddModel").dialog("close");
+                    doSearch(null);
+
+                }
+            });
+            $('#stuAddForm').submit();
+        }
+        if(type == 'edit'){
+            $('#stuEditForm').form({
+                success:function(data){
+                    debugger
+                    data = JSON.parse(data);
+                    if(data.code == "0000"){
+                        $.messager.alert('Info', "修改成功", 'info');
+                    }else{
+                        $.messager.alert('Info', data.msg, 'info');
+                    }
+                    $("#stuDetailEditModel").dialog("close");
+                    doSearch(null);
+
+                }
+            });
+            $('#stuEditForm').submit();
+        }
+    }
+
+    setTimeout(function () {
+        closeStudentModel();
+        //初始化表格，双击事件
+        queryList();
+        buildDepart(1, null,1);
+
+        //  private String stuId;   //学号
+        // private String stuName; //学生姓名
+        // private Integer colId;   //学院id
+        // private String colName; //学院名称
+        // private Integer majId;   //专业id
+        // private String majName; //专业名称
+        //  private Integer claId;   //班级id
+        //  private String claName; //班级名称
+        //  private Integer stuGender;
+        $("#stuList").datagrid({
+            //双击事件
+            onDblClickRow: function (index, row) {
+                $('#eStuId').val(row.stuId);
+                $('#eStuName').val(row.stuName);
+                $('#pass').val(row.stuPassword);
+                $('#eSid').val(row.sid);
+                buildDepart(1, null, 2);
+                buildDepart(2,row.colId,2)
+                buildDepart(3,row.majId,2)
+                $('#eColId').val(row.colId);
+                $('#eMajId').val(row.majId);
+                $('#eClaId').val(row.claId);
+                $('#eStuGender').val(row.stuGender);
+                $("#stuDetailEditModel").dialog("open");
+
+            }
+        });
+
+    }, 5);
+
+    //查询列表
+    function queryList() {
+        $('#stuList').datagrid({
+            url: '/man/json/student/list',
+            title: '学生信息列表',
+            iconCls: 'icon-save',
+            pagination: true,
+            pageSize: 10,
+            pageList: [10, 20],
+            fit: true,//使表格自适应
+            fitColumns: true,//使得表格中所有的列宽相加等于自适应的宽度、也就是浏览器改变大小的时候下方会不会出现滚动条、一般只有在列较少的时候使用
+            nowrap: false,//表格中的文字可以换行、默认是false、不能换行、这样在文字很多的时候就看不到全部：使用真实的数据去测试
+            border: false,
+            idFeild: 'wId',//标识、会记录我们选中项的id、不一定是id、通常使用主键
+            //sortName:'cid',//设置默认排序时的 字段（必须是field中的一个字段）
+            // sortOrder:'asc',//是按照升序还是降序排序   但是仅仅添加这两个字段并不会自动排序、这样写的意义就是前台会自动的向后台传递两个参数：sort order,我们可以在后台查询记录的时候进行排序
+            columns: [[
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'stuId',
+                    title: '学号',
+                    width: 300,
+                },
+                {
+                    field: 'stuName',
+                    title: '学生姓名',
+                    width: 300,
+                }
+                , {
+                    field: 'stuGenderStr',
+                    title: '性别',
+                    width: 300,
+                }, {
+                    field: 'colName',
+                    title: '学院',
+                    width: 300,
+                }
+                , {
+                    field: 'majName',
+                    title: '专业',
+                    width: 300,
+                },
+                {
+                    field: 'claName',
+                    title: '班级',
+                    width: 300,
+                }
+            ]]
+
+        });
+    }
+    
+    //构建查询级联选择
+    function departSearch(type) {
+        debugger
+        if (type == 1) {  //构建专业
+            var colId = $('#colId').val();
+            buildDepart(2, colId,1);
+        }
+        if (type == 2) {//构建班级
+            var majId = $('#majId').val();
+            buildDepart(3, majId,1);
+        }
+        //构建查询参数
+        var queryParam = buildAllSearchParam();
+        //进行查询
+        doSearch(queryParam);
+    }
+    //构建所有查询参数
+    function buildAllSearchParam() {
+        //colName majorName clasName stuId colId majId claId
+        var colName = $('#colName').val();
+        var majorName = $('#majorName').val();
+        var clasName = $('#clasName').val();
+        var stuId = $('#stuId').val();
+        var colId = $('#colId').val();
+        var majId = $('#majId').val();
+        var claId = $('#claId').val();
+        if (colName == "") {
+            colName = null;
+        }
+        if (majorName == "") {
+            majorName = null;
+        }
+        if (clasName == "") {
+            clasName = null;
+        }
+        if (stuId == "") {
+            stuId = null;
+        }
+        if (colId == "" || colId == -1) {
+            colId = null;
+        }
+        if (majId == "" || majId == -1) {
+            majId = null;
+        }
+        if (claId == "" || claId == -1) {
+            claId = null;
+        }
+        var queryJson = {
+            colName: colName,
+            majorName: majorName,
+            clasName: clasName,
+            stuId: stuId,
+            colId: colId,
+            majId: majId,
+            claId: claId
+        }
+        return queryJson;
+    }
+
+    //为弹出框查询 班级，专业，学院
+    function searchDepart(type, position) {
+        if(position == 2){
+            if (type == 1) {
+                var colId = $('#eColId').val();
+                buildDepart(2, colId, position);  //构建专业
+            }
+            if (type == 2) {
+                var majId = $('#eMajId').val();
+                buildDepart(3, majId, position); //构建班级
+            }
+        }
+        if(position == 3){
+            if (type == 1) {
+                var colId = $('#aColId').val();
+                buildDepart(2, colId, position);  //构建专业
+            }
+            if (type == 2) {
+                var majId = $('#aMajId').val();
+                buildDepart(3, majId, position); //构建班级
+            }
+        }
+
+    }
+
+    //查询学生 班级，专业，学院
+    function buildDepart(type, id, position) {
+        debugger
+        if (type == null) {
+            $.messager.alert('Info', "请选择要查询的类型", 'info');
+        }
+        if (id == "") {
+            id = null;
+        }
+        var resultData;
+        $.ajax({
+            url: "/man/json/student/department",
+            data: {"type": type, id: id},
+            type: 'post',
+            async: false,
+            success: function (result) {
+                if (result.code == "0000") {
+                    resultData = result;
+                    if (type == 1) {
+                        var htmlStr = '<option value="-1">选择学院</option>';
+                        var data = resultData.data;
+                        for (var index in resultData.data) {
+                            htmlStr += '<option value=' + data[index].colId + '>' + data[index].colName + '</option>'
+                        }
+                        if (position == 1) { //搜索
+                            $('#colId').empty();
+                            $('#colId').append(htmlStr);
+                        }
+                        else if (position == 2) { //编辑框
+                            $('#eColId').empty();
+                            $('#eColId').append(htmlStr);
+                        }
+                        else if (position == 3) { //添加框
+                            $('#aColId').empty();
+                            $('#aColId').append(htmlStr);
+                        }
+
+                    }
+                    if (type == 2) {
+                        var htmlStr = '<option value="-1">选择专业</option>';
+                        var data = resultData.data;
+                        for (var index in resultData.data) {
+                            htmlStr += '<option value=' + data[index].majId + '>' + data[index].majName + '</option>'
+                        }
+                        if (position == 1) { //搜索
+                            $('#majId').empty();
+                            $('#majId').append(htmlStr);
+                        }
+                        else if (position == 2) { //编辑框
+                            $('#eMajId').empty();
+                            $('#eMajId').append(htmlStr);
+                        }
+                        else if (position == 3) { //编辑框
+                            $('#aMajId').empty();
+                            $('#aMajId').append(htmlStr);
+                        }
+
+                    }
+                    if (type == 3) {
+                        var htmlStr = '<option value="-1">选择班级</option>';
+                        var data = resultData.data;
+                        for (var index in resultData.data) {
+                            htmlStr += '<option value=' + data[index].claId + '>' + data[index].claName + '</option>'
+                        }
+                        if (position == 1) {     //搜索
+                            $('#claId').empty();
+                            $('#claId').append(htmlStr);
+                        }
+                        else if (position == 2) { //编辑框
+                            $('#eClaId').empty();
+                            $('#eClaId').append(htmlStr);
+                        }
+                        else if (position == 3) { //添加框
+                            $('#aClaId').empty();
+                            $('#aClaId').append(htmlStr);
+                        }
+
+                    }
+                } else {
+                    $.messager.alert('Info', "系统错误，请联系运维人员", 'info');
+                }
+            },
+            errror: function () {
+                $.messager.alert('Info', "系统错误，请联系运维人员", 'info');
+            }
+        });
+        if (resultData.code != "0000") {
+            return;
+        }
+
+
+    }
+    function addStudent() {
+        $('#aStuName').val('');
+        $('#aStuId').val('');
+        $('#colId').val(null);
+        $('#aMajId').val(null);
+        $('#aClaId').val(null);
+        buildDepart(1,null,3);
+        $("#stuDetailAddModel").dialog("open");
+    }
+    function delStudent() {
+        debugger
+        var selected = $("#stuList").datagrid('getChecked');
+        if(selected == null || selected.length == 0){
+            $.messager.alert('Info',"请选择要删除的数据", 'info');
+            return;
+        }
+        var stuIds = [];
+        for(var row in  selected){
+            stuIds.push(selected[row].stuId);
+        }
+        $.ajax({
+            url:"/man/json/student/del",
+            data:{"stuIds":JSON.stringify(stuIds),"sids":null},
+            success:function (result) {
+                if(result.code == "0000"){
+                    $.messager.alert('Info', "删除成功", 'info');
+                    doSearch(null);
+                }else{
+                    $.messager.alert('Info', result.msg, 'info');
+                }
+            },
+            error:function () {
+                $.messager.alert('Info', "系统出小差啦，请稍后重试", 'info');
+            }
+        });
+    }
+</script>
