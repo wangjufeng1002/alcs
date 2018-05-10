@@ -9,13 +9,13 @@
 
         <span>竞赛 题目:</span>
         <input id="conTitle" style="line-height:26px;border:1px solid #ccc">
-        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doContestSearch()">Search</a>
     </div>
 
     <!--对话框-->
     <div id="addContestModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
          title="添加竞赛" iconCls="icon-ok"
-         toolbar="#dlg-toolbar" buttons="#add-buttons">
+         toolbar="#addContest-toolbar" buttons="#addContest-buttons">
         <form id="addContestForm" action="/man/json/contest/addOrUpdate" method="post">
             <table style="border-collapse: separate;border-spacing: 0px 10px;">
                 <tr>
@@ -45,14 +45,14 @@
             </table>
         </form>
     </div>
-    <div id="add-buttons" style="display: none;overflow: hidden;" >
+    <div id="addContest-buttons" style="display: none;overflow: hidden;" >
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveContest('add')">Ok</a>
         <a href="javascript:void(0)"  class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeContestModel()">Cancel</a>
     </div>
     <!--编辑对话框-->
     <div id="editContestModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'" style="width:800px; padding:10px;"
          title="编辑竞赛" iconCls="icon-ok"
-         buttons="#edit-buttons" >
+         buttons="#editContest-buttons" >
         <form id="editContestForm" action="/man/json/contest/addOrUpdate" method="post">
             <table style="border-collapse: separate;border-spacing: 0px 10px;">
                 <tr>
@@ -85,7 +85,7 @@
             </table>
         </form>
     </div>
-    <div id="edit-buttons" style="display: none;overflow: hidden;" >
+    <div id="editContest-buttons" style="display: none;overflow: hidden;" >
         <a href="javascript:void(0)" id="okButton" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveContest('edit')">Ok</a>
         <a href="javascript:void(0)" id="calcelButton"    class="easyui-linkbutton" iconCls="icon-cancel" onclick="closeContestModel()">Cancel</a>
     </div>
@@ -108,15 +108,15 @@
             $('#addContestForm').form({
                 success:function(data){
                     debugger
-                    data = JSON.parse(data);
-                    if(data.code == "0000"){
+                    var res = JSON.parse(data);
+                    if(res.code == "0000"){
                         $.messager.alert('Info', "添加成功", 'info');
                     }
                     else{
-                        $.messager.alert('Info', data.msg, 'info');
+                        $.messager.alert('Info', res.msg, 'info');
                     }
                     $("#addContestModel").dialog("close");
-                    queryList();
+                    doContestSearch();
 
                 }
             });
@@ -126,14 +126,14 @@
             $('#editContestForm').form({
                 success:function(data){
                     debugger
-                    data = JSON.parse(data);
-                    if(data.code == "0000"){
+                    var res = JSON.parse(data);
+                    if(res.code == "0000"){
                         $.messager.alert('Info', "修改成功", 'info');
                     }else{
-                        $.messager.alert('Info', data.msg, 'info');
+                        $.messager.alert('Info', res.msg, 'info');
                     }
                     $("#editContestModel").dialog("close");
-                    queryList();
+                    doContestSearch();
 
                 }
             });
@@ -170,11 +170,17 @@
 
     }
     //查询
-    function doSearch() {
+    function doContestSearch() {
         var cId  = $("#conId").val();
         var cTitle = $("#conTitle").val();
-        var searchParam = {"cid":cId,"title":cTitle};
 
+        if(cId == ''){
+            cId == null
+        }
+        if(cTitle == ''){
+            cTitle == null
+        }
+        var searchParam = {"cid":cId,"title":cTitle};
         $('#contestList').datagrid('load',{
             queryParam: JSON.stringify(searchParam)
         });

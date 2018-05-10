@@ -8,7 +8,7 @@
     <input id="name" style="width:100px;line-height:26px;border:1px solid #ccc">
     <span>账号:</span>
     <input id="account" style="width:100px;line-height:26px;border:1px solid #ccc">
-    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch(null)">Search</a>
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doAdminSearch(null)">Search</a>
 </div>
 <!--编辑对话框-->
 <div id="adminDetailEditModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
@@ -95,7 +95,7 @@
     }
 
     //查询
-    function doSearch(searchParam) {
+    function doAdminSearch(searchParam) {
         if (searchParam == null || searchParam == "") {
             searchParam = buildAllSearchParam();
         }
@@ -109,15 +109,15 @@
             $('#adminAddForm').form({
                 success:function(data){
                     debugger
-                    data = JSON.parse(data);
-                    if(data.code == "0000"){
+                    var res = JSON.parse(data);
+                    if(res.code == "0000"){
                         $.messager.alert('Info', "添加成功", 'info');
                     }
                     else{
-                        $.messager.alert('Info', data.msg, 'info');
+                        $.messager.alert('Info', res.msg, 'info');
                     }
                     $("#adminDetailAddModel").dialog("close");
-                    doSearch(null);
+                    doAdminSearch(null);
 
                 }
             });
@@ -127,14 +127,15 @@
             $('#adminEditForm').form({
                 success:function(data){
                     debugger
-                    data = JSON.parse(data);
-                    if(data.code == "0000"){
+                    var res = JSON.parse(data);
+
+                    if(res.code == "0000"){
                         $.messager.alert('Info', "修改成功", 'info');
                     }else{
-                        $.messager.alert('Info', data.msg, 'info');
+                        $.messager.alert('Info', res.msg, 'info');
                     }
                     $("#adminDetailEditModel").dialog("close");
-                    doSearch(null);
+                    doAdminSearch(null);
 
                 }
             });

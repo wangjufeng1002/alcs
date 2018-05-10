@@ -8,13 +8,13 @@
 
         <span>竞赛 题目:</span>
         <input id="conTitle" style="line-height:26px;border:1px solid #ccc">
-        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doRllotRaterSearch()">Search</a>
     </div>
 
     <!--编辑对话框-->
     <div id="aContestDetailModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-add'" style="width:800px; padding:10px;"
          title="详细信息" iconCls="icon-ok"
-         buttons="#edit-buttons">
+         buttons="#allotEdit-buttons">
         <form id="editContestForm">
             <table style="border-collapse: separate;border-spacing: 0px 10px;">
                 <tr>
@@ -58,7 +58,7 @@
             </table>
         </form>
     </div>
-    <div id="edit-buttons" style="display: none;overflow: hidden;">
+    <div id="allotEdit-buttons" style="display: none;overflow: hidden;">
         <a href="javascript:void(0)" id="calcelButton" class="easyui-linkbutton" iconCls="icon-cancel"
            onclick="closeAlloterRaterModel()">Cancel</a>
     </div>
@@ -83,7 +83,7 @@
 </div>
 <script type="text/javascript">
     //查询
-    function doSearch() {
+    function doRllotRaterSearch() {
         debugger
         var cId = $("#conId").val();
         var cTitle = $("#conTitle").val();
@@ -143,7 +143,7 @@
             $.messager.alert('info', "请选择竞赛！！！", 'info');
             return;
         }
-        if (selected[0].status > 2) {
+        if (selected[0].status >=2) {
             $.messager.alert('info', "竞赛当前状态不能分配评委！！！", 'info');
             return;
         }

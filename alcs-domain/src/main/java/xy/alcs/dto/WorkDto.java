@@ -15,6 +15,8 @@ public class WorkDto {
     private String fileName;
     private String workContent;
     private Long   wId;
+    private String image;
+    private String file;
 
 
     public String getStuId() {
@@ -71,5 +73,21 @@ public class WorkDto {
 
     public void setwId(Long wId) {
         this.wId = wId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }

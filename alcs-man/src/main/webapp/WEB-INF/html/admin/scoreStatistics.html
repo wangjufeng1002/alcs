@@ -21,7 +21,7 @@
             <option value="0" selected>未统计</option>
             <option value="1">已统计</option>
         </select>
-        <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+        <a href="#" class="easyui-linkbutton" plain="true" onclick="doScoreStatisticSearch()">Search</a>
     </div>
 
     <!--详情对话框-->
@@ -98,7 +98,7 @@
     }
 
     //查询
-    function doSearch() {
+    function doScoreStatisticSearch() {
         var cId = $("#conId").val();
         var cTitle = $("#conTitle").val();
         var status = $("#status").val();

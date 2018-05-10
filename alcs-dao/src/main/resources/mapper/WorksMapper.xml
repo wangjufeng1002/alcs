@@ -498,4 +498,8 @@
         INNER JOIN awards as a on w.w_id = a.work_id
         WHERE w.contest_id = #{cid}
     </select>
+
+    <select id="selectWorkByTeamId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from works where team_id = #{teamId,jdbcType=VARCHAR};
+    </select>
 </mapper>

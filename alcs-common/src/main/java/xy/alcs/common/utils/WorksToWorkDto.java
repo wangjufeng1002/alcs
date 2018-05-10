@@ -16,6 +16,8 @@ public class WorksToWorkDto {
         workDto.setWorkContent(works.getCode());
         workDto.setCid(works.getContestId());
         workDto.setwId(works.getwId());
+        workDto.setImage(works.getImage());
+        workDto.setFile(works.getThesis());
         //拼接图片链接
         workDto.setImageName(imgResourcesUrl + works.getImage());
         //拼接文件链接

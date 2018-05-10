@@ -13,7 +13,7 @@
     <span>学生 id:</span>
     <input id="stuId" style="line-height:26px;border:1px solid #ccc">
 
-    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doWorkSearch()">Search</a>
 
     <a href="#" class="easyui-linkbutton" iconCls=".icon-download" plain="true" onclick="showImage()">浏览图片</a>
     <a href="#" class="easyui-linkbutton" iconCls=".icon-download" plain="true" onclick="downFile()">下载文件</a>
@@ -150,7 +150,7 @@
     }
 
     //查询
-    function doSearch() {
+    function doWorkSearch() {
         var cId = $("#conId").val();
         var cTitle = $("#conTitle").val();
         var workId = $("#workId").val();

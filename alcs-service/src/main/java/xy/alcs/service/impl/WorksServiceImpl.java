@@ -155,6 +155,7 @@ public class WorksServiceImpl implements WorksService {
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("workcommit", WorkCommitEnum.IS_COMMIT.getCode());
         updateMap.put("teamId", workDto.getTeamId());
+        updateMap.put("contestId",workDto.getCid());
         studentCompetitionMapper.updateCommitStatus(updateMap);
 
         //查出比赛分配的评委
@@ -194,18 +195,12 @@ public class WorksServiceImpl implements WorksService {
             throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
         }
         String teamId = studentCompetitions.get(0).getTeamId();
-        WorksExample worksExample = new WorksExample();
-        worksExample.createCriteria().andTeamIdEqualTo(teamId);
-        List<Works> worksList = worksMapper.selectByExample(worksExample);
-        if (CollectionUtils.isEmpty(worksList)) {
+        Works works= worksMapper.selectWorkByTeamId(teamId);
+
+        if (works == null) {
             return null;
         }
-        if (worksList.size() > 1) {
-            throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
-        }
-
-        Works work = worksList.get(0);
-        WorkDto workDto = WorksToWorkDto.buildWorkDto(work, imageWebUrl, fileWebUrl);
+        WorkDto workDto = WorksToWorkDto.buildWorkDto(works, imageWebUrl, fileWebUrl);
         return workDto;
     }
 

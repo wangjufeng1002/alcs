@@ -10,9 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import xy.alcs.common.enums.AlcsErrorCode;
-import xy.alcs.common.enums.TeamCaptainEnum;
-import xy.alcs.common.enums.WorkCommitEnum;
+import xy.alcs.common.entity.ContestStatus;
+import xy.alcs.common.enums.*;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
 import xy.alcs.common.utils.Utils;
@@ -127,14 +126,15 @@ public class ContestServiceImpl implements ContestService {
     public Result addOrUpdateContest(Contest contest) {
         try {
             if (contest.getCid() == null) {
+                contest.setScoreStatus(ScoreStatusEnum.NO.getCode());
+                contest.setStatus(ContestStatusEnum.CONTEST_NOT_START.getCode());
                 contestMapper.insert(contest);
             } else {
-                contestMapper.updateByPrimaryKey(contest);
+                contestMapper.updateByPrimaryKeySelective(contest);
             }
 
         } catch (Exception e) {
             logger.error("#ContestServiceImpl addContest hadppend exception,error:{}", e);
-            e.printStackTrace();
             throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);
         }
         return Result.buildSuccessResult(AlcsErrorCode.SUCCESS);
@@ -201,6 +201,14 @@ public class ContestServiceImpl implements ContestService {
             }
             if (CollectionUtils.isEmpty(students)) {
                 return Result.buildErrorResult(AlcsErrorCode.USER_NOT_EXIST);
+            }
+
+            StudentCompetitionExample studentCompetitionExample = new StudentCompetitionExample();
+            studentCompetitionExample.createCriteria().andContestIdEqualTo(cId).andStudentIdEqualTo(sId);
+            List<StudentCompetition> studentCompetitions = studentCompetitionMapper.selectByExample(studentCompetitionExample);
+            if (CollectionUtils.isNotEmpty(studentCompetitions)) {
+                //重复报名
+                return Result.buildSuccessResult(AlcsErrorCode.ENROLLD);
             }
             StudentCompetition studentCompetition = new StudentCompetition();
             studentCompetition.setStudentId(sId);
@@ -296,11 +304,11 @@ public class ContestServiceImpl implements ContestService {
                 } else {
                     resultMap.put("raterAccount", item.getValue());
                 }
-            }else if(item.getKey().equals("contestStatus")){
-                if(StringUtils.isBlank(item.getValue().toString())){
-                   resultMap.put("contestStatus",null);
-                }else{
-                    resultMap.put("contestStatus",item.getValue());
+            } else if (item.getKey().equals("contestStatus")) {
+                if (StringUtils.isBlank(item.getValue().toString())) {
+                    resultMap.put("contestStatus", null);
+                } else {
+                    resultMap.put("contestStatus", item.getValue());
                 }
             }
         }

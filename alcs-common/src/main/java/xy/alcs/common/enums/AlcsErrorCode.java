@@ -33,6 +33,7 @@ public enum AlcsErrorCode implements ErrorCode {
     SUPER_ADMIN("00016", "超级管理员"),
     ORDINARY_ADMIN("00017", "普通管理员"),
     LOGIN_FAIL("00018", "登录失败"),
+    ENROLLD("00019","重复报名")
     ;
     private String code;
     private String description;

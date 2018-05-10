@@ -121,4 +121,5 @@ public interface WorksMapper {
 
     List<Rater> selectRaterList(Map<String, Object> queryParam);
 
+    Works selectWorkByTeamId(@Param("teamId") String teamId);
 }

@@ -24,7 +24,7 @@
     <select id="claId" onchange="departSearch(3)">
         <option value="-1">选择班级</option>
     </select>
-    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch(null)">Search</a>
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doStudentSearch(null)">Search</a>
 </div>
 <!--编辑对话框-->
 <div id="stuDetailEditModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
@@ -134,7 +134,7 @@
     }
 
     //查询
-    function doSearch(searchParam) {
+    function doStudentSearch(searchParam) {
         if (searchParam == null || searchParam == "") {
             searchParam = buildAllSearchParam();
         }
@@ -148,16 +148,16 @@
             $('#stuAddForm').form({
                 success:function(data){
                     debugger
-                    data = JSON.parse(data);
-                    if(data.code == "0000"){
+                    var res = JSON.parse(data);
+                    if(res.code == "0000"){
                         $.messager.alert('Info', "添加成功", 'info');
                     }
                     else{
-                        $.messager.alert('Info', data.msg, 'info');
+                        $.messager.alert('Info', res.msg, 'info');
                     }
                     $("#stuDetailAddModel").dialog("close");
-                    doSearch(null);
-
+                    debugger
+                    doStudentSearch(null);
                 }
             });
             $('#stuAddForm').submit();
@@ -166,14 +166,14 @@
             $('#stuEditForm').form({
                 success:function(data){
                     debugger
-                    data = JSON.parse(data);
-                    if(data.code == "0000"){
+                    var res = JSON.parse(data);
+                    if(res.code == "0000"){
                         $.messager.alert('Info', "修改成功", 'info');
                     }else{
-                        $.messager.alert('Info', data.msg, 'info');
+                        $.messager.alert('Info', res.msg, 'info');
                     }
                     $("#stuDetailEditModel").dialog("close");
-                    doSearch(null);
+                    doStudentSearch(null);
 
                 }
             });
@@ -285,7 +285,7 @@
         //构建查询参数
         var queryParam = buildAllSearchParam();
         //进行查询
-        doSearch(queryParam);
+        doStudentSearch(queryParam);
     }
     //构建所有查询参数
     function buildAllSearchParam() {
@@ -473,7 +473,7 @@
             success:function (result) {
                 if(result.code == "0000"){
                     $.messager.alert('Info', "删除成功", 'info');
-                    doSearch(null);
+                    doStudentSearch(null);
                 }else{
                     $.messager.alert('Info', result.msg, 'info');
                 }

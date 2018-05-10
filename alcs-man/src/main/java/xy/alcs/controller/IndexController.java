@@ -33,11 +33,11 @@ public class IndexController {
             if (result.getCode().equals(AlcsErrorCode.SUCCESS.getCode())) {
 
                 if (result.getData().getCode().equals(AdminPowerTypeEnum.SUPER_ADMIN.getCode())) {
-                    request.getSession().setAttribute("admin_account",account);
+                    request.getSession().setAttribute("admin_account", account);
                     modelAndView.setViewName("redirect:/man/html/admin/indexSuper");
                     return modelAndView;
                 } else {
-                    request.getSession().setAttribute("admin_account",account);
+                    request.getSession().setAttribute("admin_account", account);
                     modelAndView.setViewName("redirect:/man/html/admin/indexOrdinary");
                     return modelAndView;
                 }
@@ -53,26 +53,37 @@ public class IndexController {
             modelAndView.setViewName("redirect:/man/html/admin/loginHtml");
         } else {
             if (admin.getPower().equals(AdminPowerTypeEnum.SUPER_ADMIN.getCode())) {
-                request.getSession().setAttribute("admin_account",account);
+                request.getSession().setAttribute("admin_account", account);
                 modelAndView.setViewName("redirect:/man/html/admin/indexSuper");
             } else {
-                request.getSession().setAttribute("admin_account",account);
+                request.getSession().setAttribute("admin_account", account);
                 modelAndView.setViewName("redirect:/man/html/admin/indexOrdinary");
             }
         }
         return modelAndView;
     }
 
+    @RequestMapping(value = "/admin/outLogin")
+    public ModelAndView outLogin(HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView();
+        request.getSession().removeAttribute("admin_account");
+        modelAndView.setViewName("redirect:/man/html/admin/loginHtml");
+        return modelAndView;
+    }
+
+
     @RequestMapping(value = "/admin/loginHtml")
     public String adminIndex() {
         return "admin/login";
     }
+
     @RequestMapping(value = "/admin/indexSuper")
-    public String superAdmin(){
+    public String superAdmin() {
         return "admin/indexSuper";
     }
+
     @RequestMapping(value = "/admin/indexOrdinary")
-    public String ordinaryAdmin(){
+    public String ordinaryAdmin() {
         return "admin/indexOrdinary";
     }
 

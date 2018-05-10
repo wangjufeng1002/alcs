@@ -14,6 +14,8 @@ import xy.alcs.dto.StudentDto;
 import xy.alcs.service.AdminService;
 
 import javax.annotation.Resource;
+import javax.naming.Name;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +107,14 @@ public class AdminJson {
             return Result.buildSuccessResult();
         }
         return Result.buildErrorResult(AlcsErrorCode.SYSTEM_ERROR);
+    }
+    @ResponseBody
+    @RequestMapping(value = "/admin/getInfo")
+    private Result<String> getAdminName(HttpServletRequest request){
+        String accountStr = (String) request.getSession().getAttribute("admin_account");
+        Admin admin = adminService.queryAdminByAccount(accountStr);
+        return Result.buildSuccessResult(admin.getName());
+
     }
     private Boolean verifyAdmin(Admin admin) {
         if (StringUtils.isBlank(admin.getName())) {

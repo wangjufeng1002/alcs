@@ -19,8 +19,8 @@
         <h1>汇编语言竞赛系统</h1>
     </div>
     <div class="wu-header-right">
-        <p><strong class="easyui-tooltip" title="2条未读消息">wangjufeng</strong>，欢迎您！</p>
-        <p><a href="#">安全退出</a></p>
+        <p><strong id="adminName" class="easyui-tooltip" title="2条未读消息"></strong>，欢迎您！</p>
+        <p><a href="/man/html/admin/outLogin">安全退出</a></p>
     </div>
 </div>
 <!-- end of header -->
@@ -59,6 +59,7 @@
             var iframe = $(this).attr('iframe')==1?true:false;
             addTab(title,url,iconCls,iframe);
         });
+        getAdminInfo()
     })
 
 
@@ -124,6 +125,15 @@
             var index = tabPanel.tabs('getTabIndex', tab);
             tabPanel.tabs('close', indexTest);
         }
+    }
+    function getAdminInfo() {
+        $.ajax({
+            url: '/man/json/admin/getInfo',
+            type: 'post',
+            success: function (res) {
+                $('#adminName').html(res.data);
+            }
+        });
     }
 </script>
 </body>

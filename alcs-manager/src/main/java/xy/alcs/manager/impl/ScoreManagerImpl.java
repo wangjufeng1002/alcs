@@ -1,5 +1,6 @@
 package xy.alcs.manager.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Repository;
 import xy.alcs.common.enums.AlcsErrorCode;
 import xy.alcs.common.enums.CommentStatusEnum;
@@ -51,6 +52,14 @@ public class ScoreManagerImpl  extends BaseManager implements ScoreManager {
                     }
                     Integer size = raterCompetitions.size();
                     List<CommentAvgDto> commentAvgDtos = commentMapper.selectAvgSorceByContest(Long.valueOf(cid.toString()));
+                    if(CollectionUtils.isEmpty(commentAvgDtos)){ //无人参加
+                        //更新竞赛表中的字段
+                        Contest contest = new Contest();
+                        contest.setCid(Long.valueOf(cid.toString()));
+                        contest.setScoreStatus(CommentStatusEnum.YES.getCode());
+                        contestMapper.updateByPrimaryKeySelective(contest);
+                        return true;
+                    }
                     for (CommentAvgDto dto : commentAvgDtos) {
                         if (!dto.getSize().equals(size)) {
                             throw BussinessException.asBussinessException(AlcsErrorCode.SYSTEM_ERROR);

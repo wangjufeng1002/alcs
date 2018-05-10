@@ -1041,10 +1041,7 @@ $(function () {
                 '</div>' +
                 '<div class="pop-window-item-content">' +
                 '<div class="picture-upLoad">' +
-                '<input type="file" class="img-file-input">' +
                 '<img class="picture"/>' +
-                '<div class="upload-name">上传图片</div>' +
-                '</div>' +
                 '</div>' +
                 '</div>' +
                 '<div class="pop-window-item">' +
@@ -1195,7 +1192,7 @@ $(function () {
                     if (result.code == "0000") {
                         toastAdd(1, '成功报名', '')
                     } else {
-                        toastAdd(1, '报名失败', '')
+                        toastAdd(1, result.msg, '')
                     }
                 },
                 fail: function () {
@@ -1222,6 +1219,7 @@ $(function () {
                         $('.fade.sure-window').remove();
                         $('.fade.look-report-window').remove();
                         toastAdd(1, '提交成功')
+                        initTable("myReportWill",null)
                     } else {
                         $('.fade.sure-window').remove();
                         toastAdd(1, '提交失败')
@@ -1281,14 +1279,16 @@ $(function () {
                 if (result.code == "0000") {
                     myWork = result.data;
                     if (myWork.imageName != null && myWork.imageName != "") {
-                        imageName = myWork.imageName;
+                        imageName = myWork.image;
                         $('.picture').attr("src", myWork.imageName).show();
                     }
                     if (myWork.workContent != null && myWork.workContent != "") {
                         editor.txt.html(myWork.workContent);
                     }
                     if (myWork.fileName != null && myWork.fileName != "") {
-                        fileName = myWork.fileName;
+                        fileName = myWork.file;
+                        $('.file-name').html(fileName);
+                        $('.file-name').attr('href', myWork.fileName);
                     }
 
                 } else {
