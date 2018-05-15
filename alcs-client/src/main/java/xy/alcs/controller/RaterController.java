@@ -93,11 +93,13 @@ public class RaterController {
 
     @ResponseBody
     @RequestMapping("/rater/approval")
-    public Result approvalWork(String approvalPram) {
+    public Result approvalWork(HttpServletRequest request, String approvalPram) {
         if (StringUtils.isBlank(approvalPram)) {
             throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
         }
+        String ratId = (String) request.getSession().getAttribute("rat_id");
         Map map = JSONObject.parseObject(approvalPram, Map.class);
+        map.put("raterId", ratId);
         Boolean res = raterService.approvalWork(map);
         if (res) {
             return Result.buildSuccessResult();

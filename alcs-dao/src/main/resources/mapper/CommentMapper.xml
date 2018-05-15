@@ -346,5 +346,6 @@
         work_id = #{wid,jdbcType=BIGINT}
         and team_id = #{teamId,jdbcType=VARCHAR}
         and contest_id = #{cid,jdbcType=BIGINT}
+        and rater_id   = #{raterId}
     </update>
 </mapper>

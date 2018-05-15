@@ -203,6 +203,13 @@ public class RaterServiceImpl implements RaterService {
                     resultMap.put("content", item.getValue());
                 }
             }
+            if ("raterId".equals(item.getKey())) {
+                if (StringUtils.isBlank(item.getValue().toString())) {
+                    resultMap.put("raterId", null);
+                } else {
+                    resultMap.put("raterId", item.getValue());
+                }
+            }
         }
         return resultMap;
     }

@@ -16,6 +16,7 @@ import xy.alcs.manager.ScoreManager;
 import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -69,7 +70,7 @@ public class ScoreManagerImpl  extends BaseManager implements ScoreManager {
                     worksMapper.updateScoreAvg(commentAvgDtos);
                     //插入获奖表中
                     //进行排序
-                    commentAvgDtos.stream().sorted(Comparator.comparing(CommentAvgDto::getAvg).reversed());
+                    commentAvgDtos =  commentAvgDtos.stream().sorted(Comparator.comparing(CommentAvgDto::getAvg).reversed()).collect(Collectors.toList());
                     //插入操作
                     awardsMapper.batchInsertAward(commentAvgDtos);
                     //更新竞赛表中的字段
