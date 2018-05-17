@@ -2,19 +2,28 @@ package xy.alcs.json;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import xy.alcs.common.entity.PageData;
 import xy.alcs.common.enums.AlcsErrorCode;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
 import xy.alcs.common.utils.StudentDto2Student;
 import xy.alcs.dto.StudentDto;
+import xy.alcs.service.ExcalService;
 import xy.alcs.service.StudentService;
+import xy.alcs.service.impl.ContestServiceImpl;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +35,8 @@ import java.util.Map;
  */
 @Controller
 public class StudentJson {
+    private static Logger logger = LoggerFactory.getLogger(StudentJson.class);
+
     /**
      * 默认的每页显示的数据
      */
@@ -42,6 +53,8 @@ public class StudentJson {
     private String PAGENOW;
     @Resource
     private StudentService studentService;
+    @Resource
+    private ExcalService excalService;
 
 
     @ResponseBody
@@ -127,6 +140,26 @@ public class StudentJson {
             return Result.buildSuccessResult();
         }
         return Result.buildErrorResult(AlcsErrorCode.SYSTEM_ERROR);
+    }
+    @ResponseBody
+    @RequestMapping(value = "/student/import")
+    public Result importStu(@RequestParam MultipartFile file, Integer type, String reason, HttpServletResponse response){
+        InputStream inputStream = null;
+        String originalFilename = file.getOriginalFilename();
+        try {
+            inputStream = file.getInputStream();
+        } catch (IOException e) {
+            logger.error("#StudentJson importStu error:{}",e);
+        }
+        try {
+            Result result = excalService.importStuInfo(inputStream, originalFilename);
+            return result;
+        } catch (Exception e) {
+            if(e instanceof BussinessException){
+                return Result.buildErrorResult(((BussinessException) e).getErrorCode());
+            }
+            return Result.buildErrorResult(AlcsErrorCode.SYSTEM_ERROR);
+        }
     }
     private boolean verifyStudentParam(StudentDto studentDto){
         if(studentDto.getStuGender() == null){

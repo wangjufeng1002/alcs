@@ -4,6 +4,7 @@
 <div id="stuToolbar">
     <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addStudent()">New</a>
     <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delStudent()">Destroy</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="importStu()">导入学生信息</a>
     <span>学院名称:</span>
     <input id="colName" style="width:100px;line-height:26px;border:1px solid #ccc">
     <span>专业名称:</span>
@@ -65,7 +66,7 @@
             </tr>
             <tr>
                 <td class="tdName">密码:</td>
-                <td><input id="pass" name="stuPassword"/></td>
+                <td><input id="pass" type="password" name="stuPassword"/></td>
             </tr>
         </table>
     </form>
@@ -113,7 +114,7 @@
             </tr>
             <tr>
                 <td class="tdName">密码:</td>
-                <td><input id="apass" name="stuPassword"/></td>
+                <td><input id="apass" type="password" name="stuPassword"/></td>
             </tr>
         </table>
     </form>
@@ -123,14 +124,43 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="closeStudentModel()">Cancel</a>
 </div>
+<!--导入学生信息对话框-->
+<div id="stuImportModel" class="easyui-dialog" data-options="closed:true,iconCls:'icon-edit'"
+     style="overflow:scroll;width:1200px;height: 700px; padding:10px;"
+     title="添加学生信息" iconCls="icon-ok"
+     buttons="#stuImport-buttons">
+    <form id="importForm" action="/man/json/student/import" method="post" enctype="multipart/form-data">
+        <table style="border-collapse: separate;border-spacing: 0px 10px;">
+            <tr>
+                <td>导入文件:</td>
+                <td>
+                    <input type="file" id="file" name="file" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        选择文件
+                    </input>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="stuImport-buttons" style="display: none;overflow: hidden;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="stuSubmit('import')">Ok</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="closeStudentModel()">Cancel</a>
+</div>
 </div>
 
 <script type="text/javascript">
+
+    //导入学生信息
+    function importStu() {
+        $("#stuImportModel").dialog("open");
+    }
+
     //关闭对话框
     function closeStudentModel() {
         $("#stuDetailAddModel").dialog("close");
         $("#stuDetailEditModel").dialog("close");
-
+        $("#stuImportModel").dialog("close");
     }
 
     //查询
@@ -178,6 +208,23 @@
                 }
             });
             $('#stuEditForm').submit();
+        }
+        if(type == 'import'){
+            $('#importForm').form({
+                success:function(data){
+                    debugger
+                    var res = JSON.parse(data);
+                    if(res.code == "0000"){
+                        $.messager.alert('Info', "导入成功", 'info');
+                    }else{
+                        $.messager.alert('Info', res.msg, 'info');
+                    }
+                    $("#stuImportModel").dialog("close");
+                    doStudentSearch(null);
+
+                }
+            });
+            $('#importForm').submit();
         }
     }
 

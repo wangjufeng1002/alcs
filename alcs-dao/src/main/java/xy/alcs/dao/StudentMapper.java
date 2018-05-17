@@ -50,4 +50,11 @@ public interface StudentMapper {
      */
     Integer countStuList(Map<String, Object> queryMap);
 
+    /**
+     * 批量插入
+     * @param stuList
+     * @return
+     */
+    Integer batchAddStu(@Param("stuList") List<Student> stuList);
+
 }

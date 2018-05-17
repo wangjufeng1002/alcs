@@ -763,7 +763,7 @@ $(function () {
                 '<span class="pop-window-body-name">评语</span>' +
                 '</div>' +
                 '<div class="pop-window-item-content">' +
-                '<textarea rows="3" cols="50"">' + data.content + '</textarea>' +
+                '<textarea rows="3" disabled cols="50"">' + data.content + '</textarea>' +
                 '</div>' +
                 '</div>' +
 
@@ -867,6 +867,7 @@ $(function () {
                     $('.sure-window').remove();
                     $('.fade').remove();
                     initTable("myReportWill", null);
+                    toastAdd(1, "批阅成功");
                 } else {
                     toastAdd(1, "提交失败请重试");
                 }

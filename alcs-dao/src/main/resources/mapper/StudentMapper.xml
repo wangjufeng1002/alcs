@@ -356,4 +356,12 @@
             AND college.col_id = #{colId}
         </if>
     </select>
+    <insert id="batchAddStu" parameterType="java.util.List" >
+        <foreach collection="stuList" index="" open="" close="" item="stu" separator=";">
+            INSERT INTO student(stu_id, stu_name,
+            stu_gender, stu_col_id, stu_maj_id,
+            stu_cla_id, stu_password)
+            VALUES (#{stu.stuId},#{stu.stuName},#{stu.stuGender},#{stu.stuColId},#{stu.stuMajId},#{stu.stuClaId},#{stu.stuPassword})
+        </foreach>
+    </insert>
 </mapper>

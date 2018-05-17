@@ -19,9 +19,9 @@
         <!--   初始化连接数量   -->
         <property name="initialSize" value="15"/>
         <!--   最大活动连接数量   -->
-        <property name="maxTotal" value="30"/>
+        <property name="maxTotal" value="2000"/>
         <!--   最大空闲连接数量   -->
-        <property name="maxIdle" value="15"/>
+        <property name="maxIdle" value="100"/>
         <!--   最小空闲连接数量   -->
         <property name="minIdle" value="5"/>
         <!--   获取连接时等待时间，超出将抛异常，单位毫秒   -->
@@ -33,6 +33,13 @@
         <!--   泄露的连接可以被删除的超时值,   单位秒   -->
         <property name="removeAbandonedTimeout" value="180"/>
     </bean>
+    <!-- 事务 -->
+    <!--程序中统一使用编码式事务 -->
+    <bean name="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--事务结束 -->
 
     <!-- mybatis 设置 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -41,13 +48,7 @@
         <property name="configLocation" value="classpath:config/mybatis-config.xml" />
     </bean>
 
-    <!-- 事务 -->
-    <!--程序中统一使用编码式事务 -->
-    <bean name="transactionManager"
-          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"></property>
-    </bean>
-    <!--事务结束 -->
+
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage"  value="xy.alcs.dao"/>

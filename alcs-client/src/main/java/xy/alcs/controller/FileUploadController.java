@@ -86,13 +86,14 @@ public class FileUploadController {
             }
         }
         String suffix = "";
-        if(dataPrix.equals("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;")){
+        if(dataPrix.equals("data:application/octet-stream;")|| dataPrix.equals("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;")){
             suffix = ".docx";
         }
+
         else if(dataPrix.equals("data:application/msword;")){
             suffix = ".doc";
         }
-        else if(dataPrix.equals("data:application/pdf")){
+        else if(dataPrix.equals("data:application/pdf;")){
             suffix = ".pdf";
         }
         else{

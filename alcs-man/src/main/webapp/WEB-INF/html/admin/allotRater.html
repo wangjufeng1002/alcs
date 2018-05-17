@@ -177,7 +177,10 @@
 
             ]],
             onLoadSuccess:function (data) {
-                if(data){
+                if(data.rows == null ||data.rows.length == 0){
+                    return;
+                }
+                else{
                     $.each(data.rows, function(index, item){
                         if(item.alloted){
                                debugger

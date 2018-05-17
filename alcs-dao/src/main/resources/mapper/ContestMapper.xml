@@ -423,7 +423,7 @@
                 AND contest.status = 5
             </if>
             <if test="contestStatus == 1">
-                AND 0 &gt; contest.status &lt; 5
+                AND 0 &lt; contest.status AND  contest.status &lt; 5
             </if>
 
         </if>
@@ -447,7 +447,7 @@
                 AND contest.status = 5
             </if>
             <if test="contestStatus == 1">
-                AND 0 &gt; contest.status &lt; 5
+                AND 0 &lt; contest.status AND  contest.status &lt; 5
             </if>
         </if>
         <if test="scoreStatus != null">

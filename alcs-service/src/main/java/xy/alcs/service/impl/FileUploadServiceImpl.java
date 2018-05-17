@@ -43,6 +43,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             if (typeEnum.getCode().equals(FileTypeEnum.IMAGE.getCode())) {
                 filePath = imageWebUrl + fileName;
             }
+            //文档
             if (typeEnum.getCode().equals(FileTypeEnum.DOCUMENT.getCode())) {
                 filePath = fileWebUrl + fileName;
             }

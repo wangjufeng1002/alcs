@@ -1160,6 +1160,7 @@ $(function () {
             data = {"base64Data": content};
 
         }
+        debugger
         $.ajax({
             url: url,
             type: "post",

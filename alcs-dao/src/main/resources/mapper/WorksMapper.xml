@@ -423,7 +423,7 @@
     <select id="selectRaterWorks" parameterType="java.util.Map" resultMap="raterWorkResultMap">
         SELECT c.*,w.*,com.* FROM comment AS com
         INNER JOIN contest AS c ON com.contest_id = c.cid
-        INNER JOIN works AS w ON com.contest_id = w.contest_id
+        INNER JOIN works AS w ON  com.team_id = w.team_id
         INNER JOIN rater AS r ON com.rater_id = r.rid
         WHERE r.rat_account = #{raterAccount}
         and w.commit = 2
@@ -446,7 +446,7 @@
     <select id="countRaterWorks" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT count(*) FROM comment AS com
         INNER JOIN contest AS c ON com.contest_id = c.cid
-        INNER JOIN works AS w ON com.contest_id = w.contest_id
+        INNER JOIN works AS w ON  com.team_id = w.team_id
         INNER JOIN rater AS r ON com.rater_id = r.rid
         WHERE r.rat_account = #{raterAccount}
         and w.commit = 2
@@ -467,7 +467,7 @@
     <select id="selectRaterWorkDetail" parameterType="java.util.Map" resultMap="raterWorkResultMap">
         SELECT c.*,w.image,w.w_id,w.thesis,w.code,w.commit,com.* FROM comment AS com
         INNER JOIN contest AS c ON com.contest_id = c.cid
-        INNER JOIN works AS w ON com.contest_id = w.contest_id
+        INNER JOIN works AS w ON  com.team_id = w.team_id
         INNER JOIN rater AS r ON com.rater_id = r.rid
         WHERE r.rat_account = #{raterAccount}
         and w.commit = 2

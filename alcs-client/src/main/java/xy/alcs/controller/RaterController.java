@@ -10,6 +10,7 @@ import xy.alcs.common.entity.PageData;
 import xy.alcs.common.enums.AlcsErrorCode;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
+import xy.alcs.domain.Rater;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.RaterWorkDto;
 import xy.alcs.dto.WorkListDto;
@@ -98,8 +99,9 @@ public class RaterController {
             throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
         }
         String ratId = (String) request.getSession().getAttribute("rat_id");
+        Rater rater = raterService.queryRaterInfo(ratId);
         Map map = JSONObject.parseObject(approvalPram, Map.class);
-        map.put("raterId", ratId);
+        map.put("raterId", rater.getRid());
         Boolean res = raterService.approvalWork(map);
         if (res) {
             return Result.buildSuccessResult();
