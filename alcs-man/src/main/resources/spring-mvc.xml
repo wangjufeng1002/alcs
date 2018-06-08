@@ -28,14 +28,10 @@
     <mvc:resources mapping=".js" location="/common/"></mvc:resources>
     <mvc:resources mapping=".css" location="/common/"></mvc:resources>
     <mvc:resources mapping=".html" location="/common/"></mvc:resources>
-
-
     <!-- springMVC 扫包 -->
     <context:component-scan base-package="xy.alcs.controller" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-
-
     <!-- html视图 -->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/html/"/>
@@ -46,7 +42,6 @@
          <property name="interceptors">
              <list>
                  <bean class="xy.alcs.interceptors.LoginInterceptor">
-
                  </bean>
              </list>
          </property>
