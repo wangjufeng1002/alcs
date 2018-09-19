@@ -3,6 +3,7 @@ package xy.alcs.common.task.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import xy.alcs.common.enums.ContestStatusEnum;
@@ -14,7 +15,6 @@ import xy.alcs.dto.ContestDto;
 
 import javax.annotation.Resource;
 import java.util.*;
-
 /**
  * @Author:ju
  * @Description:  定时任务，每天跟新
@@ -22,12 +22,12 @@ import java.util.*;
  */
 @Component
 public class ContestTaskImpl implements ContestTask {
-
     Logger logger = LoggerFactory.getLogger(ContestTaskImpl.class);
-
     @Resource
     private ContestMapper contestMapper;
-
+    @Value("${task.limit}")
+    private String taskLimitStr;
+    private Integer taskLimit;
     /**
      * 每天23:59:55 触发，将结束时间再此之前竞赛状态改为 0
      * （1：正在进行；0：已结束）
@@ -39,18 +39,17 @@ public class ContestTaskImpl implements ContestTask {
         try {
             logger.info("定时任务进行中");
             Map<String,Object> queryMap = new HashMap<>();
-            for(int i= 0;;i+=1000){
+            for(int i= 0;;i+=taskLimit){
                 queryMap.put("offset",i);
-                queryMap.put("limit",1000);
+                queryMap.put("limit",taskLimit);
                 List<ContestDto> contestDtos = contestMapper.selectContest(queryMap);
                 this.updateContestStatusHandler(contestDtos);
             }
         } catch (Exception e) {
-           logger.error("定时任务出错：" + e);
+           logger.error("定时任务出错：{}" , e);
         }
         logger.info("===================定时任务完成==================");
     }
-
     private void updateContestStatusHandler(List<ContestDto> contestDtos){
         Contest contest = new Contest();
         for(ContestDto contestDto : contestDtos){
@@ -64,8 +63,6 @@ public class ContestTaskImpl implements ContestTask {
                 this.updateStatusHandler(contestDto.getCid(),ContestStatusEnum.CONTEST_END);
                 continue;
             }
-
-
             //判断竞赛是否在报名时间内
             Calendar enrollStartDate = Calendar.getInstance();
             Calendar enrollEndDate   = Calendar.getInstance();
@@ -114,7 +111,24 @@ public class ContestTaskImpl implements ContestTask {
 
          Contest contest = new Contest();
          contest.setStatus(contestStatusEnum.getCode());
-
          contestMapper.updateByExampleSelective(contest,contestExample);
+    }
+
+    public String getTaskLimitStr() {
+        return taskLimitStr;
+    }
+
+    public void setTaskLimitStr(String taskLimitStr) {
+        int limit = Integer.parseInt(taskLimitStr);
+        this.setTaskLimit(limit);
+        this.taskLimitStr = taskLimitStr;
+    }
+
+    public Integer getTaskLimit() {
+        return taskLimit;
+    }
+
+    public void setTaskLimit(Integer taskLimit) {
+        this.taskLimit = taskLimit;
     }
 }

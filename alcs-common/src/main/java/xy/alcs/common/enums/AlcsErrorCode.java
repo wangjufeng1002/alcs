@@ -33,13 +33,18 @@ public enum AlcsErrorCode implements ErrorCode {
     SUPER_ADMIN("00016", "超级管理员"),
     ORDINARY_ADMIN("00017", "普通管理员"),
     LOGIN_FAIL("00018", "登录失败"),
-    ENROLLD("00019","重复报名"),
-    IMPORT_ERROR("00020","导入文件失败"),
-    COLLEGE_NOT_EXIST("00021","学院不存在"),
-    MAJOR_NOT_EXIST("00022","专业不存在"),
-    CLA_NOT_EXIST("00023","学院不存在"),
-    EXCAL_IS_NULL("00024","文件内容为空"),
+    ENROLLD("00019", "重复报名"),
+    IMPORT_ERROR("00020", "导入文件失败"),
+    COLLEGE_NOT_EXIST("00021", "学院不存在"),
+    MAJOR_NOT_EXIST("00022", "专业不存在"),
+    CLA_NOT_EXIST("00023", "学院不存在"),
+    EXCAL_IS_NULL("00024", "文件内容为空"),
+    CANCEL_FAIL("00025", "取消失败"),
+    TEAM_NOT_EXIT("00026","小组不存在"),
+    NOT_TEAM_CAPTAIN("00027","不是组长")
+    ,
     ;
+
     private String code;
     private String description;
 
