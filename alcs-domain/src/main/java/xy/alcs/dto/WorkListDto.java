@@ -29,6 +29,8 @@ public class WorkListDto {
 
     //学生学号
     private String studentId;
+    //小组Id
+    private String teamId;
 
     //奖项
     private Integer prize;
@@ -238,5 +240,13 @@ public class WorkListDto {
 
     public void setPrizeStr(String prizeStr) {
         this.prizeStr = prizeStr;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }
