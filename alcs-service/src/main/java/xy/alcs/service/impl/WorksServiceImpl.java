@@ -226,7 +226,7 @@ public class WorksServiceImpl implements WorksService {
             throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
         }
         Map<String, Object> queryMap = this.buildQueryMap(queryParamMap);
-        return worksMapper.countWork(queryMap);
+        return worksMapper.countWork(queryMap).size();
     }
 
     @Override
@@ -270,7 +270,7 @@ public class WorksServiceImpl implements WorksService {
             throw BussinessException.asBussinessException(AlcsErrorCode.PARAM_EXCEPTION);
         }
         Map<String, Object> map = this.buildQueryMap(queryParamMap);
-        Integer total = worksMapper.countScoreList(map);
+        Integer total = worksMapper.countScoreList(map).size();
         return total;
     }
 

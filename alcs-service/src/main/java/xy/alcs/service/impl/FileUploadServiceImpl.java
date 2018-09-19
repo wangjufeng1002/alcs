@@ -9,9 +9,6 @@ import sun.misc.BASE64Decoder;
 import xy.alcs.common.enums.FileTypeEnum;
 import xy.alcs.service.FileUploadService;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 

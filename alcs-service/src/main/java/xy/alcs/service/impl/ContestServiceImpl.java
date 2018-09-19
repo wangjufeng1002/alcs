@@ -1,16 +1,13 @@
 package xy.alcs.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sun.xml.internal.bind.v2.model.core.MaybeElement;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import xy.alcs.common.entity.ContestStatus;
 import xy.alcs.common.enums.*;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
@@ -24,7 +21,6 @@ import xy.alcs.manager.ContestManager;
 import xy.alcs.service.ContestService;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -186,7 +182,7 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public Result enrollContest(Long cId, String sId) {
+    public Result enrollContest(Long cId, String sId,String leaderId) {
         try {
             if (StringUtils.isBlank(sId) || cId == null) {
                 return Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
@@ -210,11 +206,36 @@ public class ContestServiceImpl implements ContestService {
                 //重复报名
                 return Result.buildSuccessResult(AlcsErrorCode.ENROLLD);
             }
+            String teamId;
+            Integer captain;
+            // 个人参赛 、创建小组
+            if(StringUtils.isEmpty(leaderId)){
+                captain = TeamCaptainEnum.IS_CAPTAIN.getCode();
+                teamId = Utils.getUUID();
+            }else{
+                StudentCompetitionExample example = new StudentCompetitionExample();
+                example.createCriteria().andContestIdEqualTo(cId).andStudentIdEqualTo(leaderId);
+                List<StudentCompetition> sc = studentCompetitionMapper.selectByExample(example);
+                if (CollectionUtils.isEmpty(sc)) {
+                    //小组不存在
+                    return Result.buildSuccessResult(AlcsErrorCode.TEAM_NOT_EXIT);
+                }else{
+                    //是组长可以报名
+                    if(sc.get(0).getStudentN().equals(TeamCaptainEnum.IS_CAPTAIN.getCode())){
+                        captain = TeamCaptainEnum.NOT_CAPTAIN.getCode();
+                        teamId = sc.get(0).getTeamId();
+                    }else{
+                        //不是组长
+                        return Result.buildErrorResult(AlcsErrorCode.NOT_TEAM_CAPTAIN);
+                    }
+
+                }
+            }
             StudentCompetition studentCompetition = new StudentCompetition();
             studentCompetition.setStudentId(sId);
             studentCompetition.setContestId(cId);
-            studentCompetition.setTeamId(Utils.getUUID());
-            studentCompetition.setStudentN(TeamCaptainEnum.IS_CAPTAIN.getCode());
+            studentCompetition.setTeamId(teamId);
+            studentCompetition.setStudentN(captain);
             studentCompetition.setTimestamp(new Date());
             studentCompetition.setWorkcommit(WorkCommitEnum.NOT_SAVE_COMIIT.getCode());
 

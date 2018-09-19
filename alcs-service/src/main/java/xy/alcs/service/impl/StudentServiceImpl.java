@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xy.alcs.common.enums.AlcsErrorCode;
 import xy.alcs.common.enums.DepartmentTypeEnum;
+import xy.alcs.common.enums.TeamCaptainEnum;
 import xy.alcs.common.exception.BussinessException;
 import xy.alcs.common.utils.Result;
-import xy.alcs.dao.ClasMapper;
-import xy.alcs.dao.CollegeMapper;
-import xy.alcs.dao.MajorMapper;
-import xy.alcs.dao.StudentMapper;
+import xy.alcs.dao.*;
 import xy.alcs.domain.*;
 import xy.alcs.dto.StudentDto;
 import xy.alcs.service.StudentService;
@@ -40,6 +38,8 @@ public class StudentServiceImpl implements StudentService {
     private MajorMapper majorMapper;
     @Resource
     private ClasMapper clasMapper;
+    @Resource
+    private StudentCompetitionMapper studentCompetitionMapper;
 
     @Value("${page.now}")
     private String pageNow;
@@ -154,6 +154,38 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
+    @Override
+    public StudentCompetition queryStudentCompetition(String stuId) {
+        StudentCompetitionExample studentCompetitionExample = new StudentCompetitionExample();
+        studentCompetitionExample.createCriteria().andStudentIdEqualTo(stuId);
+        List<StudentCompetition> studentCompetitions = studentCompetitionMapper.selectByExample(studentCompetitionExample);
+        return studentCompetitions.get(0);
+    }
+
+    @Override
+    public Boolean canelEnroll(String stuId, Long cId) {
+        StudentCompetitionExample studentCompetitionExample = new StudentCompetitionExample();
+        studentCompetitionExample.createCriteria().andStudentIdEqualTo(stuId);
+        List<StudentCompetition> studentCompetitions = studentCompetitionMapper.selectByExample(studentCompetitionExample);
+        StudentCompetition studentCompetition = studentCompetitions.get(0);
+        int res = 0;
+        //是队长，全队取消
+        if (TeamCaptainEnum.IS_CAPTAIN.getCode().equals(studentCompetition.getStudentN())) {
+            StudentCompetitionExample example = new StudentCompetitionExample();
+            example.createCriteria().andTeamIdEqualTo(studentCompetition.getTeamId());
+            res = studentCompetitionMapper.deleteByExample(example);
+        } else {
+            StudentCompetitionExample example = new StudentCompetitionExample();
+            example.createCriteria().andContestIdEqualTo(cId).andStudentIdEqualTo(stuId);
+            res = studentCompetitionMapper.deleteByExample(example);
+        }
+        if (res > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
     /**
      *
      * @param queryMap

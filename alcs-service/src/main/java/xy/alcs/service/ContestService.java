@@ -98,7 +98,7 @@ public interface ContestService {
      * @param sId  学生id
      * @return
      */
-    Result enrollContest(Long cId,String sId);
+    Result enrollContest(Long cId,String sId,String leaderId);
 
 
     /**

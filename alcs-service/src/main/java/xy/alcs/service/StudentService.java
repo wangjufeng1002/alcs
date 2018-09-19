@@ -2,6 +2,7 @@ package xy.alcs.service;
 
 import xy.alcs.common.utils.Result;
 import xy.alcs.domain.Student;
+import xy.alcs.domain.StudentCompetition;
 import xy.alcs.dto.StudentDto;
 
 import java.util.List;
@@ -67,5 +68,15 @@ public interface StudentService {
     Boolean updateStudent(Student student);
 
 
-    Boolean changePassWord(String account,String password);
+    Boolean changePassWord(String account, String password);
+
+    /**
+     * 查询学生参与竞赛信息
+     *
+     * @param stuId 学生ID
+     * @return
+     */
+    StudentCompetition queryStudentCompetition(String stuId);
+
+    Boolean canelEnroll(String stuId, Long cId);
 }
