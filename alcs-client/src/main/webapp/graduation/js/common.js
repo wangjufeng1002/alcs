@@ -1,7 +1,7 @@
 $(function () {
-    debugger
+        debugger
         $.ajaxSetup({
-//设置ajax请求结束后的执行动作
+             //设置ajax请求结束后的执行动作
             complete:
                 function (XMLHttpRequest, textStatus) {
                     // 通过XMLHttpRequest取得响应头，sessionstatus
@@ -11,7 +11,9 @@ $(function () {
                         while (win != win.top) {
                             win = win.top;
                         }
-                        win.location.href = "http://127.0.0.1/graduation/html/login.html";
+                        var host = window.location.host;
+                        alert(host);
+                        win.location.href = "http://" + host + "/graduation/html/login.html";
                     }
                 }
         });

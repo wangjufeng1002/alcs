@@ -21,6 +21,5 @@
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
 		<property name="properties" ref="configProperties" />
 	</bean>
-
 	<import resource="classpath:config/*.xml" />
 </beans>

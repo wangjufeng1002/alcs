@@ -867,7 +867,9 @@ $(function () {
                 '<div class="fade sure-window">' +
                 '<div class="pop-window">' +
                 '<div class="pop-window-item">' +
-                '<div class="sure-title">确定报名吗？</div>' +
+                '<div class="sure-title">确定报名吗？' + '</div>' +
+                '<div class="sure-title">组队:<input type="radio" name="team" value="2">是'+'<input type="radio" name="team" value="1">否' +'</div>' +
+                '<div class="sure-title">组长ID:<input type="text" id="leaderId" >' + '</div>' +
                 '</div>' +
                 '<div class="pop-window-footer">' +
                 '<span class="pop-window-footer-btn submit-btn">确定' +
@@ -1186,8 +1188,14 @@ $(function () {
 
     function makeSure(type) {
         if (type == 2) {
+            var team= $("input[name='team']:checked").val();
+            var leaderId = $("#leaderId").val();
+            if(team == 2 && (leaderId == null|| leaderId =="") ){ //组队
+                    toastAdd(1,"请填写队长ID");
+            }
+
             $.ajax({
-                data: {cId: globalCid},
+                data: {cId: globalCid,leaderId:leaderId,nTeam:team},
                 url: '/client/contest/enroll',
                 success: function (result) {
                     if (result.code == "0000") {

@@ -1,6 +1,7 @@
 package xy.alcs.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xy.alcs.common.entity.PageData;
 import xy.alcs.common.enums.AlcsErrorCode;
+import xy.alcs.common.enums.EnrollType;
+import xy.alcs.common.enums.TeamCaptainEnum;
 import xy.alcs.common.utils.Result;
+import xy.alcs.domain.StudentCompetition;
 import xy.alcs.dto.ContestDto;
 import xy.alcs.dto.MyContestDetailDto;
 import xy.alcs.dto.MyContestWorkDto;
+import xy.alcs.dto.StudentDto;
 import xy.alcs.service.ContestService;
+import xy.alcs.service.StudentService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -33,6 +39,8 @@ public class ContestController {
     Logger logger = LoggerFactory.getLogger(ContestController.class);
     @Autowired
     private ContestService contestService;
+    @Autowired
+    private StudentService studentService;
 
 
     /**
@@ -162,12 +170,13 @@ public class ContestController {
      *
      * @param request 请求体
      * @param cId     竞赛id
+     *
      * @return
      */
 
     @RequestMapping("/contest/enroll")
     @ResponseBody
-    public Result enrollContest(HttpServletRequest request, Integer cId) {
+    public Result enrollContest(HttpServletRequest request, Integer cId,String leaderId,Integer nTeam) {
         String stuId = (String) request.getSession().getAttribute("stu_id");
         if (stuId == null) {
             Result.buildErrorResult(AlcsErrorCode.NOT_LOGIN);
@@ -175,7 +184,25 @@ public class ContestController {
         if (cId == null) {
             Result.buildErrorResult(AlcsErrorCode.PARAM_EXCEPTION);
         }
-        return contestService.enrollContest(new Long(cId), stuId);
+
+
+        //个人参赛
+        if(nTeam.equals(EnrollType.ONLY.getCode())){
+            return contestService.enrollContest(new Long(cId), stuId,null);
+        }
+        //小组参赛
+        if(nTeam.equals(EnrollType.TEAM.getCode())){
+            if(StringUtils.isNotEmpty(leaderId)){
+                return contestService.enrollContest(new Long(cId), stuId,leaderId);
+            }else {
+                return Result.buildErrorResult(AlcsErrorCode.ENROLL_FAIL);
+            }
+
+        }
+        else{
+            return Result.buildErrorResult(AlcsErrorCode.ENROLL_FAIL);
+        }
+
     }
 
     @RequestMapping("/contest/works")
@@ -205,7 +232,7 @@ public class ContestController {
 
     @ResponseBody
     @RequestMapping("/contest/rater/list")
-    public PageData<ContestDto> listRaterConetst(HttpServletRequest request,Integer page, Integer rows, String queryParam) {
+    public PageData<ContestDto> listRaterConetst(HttpServletRequest request, Integer page, Integer rows, String queryParam) {
         String ratId = (String) request.getSession().getAttribute("rat_id");
         Map<String, Object> map = new HashMap<>();
         if (page == null || page.intValue() <= 0) {
@@ -219,7 +246,7 @@ public class ContestController {
         }
         map.put("page", page);
         map.put("rows", rows);
-        map.put("raterAccount",ratId);
+        map.put("raterAccount", ratId);
 
         List<ContestDto> contests = contestService.listRaterContest(map);
         Integer total = contestService.countRateContestTotal(map);
@@ -230,5 +257,18 @@ public class ContestController {
         pageData.setPageSize(rows);
         return pageData;
     }
+
+    @ResponseBody
+    @RequestMapping("/contest/cancelEnroller")
+    public Result cancelEnroll(HttpServletRequest request, String cId) {
+        String stuId = (String) request.getSession().getAttribute("stu_id");
+        Boolean res = studentService.canelEnroll(stuId, Long.parseLong(cId));
+        if (res) {
+            return Result.buildSuccessResult();
+        } else {
+            return Result.buildErrorResult(AlcsErrorCode.CANCEL_FAIL);
+        }
+    }
+
 
 }
