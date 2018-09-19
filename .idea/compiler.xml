@@ -17,7 +17,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="alcs" target="1.8" />
+      <module name="alcs" target="1.5" />
       <module name="alcs-client" target="1.8" />
       <module name="alcs-common" target="1.8" />
       <module name="alcs-dao" target="1.8" />
@@ -25,7 +25,7 @@
       <module name="alcs-man" target="1.8" />
       <module name="alcs-manager" target="1.8" />
       <module name="alcs-service" target="1.8" />
-      <module name="image-web" target="1.8" />
+      <module name="image-web" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

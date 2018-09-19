@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" name="alcs-client:war">
     <output-path>$PROJECT_DIR$/alcs-client/target</output-path>
-    <root id="archive" name="monitor.war">
+    <root id="archive" name="alcs-client.war">
       <element id="artifact" artifact-name="alcs-client:war exploded" />
     </root>
   </artifact>
