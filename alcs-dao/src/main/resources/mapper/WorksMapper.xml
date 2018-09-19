@@ -24,6 +24,7 @@
         <result column="thesis" property="thesis" jdbcType="VARCHAR"/>
         <result column="commit" property="commit" jdbcType="INTEGER"/>
         <result column="student_id" property="studentId"></result>
+        <result column="team_id" property="teamId"></result>
         <result column="summary" property="summary" jdbcType="VARCHAR"/>
         <result column="score_end_date" property="scoreEndDate" jdbcType="DATE"/>
         <result column="score_start_date" property="scoreStartDate" jdbcType="DATE"/>
@@ -369,7 +370,7 @@
         LIMIT #{offset},#{limit};
     </sql>
     <select id="selectWork" parameterType="java.util.Map" resultMap="workListResultMap">
-        SELECT w.*,c.*,sc.student_id FROM works AS w
+        SELECT w.*,c.*,sc.team_id FROM works AS w
         INNER JOIN contest AS c ON w.contest_id = c.cid
         INNER JOIN student_competition AS sc ON w.team_id = sc.team_id
         <if test="title != null">
@@ -387,6 +388,7 @@
         <if test="sid != null">
             and s.student_id = #{sid}
         </if>
+        GROUP BY sc.team_id
         ORDER BY w.timestamp DESC
         <if test="offset != null and limit!= null">
             <include refid="limit_select"></include>
@@ -409,8 +411,9 @@
             and w.commit = #{commit}
         </if>
         <if test="sid != null">
-            and s.student_id = #{sid}
+            and sc.student_id = #{sid}
         </if>
+        GROUP BY sc.team_id
     </select>
 
     <delete id="batchDelete" parameterType="java.util.List">
@@ -480,23 +483,30 @@
     </update>
 
     <select id="selectScoreList" parameterType="java.util.Map" resultMap="workListResultMap">
-        SELECT w.*,c.*,sc.student_id,a.* FROM works AS w
+        SELECT w.*,c.*,sc.team_id,a.* FROM works AS w
         INNER JOIN contest AS c ON w.contest_id = c.cid
         INNER JOIN student_competition AS sc ON w.team_id = sc.team_id
         INNER JOIN awards as a on w.w_id = a.work_id
         WHERE w.contest_id = #{cid}
+        GROUP BY sc.team_id
         order by a.prize ASC
         <if test="offset != null and limit!= null">
             <include refid="limit_select"></include>
         </if>
     </select>
-
+   <!-- AS w
+        INNER JOIN contest AS c ON w.contest_id = c.cid
+        INNER JOIN student_competition AS sc ON w.team_id = sc.team_id
+        INNER JOIN awards as a on w.w_id = a.work_id
+        WHERE w.contest_id = #{cid}
+        GROUP BY sc.team_id -->
     <select id="countScoreList" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT count(*) FROM works AS w
         INNER JOIN contest AS c ON w.contest_id = c.cid
         INNER JOIN student_competition AS sc ON w.team_id = sc.team_id
         INNER JOIN awards as a on w.w_id = a.work_id
         WHERE w.contest_id = #{cid}
+        GROUP BY sc.team_id
     </select>
 
     <select id="selectWorkByTeamId" parameterType="java.lang.String" resultMap="BaseResultMap">

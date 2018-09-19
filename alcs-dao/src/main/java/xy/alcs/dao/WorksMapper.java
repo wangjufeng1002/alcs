@@ -62,7 +62,7 @@ public interface WorksMapper {
      * @param queryParam
      * @return
      */
-    Integer countWork(Map<String, Object> queryParam);
+    List<Integer> countWork(Map<String, Object> queryParam);
 
     /**
      * 批量删除
@@ -116,7 +116,7 @@ public interface WorksMapper {
      * @param queryParam
      * @return
      */
-    Integer countScoreList(Map<String, Object> queryParam);
+    List<Integer> countScoreList(Map<String, Object> queryParam);
 
 
     List<Rater> selectRaterList(Map<String, Object> queryParam);
